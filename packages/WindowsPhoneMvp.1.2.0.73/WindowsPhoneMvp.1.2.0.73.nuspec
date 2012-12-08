@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>WindowsPhoneMvp</id>
+    <version>1.2.0.73</version>
+    <title>Windows Phone Mvp</title>
+    <authors>WindowsPhoneMvp Contributors</authors>
+    <owners>WindowsPhoneMvp Contributors</owners>
+    <licenseUrl>http://windowsphonemvp.codeplex.com/license</licenseUrl>
+    <projectUrl>http://windowsphonemvp.codeplex.com/</projectUrl>
+    <iconUrl>https://hg01.codeplex.com/windowsphonemvp/raw-file/133ad33dac0f/Resource/Art/windowsphonemvp_nuspec.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>An MVP implementation for Windows Phone. 
+	When developing projects for WindowsPhone7, without the proper binding support found in WPF, 
+	ViewModels quickly become a dumping ground, growing to an unmanageable size and doing more then they should. 
+	Take a step back and rediscover MVP, XAML does not necessarily mean you must use MVVM, 
+	the lack of binding support has given new focus for projects based on MVP and MVC.</description>
+    <summary>An MVP implementation for Windows Phone.</summary>
+    <tags>WP7 Silverlight Phone</tags>
+    <dependencies>
+      <dependency id="Autofac" version="2.5.2.830" />
+      <dependency id="WindowsPhoneEssentials" version="0.5.0.59" />
+    </dependencies>
+  </metadata>
+</package>

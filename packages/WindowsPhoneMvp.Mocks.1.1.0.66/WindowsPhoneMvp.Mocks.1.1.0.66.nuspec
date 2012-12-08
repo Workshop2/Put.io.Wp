@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>WindowsPhoneMvp.Mocks</id>
+    <version>1.1.0.66</version>
+    <title>Windows Phone Mvp Mocks</title>
+    <authors>WindowsPhoneMvp Contributors</authors>
+    <owners>WindowsPhoneMvp Contributors</owners>
+    <licenseUrl>http://windowsphonemvp.codeplex.com/license</licenseUrl>
+    <projectUrl>http://windowsphonemvp.codeplex.com/</projectUrl>
+    <iconUrl>https://hg01.codeplex.com/windowsphonemvp/raw-file/133ad33dac0f/Resource/Art/windowsphonemvp_nuspec.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>WindowsPhoneMvp Mock Objects for Unit testing makes
+      unit testing easier by providing Mock implementations of framework types and services.
+      Normally a package like this is not necessary, however limitations in the Windows Phone runtime mean
+      traditional Proxy-based mocking libraries will not work.</description>
+    <summary>WindowsPhoneMvp Mock Objects for Unit testing.</summary>
+    <tags>WP7 Silverlight Phone</tags>
+    <dependencies>
+      <dependency id="WindowsPhoneMvp" />
+    </dependencies>
+  </metadata>
+</package>

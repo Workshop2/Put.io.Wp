@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>WindowsPhoneEssentials</id>
+    <version>0.5.0.59</version>
+    <title>WindowsPhoneEssentials</title>
+    <authors>Jake Ginnivan,  Brendan Kowitz</authors>
+    <owners>Jake Ginnivan,  Brendan Kowitz</owners>
+    <projectUrl>http://wp7essentials.codeplex.com/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>a collection of utility classes which save you time and help you write testable wp7 applications</description>
+    <summary>a collection of utility classes which save you time and help you write testable wp7 applications</summary>
+    <tags>windows phone 7 wp7</tags>
+  </metadata>
+</package>

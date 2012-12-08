@@ -1,0 +1,910 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WindowsPhoneMvp</name>
+    </assembly>
+    <members>
+        <member name="T:WindowsPhoneMvp.Binder.PresenterDiscoveryStrategy.IPresenterDiscoveryStrategy">
+            <summary>
+            Defines that contract for classes that implement logic for finding relevant presenters given
+            some hosts and some view instances.
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Binder.PresenterDiscoveryStrategy.IPresenterDiscoveryStrategy.GetBindings(System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{WindowsPhoneMvp.IView})">
+            <summary>
+            Gets the presenter bindings for passed views using the passed hosts.
+            </summary>
+            <param name="hosts">The host objects.</param>
+            <param name="viewInstances">The views.</param>
+            <returns>The presenter bindings.</returns>
+        </member>
+        <member name="M:WindowsPhoneMvp.Binder.PresenterDiscoveryStrategy.AttributeBasedPresenterDiscoveryStrategy.CreateCache(System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Allows AttributeBasedPresenterDiscoveryStrategy to create a cache of
+            view types to presenter types.
+            </summary>
+            <param name="viewTypes">Types of views to search attributes on</param>
+        </member>
+        <member name="T:WindowsPhoneMvp.Binder.PresenterFactory.IPresenterFactory">
+            <summary>
+            Defines the methods of a factory class capable of creating presenters.
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Binder.PresenterFactory.IPresenterFactory.Create(System.Type,System.Type,WindowsPhoneMvp.IView)">
+            <summary>
+            Creates a new instance of the specific presenter type, for the specified
+            view type and instance.
+            </summary>
+            <param name="presenterType">The type of presenter to create.</param>
+            <param name="viewType">The type of the view as defined by the binding that matched.</param>
+            <param name="viewInstance">The view instance to bind this presenter to.</param>
+            <returns>An instantitated presenter.</returns>
+        </member>
+        <member name="M:WindowsPhoneMvp.Binder.PresenterFactory.IPresenterFactory.Release(WindowsPhoneMvp.IPresenter)">
+            <summary>
+            Releases the specified presenter from any of its lifestyle demands.
+            This method's activities are implementation specific - for example,
+            an IoC based factory would return the presenter to the container.
+            </summary>
+            <param name="presenter">The presenter to release.</param>
+        </member>
+        <member name="T:WindowsPhoneMvp.Binder.PresenterFactory.DefaultPresenterFactory">
+            <summary>
+            Provides a default implementation of <see cref="T:WindowsPhoneMvp.Binder.PresenterFactory.IPresenterFactory"/>.
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Binder.PresenterFactory.DefaultPresenterFactory.Create(System.Type,System.Type,WindowsPhoneMvp.IView)">
+            <summary>
+            Creates a new instance of the specific presenter type, for the specified
+            view type and instance.
+            </summary>
+            <param name="presenterType">The type of presenter to create.</param>
+            <param name="viewType">The type of the view as defined by the binding that matched.</param>
+            <param name="viewInstance">The view instance to bind this presenter to.</param>
+            <returns>An instantitated presenter.</returns>
+        </member>
+        <member name="M:WindowsPhoneMvp.Binder.PresenterFactory.DefaultPresenterFactory.Release(WindowsPhoneMvp.IPresenter)">
+            <summary>
+            Releases the specified presenter from any of its lifestyle demands.
+            </summary>
+            <param name="presenter">The presenter to release.</param>
+        </member>
+        <member name="P:WindowsPhoneMvp.Binder.PresenterFactory.DefaultPresenterFactory.NavigationService">
+            <summary>
+            Sets the navigation service used for presenters created with the DefaultPresenterFactory.
+            </summary>
+        </member>
+        <member name="T:WindowsPhoneMvp.Binder.PresenterBinder">
+            <summary>
+            Handles the creation and binding of presenters based on the decoration of
+            <see cref="T:WindowsPhoneMvp.PresenterBindingAttribute"/> attributes on a host class, such as page.
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Binder.PresenterBinder.#ctor(System.Object,WindowsPhoneEssentials.Abstractions.IPhoneApplicationFrame,WindowsPhoneEssentials.Abstractions.IPhoneApplicationService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WindowsPhoneMvp.Binder.PresenterBinder"/> class.
+            </summary>
+            <param name="host">The host.</param>
+            <param name="frame"></param>
+            <param name="service"></param>
+        </member>
+        <member name="M:WindowsPhoneMvp.Binder.PresenterBinder.#ctor(System.Collections.Generic.IEnumerable{System.Object},WindowsPhoneEssentials.Abstractions.IPhoneApplicationFrame,WindowsPhoneEssentials.Abstractions.IPhoneApplicationService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WindowsPhoneMvp.Binder.PresenterBinder"/> class.
+            </summary>
+            <param name="hosts">The array of hosts, useful in scenarios like ASP.NET master pages.</param>
+            <param name="frame"></param>
+            <param name="service"></param>
+        </member>
+        <member name="M:WindowsPhoneMvp.Binder.PresenterBinder.#ctor(System.Collections.Generic.IEnumerable{System.Object},WindowsPhoneEssentials.Abstractions.IPhoneApplicationFrame,WindowsPhoneEssentials.Abstractions.IPhoneApplicationService,WindowsPhoneEssentials.Diagnostics.ITraceContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WindowsPhoneMvp.Binder.PresenterBinder"/> class.
+            </summary>
+            <param name="hosts">The array of hosts.</param>
+            <param name="service"></param>
+            <param name="traceContext">The tracing context.</param>
+            <param name="frame"></param>
+        </member>
+        <member name="M:WindowsPhoneMvp.Binder.PresenterBinder.RegisterView(WindowsPhoneMvp.IView)">
+            <summary>
+            Registers a view instance as being a candidate for binding. If
+            <see cref="M:WindowsPhoneMvp.Binder.PresenterBinder.PerformBinding"/> has not been called, the view will
+            be queued until that time. If <see cref="M:WindowsPhoneMvp.Binder.PresenterBinder.PerformBinding"/> has
+            already been called, binding is attempted instantly.
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Binder.PresenterBinder.PerformBinding">
+            <summary>
+            Attempts to bind any already registered views.
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Binder.PresenterBinder.NavigatedTo(System.Object,WindowsPhoneMvp.Navigation.NavigationData,System.Boolean)">
+            <summary>
+            Allows all presenters in this presenter binder to be notified of a navigated to event, 
+            and also to hydrate navigation properties
+            </summary>
+            <param name="sender"></param>
+            <param name="data">Navigation data to be passed to presenters</param>
+            <param name="pendingActivation">Was there an Activation event pending</param>
+        </member>
+        <member name="M:WindowsPhoneMvp.Binder.PresenterBinder.Release">
+            <summary>
+            Closes the message bus, releases each of the views from the
+            presenters then releases each of the presenters from the factory
+            (useful in IoC scenarios).
+            </summary>
+        </member>
+        <member name="P:WindowsPhoneMvp.Binder.PresenterBinder.Factory">
+            <summary>
+             Gets or sets the factory that the binder will use to create
+             new presenter instances. This is pre-initialized to a
+             default implementation but can be overridden if desired.
+             This property can only be set once.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if a null value is passed to the setter.</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown if the property is being set for a second time.</exception>
+        </member>
+        <member name="P:WindowsPhoneMvp.Binder.PresenterBinder.DiscoveryStrategy">
+            <summary>
+             Gets or sets the strategy that the binder will use to discover which presenters should be bound to which views.
+             This is pre-initialized to a default implementation but can be overridden if desired. 
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if a null value is passed to the setter.</exception>
+        </member>
+        <member name="E:WindowsPhoneMvp.Binder.PresenterBinder.PresenterCreated">
+            <summary>
+            Occurs when the binder creates a new presenter instance. Useful for
+            populating extra information into presenters.
+            </summary>
+        </member>
+        <member name="P:WindowsPhoneMvp.Binder.PresenterBinder.MessageCoordinator">
+            <summary>
+            Returns the message coordinator instance that is being shared with
+            each of the presenters.
+            </summary>
+        </member>
+        <member name="T:WindowsPhoneMvp.Binder.PresenterBinding">
+            <summary/>
+        </member>
+        <member name="M:WindowsPhoneMvp.Binder.PresenterBinding.#ctor(System.Type,System.Type,WindowsPhoneMvp.BindingMode,System.Collections.Generic.IEnumerable{WindowsPhoneMvp.IView})">
+            <summary/>
+        </member>
+        <member name="M:WindowsPhoneMvp.Binder.PresenterBinding.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:WindowsPhoneMvp.Binder.PresenterBinding"/> is equal to the current <see cref="T:WindowsPhoneMvp.Binder.PresenterBinding"/>.
+            </summary>
+            <returns>
+            true if the specified <see cref="T:WindowsPhoneMvp.Binder.PresenterBinding"/> is equal to the current <see cref="T:WindowsPhoneMvp.Binder.PresenterBinding"/>; otherwise, false.
+            </returns>
+            <param name="obj">The <see cref="T:WindowsPhoneMvp.Binder.PresenterBinding"/> to compare with the current <see cref="T:WindowsPhoneMvp.Binder.PresenterBinding"/>.</param>
+        </member>
+        <member name="M:WindowsPhoneMvp.Binder.PresenterBinding.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type. 
+            </summary>
+            <returns>
+            A hash code for the current <see cref="T:WindowsPhoneMvp.Binder.PresenterBinding"/>.
+            </returns>
+        </member>
+        <member name="P:WindowsPhoneMvp.Binder.PresenterBinding.PresenterType">
+            <summary/>
+        </member>
+        <member name="P:WindowsPhoneMvp.Binder.PresenterBinding.ViewType">
+            <summary/>
+        </member>
+        <member name="P:WindowsPhoneMvp.Binder.PresenterBinding.BindingMode">
+            <summary/>
+        </member>
+        <member name="P:WindowsPhoneMvp.Binder.PresenterBinding.ViewInstances">
+            <summary/>
+        </member>
+        <member name="T:WindowsPhoneMvp.Binder.PresenterCreatedEventArgs">
+            <summary>
+            Provides data for the <see cref="E:WindowsPhoneMvp.Binder.PresenterBinder.PresenterCreated"/> event.
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Binder.PresenterCreatedEventArgs.#ctor(WindowsPhoneMvp.IPresenter)">
+            <summary />
+            <param name="presenter">The presenter that was just created.</param>
+        </member>
+        <member name="P:WindowsPhoneMvp.Binder.PresenterCreatedEventArgs.Presenter">
+            <summary>
+            Gets the presenter that was just created.
+            </summary>
+        </member>
+        <member name="T:WindowsPhoneMvp.Binder.PresenterDiscoveryStrategy.PresenterDiscoveryResult">
+            <summary />
+        </member>
+        <member name="M:WindowsPhoneMvp.Binder.PresenterDiscoveryStrategy.PresenterDiscoveryResult.#ctor(System.Collections.Generic.IEnumerable{WindowsPhoneMvp.IView},System.String,System.Collections.Generic.IEnumerable{WindowsPhoneMvp.Binder.PresenterBinding})">
+            <summary />
+        </member>
+        <member name="M:WindowsPhoneMvp.Binder.PresenterDiscoveryStrategy.PresenterDiscoveryResult.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:WindowsPhoneMvp.Binder.PresenterDiscoveryStrategy.PresenterDiscoveryResult"/> is equal to the current <see cref="T:WindowsPhoneMvp.Binder.PresenterDiscoveryStrategy.PresenterDiscoveryResult"/>.
+            </summary>
+            <returns>
+            true if the specified <see cref="T:WindowsPhoneMvp.Binder.PresenterDiscoveryStrategy.PresenterDiscoveryResult"/> is equal to the current <see cref="T:WindowsPhoneMvp.Binder.PresenterDiscoveryStrategy.PresenterDiscoveryResult"/>; otherwise, false.
+            </returns>
+            <param name="obj">The <see cref="T:WindowsPhoneMvp.Binder.PresenterDiscoveryStrategy.PresenterDiscoveryResult"/> to compare with the current <see cref="T:WindowsPhoneMvp.Binder.PresenterDiscoveryStrategy.PresenterDiscoveryResult"/>.</param>
+        </member>
+        <member name="M:WindowsPhoneMvp.Binder.PresenterDiscoveryStrategy.PresenterDiscoveryResult.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type. 
+            </summary>
+            <returns>
+            A hash code for the current <see cref="T:WindowsPhoneMvp.Binder.PresenterDiscoveryStrategy.PresenterDiscoveryResult"/>.
+            </returns>
+        </member>
+        <member name="P:WindowsPhoneMvp.Binder.PresenterDiscoveryStrategy.PresenterDiscoveryResult.ViewInstances">
+            <summary />
+        </member>
+        <member name="P:WindowsPhoneMvp.Binder.PresenterDiscoveryStrategy.PresenterDiscoveryResult.Message">
+            <summary />
+        </member>
+        <member name="P:WindowsPhoneMvp.Binder.PresenterDiscoveryStrategy.PresenterDiscoveryResult.Bindings">
+            <summary />
+        </member>
+        <member name="T:WindowsPhoneMvp.BindingMode">
+            <summary>
+            Defines the different modes through which presenters and views may be related.
+            </summary>
+        </member>
+        <member name="F:WindowsPhoneMvp.BindingMode.Default">
+            <summary>
+            A separate presenter is created for each applicable view.
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Util.CollectionExtensions.SetEqual``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            An order independent version of <see cref="M:System.Linq.Enumerable.SequenceEqual``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})"/>.
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Commands.NavigationCommandExtensions.WithPreExecutionAction(System.Windows.Input.ICommand,System.Action)">
+            <summary>
+             The action to execute before navigation
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Commands.NavigationCommandExtensions.CanExecuteWhen(System.Windows.Input.ICommand,System.Func{System.Boolean})">
+            <summary>
+            Specifies when navigation is allowed
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Commands.NavigationCommandExtensions.WithNavigationData(System.Windows.Input.ICommand,WindowsPhoneMvp.Navigation.NavigationData)">
+            <summary>
+            Optional data to pass with the navigation event
+            </summary>
+        </member>
+        <member name="T:WindowsPhoneMvp.IPresenter`2">
+            <summary>
+             Specifies the presenter interface in an Windows Phone MVP application
+            </summary>
+            <typeparam name="TView">The type of view.</typeparam>
+            <typeparam name="TModel">The type of model.</typeparam>
+        </member>
+        <member name="T:WindowsPhoneMvp.IPresenter`1">
+            <summary>
+             Specifies the presenter interface in an Windows Phone MVP application.
+            </summary>
+            <typeparam name="TView">The type of view.</typeparam>
+        </member>
+        <member name="T:WindowsPhoneMvp.IPresenter">
+            <summary>
+             Specifies the presenter interface in an Windows Phone MVP application.
+            </summary>
+        </member>
+        <member name="P:WindowsPhoneMvp.IPresenter.Messages">
+            <summary>
+            Gets or sets the message bus used for cross presenter messaging.
+            </summary>
+        </member>
+        <member name="P:WindowsPhoneMvp.IPresenter.Navigate">
+            <summary>
+            Navigation Service
+            </summary>
+        </member>
+        <member name="P:WindowsPhoneMvp.IPresenter`1.View">
+            <summary>
+            Gets the view instance that this presenter is bound to.
+            </summary>
+        </member>
+        <member name="P:WindowsPhoneMvp.IPresenter`2.Model">
+            <summary>
+            Gets the model instance. The default presenter base class
+            (<see cref="T:WindowsPhoneMvp.Presenter`1"/>) initializes this automatically.
+            </summary>
+        </member>
+        <member name="T:WindowsPhoneMvp.IViewLifecycleManager">
+            <summary>
+            An intermediate interface while we slowly remove the
+            ReleaseView method from presenters. No new code should
+            use this interface.
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.IViewLifecycleManager.ReleaseView">
+            <summary>
+            Releases the view.
+            </summary>
+        </member>
+        <member name="T:WindowsPhoneMvp.Phone.InheritModelAttribute">
+            <summary>
+            Signifies that a Presenter should allow the view to inherit the Model in the DataContext 
+            instead of creating a new instance.
+            Use this attribute where the View is not at the root level ie. a Control.
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Phone.MvpPhoneApplicationPageExtensions.Model``1(WindowsPhoneMvp.IView{``0})">
+            <summary>
+            Returns the Model for this View
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Phone.MvpPhoneApplicationPageExtensions.Model``1(WindowsPhoneMvp.IView{``0},``0)">
+            <summary>
+            Sets the Model for this View
+            </summary>
+        </member>
+        <member name="T:WindowsPhoneMvp.Phone.MvpUserControl">
+            <summary>
+             A base MvpUserControl
+            </summary>
+        </member>
+        <member name="T:WindowsPhoneMvp.IView">
+            <summary>
+            Represents a class that is a view in a Model-View-Presenter application.
+            </summary>
+        </member>
+        <member name="P:WindowsPhoneMvp.IView.ThrowExceptionIfNoPresenterBound">
+            <summary />
+        </member>
+        <member name="E:WindowsPhoneMvp.IView.Load">
+            <summary>
+            Occurs at the discretion of the view. For <see cref="T:WindowsPhoneMvp.Phone.MvpUserControl"/>
+            implementations (the most commonly used), this is fired during the
+            Load event.
+            </summary>
+        </member>
+        <member name="P:WindowsPhoneMvp.IView.DataContext">
+            <summary>
+            The View DataContext which is usually set to the Model
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Phone.MvpUserControl.#ctor">
+            <summary>
+             Instantiates a new MvpUserControl
+            </summary>
+        </member>
+        <member name="E:WindowsPhoneMvp.Phone.MvpUserControl.Load">
+            <summary>
+             A load event that occurs when the view has been loaded into view
+            </summary>
+        </member>
+        <member name="P:WindowsPhoneMvp.Phone.MvpUserControl.ThrowExceptionIfNoPresenterBound">
+            <summary>
+            Gets or sets whether the runtime should throw an exception if a presenter is not bound to this control.
+            </summary>
+            <value><c>true</c> if an exception should be thrown (default); otherwise, <c>false</c>.</value>
+        </member>
+        <member name="T:WindowsPhoneMvp.Phone.NotificationViewModel`1">
+            <summary>
+            A base ViewModel implementation that implements INotifyPropertyChanged
+            </summary>
+            <typeparam name="TViewModel">The derived ViewModel type, this gives a strongly typed interface to RaisePropertyChanged(x => x.MyProp)</typeparam>
+        </member>
+        <member name="T:WindowsPhoneMvp.Messaging.IMessageBus">
+            <summary>
+            Defines the basic methods of a cross-presenter messaging bus.
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Messaging.IMessageBus.Publish``1(``0)">
+            <summary>
+            Publishes a message to the bus. Any existing subscriptions to this type,
+            or an assignable type such as a base class or an interface, will be notified
+            at this time.
+            </summary>
+            <typeparam name="TMessage">The type of the message to publish</typeparam>
+            <param name="message">The message to publish</param>
+        </member>
+        <member name="M:WindowsPhoneMvp.Messaging.IMessageBus.Subscribe``1(System.Action{``0})">
+            <summary>
+            Registers a subscription to messages of the specified type. Any previously
+            published messages that are valid for this subscription will be raised
+            at this time.
+            </summary>
+            <typeparam name="TMessage">The type of messages to subscribe to</typeparam>
+            <param name="messageReceivedCallback">A callback that will be invoked for each message received. This callback will be invoked once per message.</param>
+        </member>
+        <member name="M:WindowsPhoneMvp.Messaging.IMessageBus.Subscribe``1(System.Action{``0},System.Action)">
+            <summary>
+            Registers a subscription to messages of the specified type. Any previously
+            published messages that are valid for this subscription will be raised
+            at this time.
+            </summary>
+            <typeparam name="TMessage">The type of messages to subscribe to</typeparam>
+            <param name="messageReceivedCallback">A callback that will be invoked for each message received. This callback will be invoked once per message.</param>
+            <param name="neverReceivedCallback">A callback that will be invoked if no matching message is ever received. This callback will not be invoked more than once.</param>
+        </member>
+        <member name="T:WindowsPhoneMvp.Messaging.IMessageCoordinator">
+            <summary>
+            Defines the basic methods of a cross-presenter messaging coordinator.
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Messaging.IMessageCoordinator.Close">
+            <summary>
+            <para>
+                Closes the message bus, causing any subscribers that have not yet received
+                a message to have their "never received" callback fired.
+            </para>
+            <para>
+                After this method is called, any further calls to <see cref="M:WindowsPhoneMvp.Messaging.IMessageBus.Publish``1(``0)"/> or
+                <see cref="M:WindowsPhoneMvp.Messaging.IMessageBus.Subscribe``1(System.Action{``0})"/> will result in an
+                <see cref="T:System.InvalidOperationException"/>.
+            </para>
+            <para>
+                The <see cref="M:WindowsPhoneMvp.Messaging.IMessageCoordinator.Close"/> method may be called multiple times and must not
+                fail in this scenario.
+            </para>
+            </summary>
+        </member>
+        <member name="T:WindowsPhoneMvp.Navigation.IViewFinder">
+            <summary>
+            Defines how views should be found in the application
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Navigation.INavigatingPresenter.OnNavigationTo(WindowsPhoneMvp.Navigation.NavigationData)">
+            <summary>
+            Called after navigation to a view has occurred
+            </summary>
+            <param name="navigationData">Data about the navigation event, including parameters passed along</param>
+        </member>
+        <member name="M:WindowsPhoneMvp.Navigation.INavigatingPresenter.OnNavigatedFrom(System.Boolean)">
+            <summary>
+             Called when the view is about to be navigated from
+            </summary>
+            <param name="isExiting">True if the navigation is going to an external destination</param>
+        </member>
+        <member name="P:WindowsPhoneMvp.Navigation.INavigatingPresenter.Params">
+            <summary>
+             A dictionary of navigation parameters
+            </summary>
+        </member>
+        <member name="T:WindowsPhoneMvp.Phone.State.PageTransientStateStore">
+            <summary>
+             Provides access to a page's transient state
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Phone.State.PageTransientStateStore.#ctor(WindowsPhoneMvp.Phone.State.ISupportsState)">
+            <summary>
+             Creates a new PageTransientStateStore
+            </summary>
+        </member>
+        <member name="T:WindowsPhoneMvp.Presenter`2">
+            <summary>
+             Represents a presenter in a Windows Phone Model-View-Presenter application.
+            </summary>
+            <typeparam name="TView">The type of view.</typeparam>
+            <typeparam name="TModel">The type of model (assigned to DataContext).</typeparam>
+        </member>
+        <member name="T:WindowsPhoneMvp.Presenter`1">
+            <summary>
+            Represents a presenter in a Windows Phone Model-View-Presenter application.
+            </summary>
+            <typeparam name="TView">The type of the view.</typeparam>
+        </member>
+        <member name="M:WindowsPhoneMvp.Presenter`1.Transient``1(System.Func{``0})">
+            <summary>
+            Specifies a path to a class that requires transient state on a property
+            </summary>
+            <typeparam name="TClassOn">Type of class that has the transient property</typeparam>
+            <param name="path">Func that returns the class instance, eg. () => View.MyProperty</param>
+            <returns>TransientBuilder which will specify the property</returns>
+        </member>
+        <member name="M:WindowsPhoneMvp.Presenter`1.StartTask``2(System.Action{``1})">
+            <summary>
+             Starts a chooser
+            </summary>
+            <param name="onComplete">Delegate to call when chooser completes</param>
+            <typeparam name="TChooser">Type of chooser to start</typeparam>
+            <typeparam name="TTaskEventArgs">Type of arguments the specified chooser needs</typeparam>
+        </member>
+        <member name="M:WindowsPhoneMvp.Presenter`1.Dispatch(System.Action)">
+            <summary>
+            Dispatches an action to the UI thread if needed
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Presenter`1.OnActivated">
+            <summary>
+            Invoked when the presenter has been activated by the phone
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Presenter`1.OnDeactivated">
+            <summary>
+            Invoked when the presenter is about to be deactivated
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Presenter`1.ReleaseView">
+            <summary>
+            Releases the view.
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Presenter`1.OnNavigationTo(WindowsPhoneMvp.Navigation.NavigationData)">
+            <summary>
+            Called when this presenter has been navigated to
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Presenter`1.OnNavigatedFrom(System.Boolean)">
+            <summary>
+             Called when navigating away from the current presenter
+            </summary>
+            <param name="isExiting">True when the application is navigating to an external destination</param>
+        </member>
+        <member name="M:WindowsPhoneMvp.Presenter`1.OnObscured(System.Boolean)">
+            <summary>
+            This event is raised when the shell chrome is covering the frame.
+            </summary>
+            <param name="isLocked">True if the application is obscured because the phone is now locked</param>
+        </member>
+        <member name="M:WindowsPhoneMvp.Presenter`1.OnUnobscured">
+            <summary>
+            This event is raised when the shell chrome is no longer covering the frame.
+            </summary>
+        </member>
+        <member name="P:WindowsPhoneMvp.Presenter`1.View">
+            <summary>
+            Gets the view instance that this presenter is bound to.
+            </summary>
+        </member>
+        <member name="P:WindowsPhoneMvp.Presenter`1.Messages">
+            <summary>
+            Gets or sets the message bus used for cross presenter messaging.
+            </summary>
+        </member>
+        <member name="P:WindowsPhoneMvp.Presenter`1.Navigate">
+            <summary>
+            Navigation Service
+            </summary>
+        </member>
+        <member name="P:WindowsPhoneMvp.Presenter`1.Params">
+            <summary>
+            Navigation Parameters that have been passed to this Presenter
+            </summary>
+        </member>
+        <member name="P:WindowsPhoneMvp.Presenter`1.TransientState">
+            <summary>
+            Access to the Page level Transient State Bag
+            </summary>
+        </member>
+        <member name="P:WindowsPhoneMvp.Presenter`1.ApplicationTransientState">
+            <summary>
+            Access to the Application level Transient State Bag
+            </summary>
+        </member>
+        <member name="T:WindowsPhoneMvp.Presenter`1.TransientBuilder`1">
+            <summary>
+             Builds transient properties
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Presenter`1.TransientBuilder`1.Property(System.Linq.Expressions.Expression{System.Func{`1,System.Object}})">
+            <summary>
+            Specifies the property to be transiently persisted (on activated and deactivated events)
+            </summary>
+            <param name="property">Path to property, eg. x => x.MyProperty</param>
+        </member>
+        <member name="M:WindowsPhoneMvp.Presenter`2.#ctor(`0)">
+            <summary>
+            Constructs a new Presenter.
+            Because the NavigationService was not passed in, it will be available on View.Load.
+            </summary>
+            <param name="view">The view instance.</param>
+        </member>
+        <member name="M:WindowsPhoneMvp.Presenter`2.Transient(System.Linq.Expressions.Expression{System.Func{`1,System.Object}})">
+            <summary>
+            Specifies the property on the bound model to be transiently persisted (on activated and deactivated events)
+            </summary>
+            <param name="property">Path to property, eg. x => x.MyProperty</param>
+        </member>
+        <member name="P:WindowsPhoneMvp.Presenter`2.Model">
+            <summary>The Model that is bound to the View</summary>
+            <remarks>
+            Provides access to the Model without needing a generic MvpPhoneApplication page
+            and without needing to go through the view
+            </remarks>
+        </member>
+        <member name="M:WindowsPhoneMvp.Util.Property.GetFor(System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Returns the string name of a property, this allows type / member safety
+            </summary>
+            <param name="propertyNameLambda">() => obj.Name</param>
+            <returns>Name</returns>
+        </member>
+        <member name="M:WindowsPhoneMvp.Util.Property.For``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Returns the string name of a property, this allows type / member safety
+            </summary>
+            <typeparam name="T">Type of objects who's properties to evaluate</typeparam>
+            <param name="propertyNameLambda">obj => obj.Name</param>
+            <returns>Name</returns>
+        </member>
+        <member name="M:WindowsPhoneMvp.Util.Property.For``2(System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            Returns the string name of a property, this allows type / member safety
+            </summary>
+            <remarks> 
+            Adding the TRetVal parameter allows more efficient Lambda expressions (doesn't create the Convert(p => p.ID) function)
+            also helps in Generic Type inference
+            </remarks>
+        </member>
+        <member name="T:WindowsPhoneMvp.IView`1">
+            <summary>
+            Represents a class that is a view with a strongly typed view model in a Model-View-Presenter application.
+            </summary>
+            <typeparam name="TModel">The type of the model.</typeparam>
+        </member>
+        <member name="P:WindowsPhoneMvp.IView`1.Model">
+            <summary>
+            Gets the model instance. The default presenter base class
+            (<see cref="T:WindowsPhoneMvp.Presenter`1"/>) initializes this automatically.
+            </summary>
+        </member>
+        <member name="T:WindowsPhoneMvp.Messaging.MessageCoordinator">
+            <summary>
+            A default implementation for cross presenter messaging.
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Messaging.MessageCoordinator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WindowsPhoneMvp.Messaging.MessageCoordinator"/> class.
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Messaging.MessageCoordinator.Publish``1(``0)">
+            <summary>
+            Publishes a message to the bus. Any existing subscriptions to this type,
+            or an assignable type such as a base class or an interface, will be notified
+            at this time.
+            </summary>
+            <typeparam name="TMessage">The type of the message to publish</typeparam>
+            <param name="message">The message to publish</param>
+        </member>
+        <member name="M:WindowsPhoneMvp.Messaging.MessageCoordinator.Subscribe``1(System.Action{``0})">
+            <summary>
+            Registers a subscription to messages of the specified type. Any previously
+            published messages that are valid for this subscription will be raised
+            at this time.
+            </summary>
+            <typeparam name="TMessage">The type of messages to subscribe to</typeparam>
+            <param name="messageReceivedCallback">A callback that will be invoked for each message received. This callback will be invoked once per message.</param>
+        </member>
+        <member name="M:WindowsPhoneMvp.Messaging.MessageCoordinator.Subscribe``1(System.Action{``0},System.Action)">
+            <summary>
+            Registers a subscription to messages of the specified type. Any previously
+            published messages that are valid for this subscription will be raised
+            at this time.
+            </summary>
+            <typeparam name="TMessage">The type of messages to subscribe to</typeparam>
+            <param name="messageReceivedCallback">A callback that will be invoked for each message received. This callback will be invoked once per message.</param>
+            <param name="neverReceivedCallback">A callback that will be invoked if no matching message is ever received. This callback will not be invoked more than once.</param>
+        </member>
+        <member name="M:WindowsPhoneMvp.Messaging.MessageCoordinator.Close">
+            <summary>
+            <para>
+                Closes the message bus, causing any subscribers that have not yet received
+                a message to have their "never received" callback fired.
+            </para>
+            <para>
+                After this method is called, any further calls to <see cref="M:WindowsPhoneMvp.Messaging.IMessageBus.Publish``1(``0)"/> or
+                <see cref="M:WindowsPhoneMvp.Messaging.IMessageBus.Subscribe``1(System.Action{``0})"/> will result in an
+                <see cref="T:System.InvalidOperationException"/>.
+            </para>
+            <para>
+                The <see cref="M:WindowsPhoneMvp.Messaging.IMessageCoordinator.Close"/> method may be called multiple times and must not
+                fail in this scenario.
+            </para>
+            </summary>
+        </member>
+        <member name="T:WindowsPhoneMvp.Phone.MvpPhoneApplicationPage">
+            <summary>
+             A base implementation a WindowsPhone MVP page
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Phone.MvpPhoneApplicationPage.#ctor">
+            <summary>
+             Instantiates a new MvpPhoneApplicationPage
+            </summary>
+        </member>
+        <member name="E:WindowsPhoneMvp.Phone.MvpPhoneApplicationPage.Load">
+            <summary>
+            Occurs at the discretion of the view. For <see cref="T:WindowsPhoneMvp.Phone.MvpUserControl"/>
+            implementations (the most commonly used), this is fired during the
+            Load event.
+            </summary>
+        </member>
+        <member name="P:WindowsPhoneMvp.Phone.MvpPhoneApplicationPage.ThrowExceptionIfNoPresenterBound">
+            <summary>
+            Gets or sets whether the runtime should throw an exception if a presenter is not bound to this control.
+            </summary>
+            <value><c>true</c> if an exception should be thrown (default); otherwise, <c>false</c>.</value>
+        </member>
+        <member name="T:WindowsPhoneMvp.Navigation.INavigationService">
+            <summary>
+            Defines an interface for navigation
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Navigation.INavigationService.ByCommand``1(System.Action{WindowsPhoneMvp.Navigation.NavigationData})">
+            <summary>
+             Generates a navigation command for the specified view
+            </summary>
+            <param name="parameterBuilder">Builds navigation parameters. x => x.With("Name", value)</param>
+            <typeparam name="TView">The view to navigate to</typeparam>
+            <returns>The delegate Navigation Command</returns>
+        </member>
+        <member name="M:WindowsPhoneMvp.Navigation.INavigationService.ByCommand``1">
+            <summary>
+             Generates a navigation command for the specified view
+            </summary>
+            <typeparam name="TView">The view to navigate to</typeparam>
+            <returns>The delegate Navigation Command</returns>
+        </member>
+        <member name="M:WindowsPhoneMvp.Navigation.INavigationService.BackByCommand">
+            <summary>
+             Generates a navigation command to navigate Back to the previous view
+            </summary>
+            <returns>The delegate Navigation Command</returns>
+        </member>
+        <member name="M:WindowsPhoneMvp.Navigation.INavigationService.ToView``1">
+            <summary>
+             Navigates to the specified view
+            </summary>
+            <typeparam name="TView">The view to navigate to</typeparam>
+        </member>
+        <member name="M:WindowsPhoneMvp.Navigation.INavigationService.ToView``1(System.Action{WindowsPhoneMvp.Navigation.NavigationData})">
+            <summary>
+             Navigates to the specified view
+            </summary>
+            <typeparam name="TView">The view to navigate to</typeparam>
+        </member>
+        <member name="M:WindowsPhoneMvp.Navigation.INavigationService.ToView(System.String,System.Action{WindowsPhoneMvp.Navigation.NavigationData})">
+            <summary>
+             Navigates to the specified view
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Navigation.INavigationService.Back">
+            <summary>
+             Navigates Back to the previous view
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Navigation.INavigationService.UriFor``1">
+            <summary>
+             Returns the path to the specified view
+            </summary>
+            <typeparam name="TView">The view to navigate to</typeparam>
+        </member>
+        <member name="M:WindowsPhoneMvp.Navigation.INavigationService.UriFor``1(System.Action{WindowsPhoneMvp.Navigation.NavigationData})">
+            <summary>
+             Returns the path to the specified view
+            </summary>
+            <typeparam name="TView">The view to navigate to</typeparam>
+        </member>
+        <member name="T:WindowsPhoneMvp.Commands.NavigationCommand">
+            <summary>
+            An ICommand that will navigate to a view
+            </summary>
+        </member>
+        <member name="T:WindowsPhoneMvp.Navigation.NavigationData">
+            <summary>
+            Data that will be passed to the destination view upon navigation
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Navigation.NavigationData.#ctor(System.String)">
+            <summary>
+            Create new NavigationData for the specified view
+            </summary>
+            <param name="view">The destination view</param>
+        </member>
+        <member name="M:WindowsPhoneMvp.Navigation.NavigationData.For(System.String)">
+            <summary>
+            Statically create new NavigationData to Navigate to the defined view
+            </summary>
+            <param name="view">The destination view</param>
+            <returns>NavigationData with the specified view</returns>
+        </member>
+        <member name="M:WindowsPhoneMvp.Navigation.NavigationData.From(System.String,System.String,System.String)">
+            <summary>
+            Creates new NavigationData from the specified view and key value data
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Navigation.NavigationData.With(System.String,System.String)">
+            <summary>
+            Navigate with the specified key value data as a parameter
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Navigation.NavigationData.With(System.Collections.Generic.KeyValuePair{System.String,System.String})">
+            <summary>
+            Navigate with the specified key value data as a parameter
+            </summary>
+            <param name="keyValue"></param>
+            <returns></returns>
+        </member>
+        <member name="P:WindowsPhoneMvp.Navigation.NavigationData.Parameters">
+            <summary>
+             Parameters used passed in a navigation event
+            </summary>
+        </member>
+        <member name="P:WindowsPhoneMvp.Navigation.NavigationData.View">
+            <summary>
+            The destination view name
+            </summary>
+        </member>
+        <member name="T:WindowsPhoneMvp.Navigation.NavigationServiceContext">
+            <summary>
+            Hooks into the Navigation events of WindowsPhone7 to perform Presenter Bindings
+            </summary>
+        </member>
+        <member name="T:WindowsPhoneMvp.Navigation.Wp7NavigationService">
+            <summary>
+            Implements the navigation service for WP7
+            </summary>
+        </member>
+        <member name="T:WindowsPhoneMvp.Phone.MvpPhoneApplicationPage`1">
+            <summary>
+            For future use. 
+            When WindowsPhone gets XAML2009 this will be supported and the Model() extension methods will
+            become obsolete
+            </summary>
+        </member>
+        <member name="P:WindowsPhoneMvp.Phone.MvpPhoneApplicationPage`1.Model">
+            <summary>
+            Gets or sets the view model.
+            </summary>
+            <value>The view model.</value>
+        </member>
+        <member name="M:WindowsPhoneMvp.Phone.PageViewHost.#ctor(Microsoft.Phone.Controls.PhoneApplicationPage,WindowsPhoneEssentials.Abstractions.IPhoneApplicationFrame,WindowsPhoneEssentials.Abstractions.IPhoneApplicationService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WindowsPhoneMvp.Phone.PageViewHost"/> class.
+            </summary>
+            <param name="page">The page instance that this view host will be responsible for.</param>
+            <param name="frame"></param>
+        </member>
+        <member name="T:WindowsPhoneMvp.PresenterBindingAttribute">
+            <summary>
+            Used to define bindings between presenters and a views.
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.PresenterBindingAttribute.#ctor(System.Type)">
+            <summary />
+        </member>
+        <member name="P:WindowsPhoneMvp.PresenterBindingAttribute.PresenterType">
+            <summary />
+        </member>
+        <member name="P:WindowsPhoneMvp.PresenterBindingAttribute.ViewType">
+            <summary />
+        </member>
+        <member name="P:WindowsPhoneMvp.PresenterBindingAttribute.BindingMode">
+            <summary />
+        </member>
+        <member name="T:WindowsPhoneMvp.Util.TraceContextAdapter">
+            <summary>
+            A bespoke substitute for the lack of System.Web.Abstractions.TraceContextWrapper.
+            Lazy Microsoft.
+            </summary>
+        </member>
+        <member name="M:WindowsPhoneMvp.Util.TraceContextAdapter.Write(System.Object,System.Func{System.String})">
+            <summary>
+            Writes trace information to the trace log.
+            </summary>
+            <param name="source">The object writing the trace message.</param>
+            <param name="messageCallback">A callback that builds the trace message to write to the log.</param>
+        </member>
+        <member name="M:WindowsPhoneMvp.Util.TraceContextAdapter.Write(System.Type,System.Func{System.String})">
+            <summary>
+            Writes trace information to the trace log.
+            </summary>
+            <param name="sourceType">The type of the object writing the trace message.</param>
+            <param name="messageCallback">A callback that builds the trace message to write to the log.</param>
+        </member>
+        <member name="M:WindowsPhoneMvp.Util.TraceContextAdapter.Write(System.Type,System.Func{System.Collections.Generic.IEnumerable{System.String}})">
+            <summary>
+            Writes trace information to the trace log.
+            </summary>
+            <param name="sourceType">The type of the object writing the trace message.</param>
+            <param name="messagesCallback">A callback that builds a series of trace messages to write to the log.</param>
+        </member>
+    </members>
+</doc>
