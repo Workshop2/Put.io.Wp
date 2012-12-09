@@ -13,14 +13,13 @@ namespace Put.io.Api.Rest
             UrlHelper = new UrlHelperFactory().GetUrlDetails();
         }
 
-        protected RestClient GetRestClient()
+        private IRestClient _restClient;
+        protected IRestClient RestClient
         {
-            return new RestClient(UrlHelper.ApiUrl);
-        }
-
-        protected void AddAuthToken(RestRequest request)
-        {
-            request.AddParameter("oauth_token", AuthKey);
+            get
+            {
+                return _restClient ?? (_restClient = new RestClient(UrlHelper.ApiUrl) { Authenticator = new OAuth2UriQueryParameterAuthenticator(AuthKey) });
+            }
         }
     }
 }

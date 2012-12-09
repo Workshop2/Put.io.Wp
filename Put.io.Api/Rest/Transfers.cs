@@ -17,13 +17,9 @@ namespace Put.io.Api.Rest
 
         public void ListTransfers(Action<IRestResponse<TransferList>> callback)
         {
-            var client = GetRestClient();
-
             var request = new RestRequest(UrlHelper.ListTransfers(), Method.GET);
 
-            AddAuthToken(request);
-
-            client.ExecuteAsync(request, callback);
+            RestClient.ExecuteAsync(request, callback);
         }
     }
 }

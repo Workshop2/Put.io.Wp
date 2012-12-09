@@ -104,7 +104,9 @@
       <DependentUpon>AppResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Tests\AuthenticationTests\CallbackHandlerTests.cs" />
-    <Compile Include="Tests\Rest\ListFilesTests.cs" />
+    <Compile Include="Tests\Rest\AccountTests.cs" />
+    <Compile Include="Tests\Rest\FilesTests.cs" />
+    <Compile Include="Tests\Rest\TransferTests.cs" />
     <Compile Include="Tests\SpecsFor.cs" />
     <Compile Include="Tests\UrlHelperTests\AuthenticateUrl.cs" />
   </ItemGroup>

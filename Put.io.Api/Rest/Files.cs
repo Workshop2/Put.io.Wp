@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Put.io.Api.ResponseObjects;
 using Put.io.Api.ResponseObjects.Files;
 using RestSharp;
 
@@ -23,36 +24,74 @@ namespace Put.io.Api.Rest
         /// <param name="callback">The callback method to use once completed</param>
         public void ListFiles(int? parentID, Action<IRestResponse<FileList>> callback)
         {
-            var client = GetRestClient();
-
             var request = new RestRequest(UrlHelper.ListFiles(), Method.GET);
-
-            AddAuthToken(request);
-
+            
             if (parentID.HasValue && parentID.Value > 0)
                 request.AddParameter("parent_id", parentID.Value);
 
-            client.ExecuteAsync(request, callback);
+            RestClient.ExecuteAsync(request, callback);
         }
 
+        /// <summary>
+        /// Gets a specific file by ID. This method is Async
+        /// </summary>
+        /// <param name="fileID">Id of the required file</param>
+        /// <param name="callback">The callback method to use once completed</param>
         public void GetFile(int fileID, Action<IRestResponse<GetFileResponse>> callback)
         {
-            var client = GetRestClient();
-
             var request = new RestRequest(UrlHelper.GetFile(), Method.GET);
-
-            AddAuthToken(request);
-
+            
             request.AddUrlSegment("id", fileID.ToString(CultureInfo.InvariantCulture));
 
-            client.ExecuteAsync(request, callback);
+            RestClient.ExecuteAsync(request, callback);
         }
 
-        //Methods to implement:
-        // GET /files/<id>          (gets a given file by id)
-        // POST /files/<id>/mp4     (begins MP4 conversion)
-        // GET /files/<id>/mp4      (gets status of mp4 conversion)
-        // GET /files/<id>/download (returns URL in header to the file to download)
+        /// <summary>
+        /// Will initiate a file to be converted
+        /// </summary>
+        /// <param name="fileID">Id of the file to convert</param>
+        /// <param name="callback">The callback method to use once completed</param>
+        public void FileToMp4(int fileID, Action<IRestResponse<BaseObject>> callback)
+        {
+            var request = GetMp4Request(fileID, Method.POST);
+
+            RestClient.ExecuteAsync(request, callback);
+        }
+        
+        /// <summary>
+        /// Gets the conversion status of an mp4 file
+        /// </summary>
+        /// <param name="fileID">Id of the file to check</param>
+        /// <param name="callback">The callback method to use once completed</param>
+        public void Mp4Status(int fileID, Action<IRestResponse<Mp4>> callback)
+        {
+            var request = GetMp4Request(fileID, Method.GET);
+
+            RestClient.ExecuteAsync(request, callback);
+        }
+
+        private IRestRequest GetMp4Request(int fileID, Method method)
+        {
+            var request = new RestRequest(UrlHelper.FileMp4(), method);
+            
+            request.AddUrlSegment("id", fileID.ToString(CultureInfo.InvariantCulture));
+
+            return request;
+        }
+
+        /// <summary>
+        /// Gets the URI of the specified file to download
+        /// </summary>
+        /// <param name="fileID">Id of file to download</param>
+        /// <param name="callback">The callback method to use once completed</param>
+        public void DownloadFile(int fileID, Action<IRestResponse> callback)
+        {
+            var request = new RestRequest(UrlHelper.DownloadFile(), Method.HEAD);
+            
+            request.AddUrlSegment("id", fileID.ToString(CultureInfo.InvariantCulture));
+
+            RestClient.ExecuteAsync(request, callback);
+        }
 
         //Non-critical api calls
         // GET /files/search/<query>/page/<page_no>

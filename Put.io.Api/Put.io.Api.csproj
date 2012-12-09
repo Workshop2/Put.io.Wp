@@ -94,6 +94,7 @@
     <Compile Include="ResponseObjects\Files\File.cs" />
     <Compile Include="ResponseObjects\Files\FileList.cs" />
     <Compile Include="ResponseObjects\Files\GetFileResponse.cs" />
+    <Compile Include="ResponseObjects\Files\Mp4.cs" />
     <Compile Include="ResponseObjects\Transfers\Transfer.cs" />
     <Compile Include="ResponseObjects\Transfers\TransferList.cs" />
     <Compile Include="Rest\Account.cs" />

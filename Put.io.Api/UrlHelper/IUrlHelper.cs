@@ -4,13 +4,15 @@
     {
         int ClientID { get; }
         string CallbackUrl { get; }
-        string ApiUrl { get; set; }
+        string ApiUrl { get; }
 
         string AuthenticateUrl();
 
         //File API
         string ListFiles();
         string GetFile();
+        string FileMp4();
+        string DownloadFile();
 
         //Transfer API
         string ListTransfers();

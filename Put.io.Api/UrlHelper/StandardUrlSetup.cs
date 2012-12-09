@@ -7,7 +7,7 @@ namespace Put.io.Api.UrlHelper
         private string Secret { get; set; }
         public int ClientID { get; private set; }
         public string CallbackUrl { get; private set; }
-        public string ApiUrl { get; set; }
+        public string ApiUrl { get; private set; }
 
         public StandardUrlSetup()
         {
@@ -41,6 +41,16 @@ namespace Put.io.Api.UrlHelper
         public string GetFile()
         {
             return "/files/{id}";
+        }
+
+        public string FileMp4()
+        {
+            return "/files/{id}/mp4";
+        }
+
+        public string DownloadFile()
+        {
+            return "/files/{id}/download";
         }
 
         public string ListTransfers()

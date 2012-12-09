@@ -16,13 +16,9 @@ namespace Put.io.Api.Rest
 
         public void GetAccountInfo(Action<IRestResponse<ResponseObjects.Account.AccountInfo>> callback)
         {
-            var client = GetRestClient();
-
             var request = new RestRequest(UrlHelper.AccountInfo(), Method.GET);
 
-            AddAuthToken(request);
-
-            client.ExecuteAsync(request, callback);
+            RestClient.ExecuteAsync(request, callback);
         }
     }
 }

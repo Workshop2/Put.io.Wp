@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Put.io.Api.ResponseObjects
 {
-    public abstract class BaseObject
+    public class BaseObject
     {
         public string status { get; set; }
         public string error_type { get; set; }
