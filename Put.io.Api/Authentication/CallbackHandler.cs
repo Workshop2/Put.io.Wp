@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Linq;
 
 namespace Put.io.Api.Authentication
 {
     public class CallbackHandler
     {
-        private const string AccessToken = "/#access_token=";
+        private readonly string[] _accessToken = { "/#access_token=", "/#token=" };
 
          public CallbackResult ParseAccessToken(string url)
          {
@@ -13,10 +14,11 @@ namespace Put.io.Api.Authentication
              if (url.StartsWith(callbackUrl, StringComparison.InvariantCultureIgnoreCase))
              {
                  var trailing = url.Substring(url.IndexOf(callbackUrl, StringComparison.InvariantCultureIgnoreCase) + callbackUrl.Length);
+                 var toFilter = ContainsAccessToken(trailing);
 
-                 if (trailing.StartsWith(AccessToken, StringComparison.InvariantCultureIgnoreCase))
+                 if (!string.IsNullOrEmpty(toFilter))
                  {
-                     var token = trailing.Substring(trailing.IndexOf(AccessToken, StringComparison.InvariantCultureIgnoreCase) + AccessToken.Length);
+                     var token = trailing.Substring(trailing.IndexOf(toFilter, StringComparison.InvariantCultureIgnoreCase) + toFilter.Length);
 
                      return new CallbackResult {Status = CallbackStatus.Success, Token = token};
                  }
@@ -24,5 +26,10 @@ namespace Put.io.Api.Authentication
 
              return new CallbackResult {Status = CallbackStatus.Failed}; 
          }
+
+        private string ContainsAccessToken(string trailing)
+        {
+            return _accessToken.FirstOrDefault(x => trailing.StartsWith(x, StringComparison.InvariantCultureIgnoreCase));
+        }
     }
 }

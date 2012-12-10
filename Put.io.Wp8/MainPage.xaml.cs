@@ -7,6 +7,8 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Put.io.Api.Authentication;
+using Put.io.Core.Models;
 using Put.io.Wp8.Resources;
 using Put.io.Wp8.ViewModels;
 
@@ -14,6 +16,8 @@ namespace Put.io.Wp8
 {
     public partial class MainPage : PhoneApplicationPage
     {
+        public File TestFile { get; set; }
+
         // Constructor
         public MainPage()
         {
@@ -24,6 +28,33 @@ namespace Put.io.Wp8
 
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
+
+            TestFile = new File() {FileID = 234};
+
+            Browser.Navigating += Browser_Navigating;
+            var urlHelper = new Api.UrlHelper.UrlHelperFactory().GetUrlDetails();
+            Browser.Navigate(new Uri(urlHelper.AuthenticateUrl(), UriKind.Absolute));
+            MainLongListSelector.ItemsSource = new List<File>
+                                                   {
+                                                       TestFile
+                                                   };
+        }
+
+        private void Browser_Navigating(object sender, NavigatingEventArgs e)
+        {
+            var url = e.Uri.ToString();
+            var callbackHandler = new CallbackHandler();
+            var result = callbackHandler.ParseAccessToken(url);
+
+            if (result.Status == CallbackStatus.Success)
+            {
+                Browser.Visibility = Visibility.Collapsed;
+                
+                MessageBox.Show(result.Token);
+                e.Cancel = true;
+
+                TestFile.FileID = 22222;
+            }
         }
 
         // Load data for the ViewModel Items
@@ -39,14 +70,14 @@ namespace Put.io.Wp8
         private void MainLongListSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // If selected item is null (no selection) do nothing
-            if (MainLongListSelector.SelectedItem == null)
-                return;
+            //if (MainLongListSelector.SelectedItem == null)
+            //    return;
 
-            // Navigate to the new page
-            NavigationService.Navigate(new Uri("/DetailsPage.xaml?selectedItem=" + (MainLongListSelector.SelectedItem as ItemViewModel).ID, UriKind.Relative));
+            //// Navigate to the new page
+            //NavigationService.Navigate(new Uri("/DetailsPage.xaml?selectedItem=" + (MainLongListSelector.SelectedItem as ItemViewModel).ID, UriKind.Relative));
 
-            // Reset selected item to null (no selection)
-            MainLongListSelector.SelectedItem = null;
+            //// Reset selected item to null (no selection)
+            //MainLongListSelector.SelectedItem = null;
         }
 
         // Sample code for building a localized ApplicationBar

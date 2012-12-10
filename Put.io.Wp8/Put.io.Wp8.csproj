@@ -171,6 +171,10 @@
       <Project>{A2A19BA8-C48C-4F66-8D95-143ACF8F9033}</Project>
       <Name>Put.io.Api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Put.io.Core\Put.io.Core.csproj">
+      <Project>{68BF44E5-903A-43B2-85CC-C2271D8E6842}</Project>
+      <Name>Put.io.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Phone.Controls.Toolkit">
