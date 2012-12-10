@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Resources;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Put.io.Core.ViewModels;
 using Put.io.Wp8.Resources;
-using Put.io.Wp8.ViewModels;
 
 namespace Put.io.Wp8
 {
@@ -85,11 +84,12 @@ namespace Put.io.Wp8
         // This code will not execute when the application is first launched
         private void Application_Activated(object sender, ActivatedEventArgs e)
         {
+            //TODO: SIMON
             // Ensure that application state is restored appropriately
-            if (!App.ViewModel.IsDataLoaded)
-            {
-                App.ViewModel.LoadData();
-            }
+            //if (!App.ViewModel.IsDataLoaded)
+            //{
+            //    App.ViewModel.LoadData();
+            //}
         }
 
         // Code to execute when the application is deactivated (sent to background)

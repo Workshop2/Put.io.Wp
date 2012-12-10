@@ -9,7 +9,7 @@
         public double current_ratio { get; set; }
         public long size { get; set; }
         public int up_speed { get; set; }
-        public long id { get; set; }
+        public int id { get; set; }
         public string source { get; set; }
         public string subscription_id { get; set; }
         public string status_message { get; set; }

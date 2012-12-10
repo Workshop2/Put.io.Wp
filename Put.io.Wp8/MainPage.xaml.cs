@@ -7,16 +7,14 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using Put.io.Api.Authentication;
 using Put.io.Core.Models;
+using Put.io.Core.ViewModels;
 using Put.io.Wp8.Resources;
-using Put.io.Wp8.ViewModels;
 
 namespace Put.io.Wp8
 {
     public partial class MainPage : PhoneApplicationPage
     {
-        public File TestFile { get; set; }
 
         // Constructor
         public MainPage()
@@ -29,49 +27,45 @@ namespace Put.io.Wp8
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
 
-            TestFile = new File() {FileID = 234};
-
-            Browser.Navigating += Browser_Navigating;
-            var urlHelper = new Api.UrlHelper.UrlHelperFactory().GetUrlDetails();
-            Browser.Navigate(new Uri(urlHelper.AuthenticateUrl(), UriKind.Absolute));
-            MainLongListSelector.ItemsSource = new List<File>
-                                                   {
-                                                       TestFile
-                                                   };
+            //Browser.Navigating += Browser_Navigating;
+            //var urlHelper = new Api.UrlHelper.UrlHelperFactory().GetUrlDetails();
+            //Browser.Navigate(new Uri(urlHelper.AuthenticateUrl(), UriKind.Absolute));
         }
 
-        private void Browser_Navigating(object sender, NavigatingEventArgs e)
-        {
-            var url = e.Uri.ToString();
-            var callbackHandler = new CallbackHandler();
-            var result = callbackHandler.ParseAccessToken(url);
+        //private void Browser_Navigating(object sender, NavigatingEventArgs e)
+        //{
+        //    var url = e.Uri.ToString();
+        //    var callbackHandler = new CallbackHandler();
+        //    var result = callbackHandler.ParseAccessToken(url);
 
-            if (result.Status == CallbackStatus.Success)
-            {
-                Browser.Visibility = Visibility.Collapsed;
+        //    if (result.Status == CallbackStatus.Success)
+        //    {
+        //        Browser.Visibility = Visibility.Collapsed;
                 
-                MessageBox.Show(result.Token);
-                e.Cancel = true;
-
-                TestFile.FileID = 22222;
-            }
-        }
+        //        MessageBox.Show(result.Token);
+        //        e.Cancel = true;
+        //    }
+        //}
 
         // Load data for the ViewModel Items
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (!App.ViewModel.IsDataLoaded)
-            {
-                App.ViewModel.LoadData();
-            }
+            //if (!App.ViewModel.IsDataLoaded)
+            //{
+            //    App.ViewModel.LoadData();
+            //}
         }
 
         // Handle selection changed on LongListSelector
         private void MainLongListSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            var selector = sender as LongListSelector;
+
             // If selected item is null (no selection) do nothing
-            //if (MainLongListSelector.SelectedItem == null)
-            //    return;
+            if (selector == null  || selector.SelectedItem == null)
+                return;
+
+            App.ViewModel.FileCollection.SelectedFile = (FileViewModel)selector.SelectedItem;
 
             //// Navigate to the new page
             //NavigationService.Navigate(new Uri("/DetailsPage.xaml?selectedItem=" + (MainLongListSelector.SelectedItem as ItemViewModel).ID, UriKind.Relative));
