@@ -19,10 +19,11 @@ namespace Put.io.Wp8
         // Constructor
         public MainPage()
         {
+
             InitializeComponent();
 
             // Set the data context of the LongListSelector control to the sample data
-            DataContext = App.ViewModel;
+            App.ViewModel = (MainViewModel) DataContext;
 
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();

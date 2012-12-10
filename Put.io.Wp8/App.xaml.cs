@@ -23,11 +23,9 @@ namespace Put.io.Wp8
             get
             {
                 // Delay creation of the view model until necessary
-                if (viewModel == null)
-                    viewModel = new MainViewModel();
-
-                return viewModel;
+                return viewModel ?? (viewModel = new MainViewModel());
             }
+            set { viewModel = value; }
         }
 
         /// <summary>
