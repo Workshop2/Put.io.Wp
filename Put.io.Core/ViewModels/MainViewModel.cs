@@ -1,20 +1,7 @@
-
 using Put.io.Core.Common;
 
 namespace Put.io.Core.ViewModels
 {
-    /// <summary>
-    /// This class contains properties that the main View can data bind to.
-    /// <para>
-    /// Use the <strong>mvvminpc</strong> snippet to add bindable properties to this ViewModel.
-    /// </para>
-    /// <para>
-    /// You can also use Blend to data bind with the tool's support.
-    /// </para>
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
-    /// </summary>
     public class MainViewModel : ViewModelBase
     {
         /// <summary>
@@ -22,19 +9,17 @@ namespace Put.io.Core.ViewModels
         /// </summary>
         public MainViewModel()
         {
-            //if (IsInDesignMode)
-            //{
-            //    // Code runs in Blend --> create design time data.
-            //}
-            //else
-            //{
-            //    // Code runs "for real"
-            //}
-
             _fileCollection = new FileCollectionViewModel();
             _transferCollection = new TransferCollectionViewModel();
         }
 
+        protected override void OnLoadData()
+        {
+            _fileCollection.LoadData();
+            _transferCollection.LoadData();
+        }
+
+        #region Properties
         private FileCollectionViewModel _fileCollection;
         public FileCollectionViewModel FileCollection
         {
@@ -60,5 +45,6 @@ namespace Put.io.Core.ViewModels
                 OnPropertyChanged();
             }
         }
+        #endregion
     }
 }

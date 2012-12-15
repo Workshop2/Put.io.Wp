@@ -1,6 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Put.io.Core.Annotations;
+using Put.io.Core.ViewModels;
 
 namespace Put.io.Core.Models
 {
@@ -110,6 +112,7 @@ namespace Put.io.Core.Models
                 OnPropertyChanged();
             }
         }
+
         #endregion
     }
 }

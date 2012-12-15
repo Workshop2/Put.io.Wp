@@ -1,5 +1,7 @@
-﻿using Put.io.Core.Common;
+﻿using System.Collections.ObjectModel;
+using Put.io.Core.Common;
 using Put.io.Core.Models;
+using System.Linq;
 
 namespace Put.io.Core.ViewModels
 {
@@ -17,5 +19,25 @@ namespace Put.io.Core.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        private ObservableCollection<FileViewModel> _children;
+        public ObservableCollection<FileViewModel> Children
+        {
+            get { return _children; }
+            set
+            {
+                if (_children == value) return;
+
+                foreach (var fileViewModel in value)
+                {
+                    fileViewModel.Parent = this;
+                }
+
+                _children = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public FileViewModel Parent { get; set; } 
     }
 }

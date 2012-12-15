@@ -23,7 +23,7 @@ namespace Put.io.Wp8
             InitializeComponent();
 
             // Set the data context of the LongListSelector control to the sample data
-            App.ViewModel = (MainViewModel) DataContext;
+            DataContext = App.ViewModel;
 
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
@@ -42,7 +42,7 @@ namespace Put.io.Wp8
         //    if (result.Status == CallbackStatus.Success)
         //    {
         //        Browser.Visibility = Visibility.Collapsed;
-                
+
         //        MessageBox.Show(result.Token);
         //        e.Cancel = true;
         //    }
@@ -51,28 +51,46 @@ namespace Put.io.Wp8
         // Load data for the ViewModel Items
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            //if (!App.ViewModel.IsDataLoaded)
-            //{
-            //    App.ViewModel.LoadData();
-            //}
+            if (!App.ViewModel.IsDataLoaded)
+            {
+                App.ViewModel.LoadData();
+            }
         }
 
         // Handle selection changed on LongListSelector
-        private void MainLongListSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void FileSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var selector = sender as LongListSelector;
 
             // If selected item is null (no selection) do nothing
-            if (selector == null  || selector.SelectedItem == null)
+            if (selector == null || selector.SelectedItem == null)
                 return;
 
-            App.ViewModel.FileCollection.SelectedFile = (FileViewModel)selector.SelectedItem;
+            var selected = selector.SelectedItem as FileViewModel;
+
+            if (selected == null)
+                return;
+
+            App.ViewModel.FileCollection.SelectedFile = selected;
+            App.ViewModel.FileCollection.ExpandFile(selected);
 
             //// Navigate to the new page
             //NavigationService.Navigate(new Uri("/DetailsPage.xaml?selectedItem=" + (MainLongListSelector.SelectedItem as ItemViewModel).ID, UriKind.Relative));
 
             //// Reset selected item to null (no selection)
             //MainLongListSelector.SelectedItem = null;
+        }
+
+        protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
+        {
+            if (Pivot.SelectedItem == FilesPivot)
+            {
+                if (App.ViewModel.FileCollection.NavigateUp())
+                {
+                    Files.SelectedItem = null;
+                    e.Cancel = true;
+                }
+            }
         }
 
         // Sample code for building a localized ApplicationBar

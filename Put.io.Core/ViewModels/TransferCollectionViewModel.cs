@@ -21,15 +21,19 @@ namespace Put.io.Core.ViewModels
                     new TransferViewModel{Transfer = new Transfer{Name = "Transfer 5", PercentComplete = 23, Size = 3333443, TransferID = 5}}
                 };
             }
-            else
-            {
-                var rester = new Api.Rest.Transfers("PUTIO_KEY");
+        }
 
-                rester.ListTransfers(response =>
-                {
-                    Transfers = response.Data.ToModelList().ToObservableCollection();
-                });
-            }
+        protected override void OnLoadData()
+        {
+            if (IsInDesignMode)
+                return;
+
+            var rester = new Transfers("PUTIO_KEY");
+
+            rester.ListTransfers(response =>
+            {
+                Transfers = response.Data.ToModelList().ToObservableCollection();
+            });
         }
 
         private ObservableCollection<TransferViewModel> _transfers;

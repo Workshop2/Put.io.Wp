@@ -9,10 +9,29 @@ namespace Put.io.Core.Common
     /// </summary>
     public abstract class ViewModelBase : GalaSoft.MvvmLight.ViewModelBase
     {
+        public bool IsDataLoaded { get; private set; }
+
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             RaisePropertyChanged(propertyName);
+        }
+
+        public void LoadData()
+        {
+            if (IsDataLoaded)
+                return;
+
+            OnLoadData();
+
+            IsDataLoaded = true;
+        }
+
+        /// <summary>
+        /// Override this method to initialise the object. This will only occur once
+        /// </summary>
+        protected virtual void OnLoadData()
+        {
         }
     }
 }
