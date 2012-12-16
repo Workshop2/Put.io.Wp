@@ -50,7 +50,7 @@ namespace Put.io.Tests.Tests.Rest
         {
             var rester = new Api.Rest.Files("PUTIO_KEY");
 
-            rester.Mp4Status(47022459, response =>
+            rester.Mp4Status(11908901, response =>
             {
                 Assert.IsNotNull(response);
                 Assert.IsNotNull(response.Data);
@@ -68,7 +68,7 @@ namespace Put.io.Tests.Tests.Rest
         {
             var rester = new Api.Rest.Files("PUTIO_KEY");
 
-            rester.FileToMp4(47022459, response =>
+            rester.FileToMp4(11908901, response =>
             {
                 Assert.IsNotNull(response);
                 Assert.IsNotNull(response.Data);
