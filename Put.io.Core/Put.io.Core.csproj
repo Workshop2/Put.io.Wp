@@ -83,6 +83,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Authentication\CallbackHandler.cs" />
+    <Compile Include="Authentication\CallbackResult.cs" />
     <Compile Include="Common\ViewModelBase.cs" />
     <Compile Include="Extensions\ApiExtensions.cs" />
     <Compile Include="Extensions\IEnuermableExtensions.cs" />
@@ -99,9 +101,7 @@
     <Compile Include="ViewModels\TransferViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>

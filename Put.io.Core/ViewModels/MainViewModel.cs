@@ -1,3 +1,4 @@
+using Put.io.Api.UrlHelper;
 using Put.io.Core.Common;
 using Put.io.Core.ProgressTracking;
 
@@ -73,6 +74,17 @@ namespace Put.io.Core.ViewModels
                 _transferCollection = value;
                 OnPropertyChanged();
             }
+        }
+
+        private IUrlHelper _urlSetup;
+        private IUrlHelper UrlSetup
+        {
+            get { return _urlSetup ?? (_urlSetup = new UrlHelperFactory().GetUrlDetails()); }
+        }
+
+        public string AuthenticateUrl()
+        {
+            return UrlSetup.AuthenticateUrl();
         }
         #endregion
 

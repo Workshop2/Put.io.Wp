@@ -4,12 +4,14 @@ using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Put.io.Core.Models;
 using Put.io.Core.ViewModels;
 using Put.io.Wp8.Resources;
+using Put.io.Wp8.UserControls;
 
 namespace Put.io.Wp8
 {
@@ -134,5 +136,20 @@ namespace Put.io.Wp8
         }
 
         #endregion
+
+        private void ApplicationBarMenuItem_OnClick(object sender, EventArgs e)
+        {
+            const int vertOffset = 48;
+            const int horizOffset = 40;
+            var appHost = Application.Current.Host.Content;
+
+            var loginWindow = new Popup();
+            var userControl = new ApiKeyFetcher { Width = appHost.ActualWidth - (horizOffset * 2), Height = appHost.ActualHeight - (vertOffset * 2) - 60 };
+
+            loginWindow.Child = userControl;
+            loginWindow.VerticalOffset = vertOffset;
+            loginWindow.HorizontalOffset = horizOffset;
+            loginWindow.IsOpen = true;
+        }
     }
 }
