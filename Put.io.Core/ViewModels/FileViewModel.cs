@@ -38,6 +38,14 @@ namespace Put.io.Core.ViewModels
             }
         }
 
-        public FileViewModel Parent { get; set; } 
+        public FileViewModel Parent { get; set; }
+
+        public bool IsExpandable
+        {
+            get
+            {
+                return File.ContentType == ContentType.Directory;
+            }
+        }
     }
 }

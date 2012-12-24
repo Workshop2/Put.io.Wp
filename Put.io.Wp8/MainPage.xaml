@@ -18,6 +18,9 @@
     <phone:PhoneApplicationPage.DataContext>
         <viewModels:MainViewModel/>
     </phone:PhoneApplicationPage.DataContext>
+    <shell:SystemTray.ProgressIndicator>
+        <shell:ProgressIndicator IsIndeterminate="True" Text="Loading..." />
+    </shell:SystemTray.ProgressIndicator>
 
     <phone:Pivot x:Name="Pivot">
         <phone:PivotItem Header="Files" x:Name="FilesPivot">

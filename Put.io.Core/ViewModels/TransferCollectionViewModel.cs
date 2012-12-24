@@ -3,6 +3,7 @@ using Put.io.Api.Rest;
 using Put.io.Core.Common;
 using Put.io.Core.Models;
 using Put.io.Core.Extensions;
+using Put.io.Core.ProgressTracking;
 
 namespace Put.io.Core.ViewModels
 {
@@ -23,6 +24,12 @@ namespace Put.io.Core.ViewModels
             }
         }
 
+        public TransferCollectionViewModel(ProgressTracker tracker)
+            : this()
+        {
+            ProgressTracker = tracker;
+        }
+
         protected override void OnLoadData()
         {
             if (IsInDesignMode)
@@ -35,6 +42,9 @@ namespace Put.io.Core.ViewModels
                 Transfers = response.Data.ToModelList().ToObservableCollection();
             });
         }
+
+        #region Properties
+        private ProgressTracker ProgressTracker { get; set; }
 
         private ObservableCollection<TransferViewModel> _transfers;
         public ObservableCollection<TransferViewModel> Transfers
@@ -61,5 +71,6 @@ namespace Put.io.Core.ViewModels
                 OnPropertyChanged();
             }
         }
+        #endregion
     }
 }

@@ -89,6 +89,7 @@
     <Compile Include="Models\ContentType.cs" />
     <Compile Include="Models\File.cs" />
     <Compile Include="Models\Transfer.cs" />
+    <Compile Include="ProgressTracking\ProgressTracker.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\FileCollectionViewModel.cs" />

@@ -55,6 +55,13 @@ namespace Put.io.Wp8
             {
                 App.ViewModel.LoadData();
             }
+
+            App.ViewModel.OnWorkingStatusChanged += ViewModel_OnWorkingStatusChanged;
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            App.ViewModel.OnWorkingStatusChanged -= ViewModel_OnWorkingStatusChanged;
         }
 
         // Handle selection changed on LongListSelector
@@ -71,8 +78,10 @@ namespace Put.io.Wp8
             if (selected == null)
                 return;
 
-            App.ViewModel.FileCollection.SelectedFile = selected;
-            App.ViewModel.FileCollection.ExpandFile(selected);
+            App.ViewModel.SelectFile(selected);
+
+            //Clear selection to avoid problems down the road
+            selector.SelectedItem = null;
 
             //// Navigate to the new page
             //NavigationService.Navigate(new Uri("/DetailsPage.xaml?selectedItem=" + (MainLongListSelector.SelectedItem as ItemViewModel).ID, UriKind.Relative));
@@ -108,5 +117,22 @@ namespace Put.io.Wp8
         //    ApplicationBarMenuItem appBarMenuItem = new ApplicationBarMenuItem(AppResources.AppBarMenuItemText);
         //    ApplicationBar.MenuItems.Add(appBarMenuItem);
         //}
+
+        #region ProgressBar
+
+        private ProgressIndicator ProgressBar
+        {
+            get
+            {
+                return SystemTray.ProgressIndicator;
+            }
+        }
+
+        private void ViewModel_OnWorkingStatusChanged(bool isWorking)
+        {
+            ProgressBar.IsVisible = isWorking;
+        }
+
+        #endregion
     }
 }

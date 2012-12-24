@@ -1,7 +1,10 @@
 using Put.io.Core.Common;
+using Put.io.Core.ProgressTracking;
 
 namespace Put.io.Core.ViewModels
 {
+    public delegate void WorkingStatusChangedHandler(bool isWorking);
+
     public class MainViewModel : ViewModelBase
     {
         /// <summary>
@@ -9,8 +12,19 @@ namespace Put.io.Core.ViewModels
         /// </summary>
         public MainViewModel()
         {
-            _fileCollection = new FileCollectionViewModel();
-            _transferCollection = new TransferCollectionViewModel();
+            if (IsInDesignMode)
+            {
+                _fileCollection = new FileCollectionViewModel();
+                _transferCollection = new TransferCollectionViewModel();
+            }
+            else
+            {
+                Tracker = new ProgressTracker();
+                Tracker.OnProgressChanged += Tracker_OnProgressChanged;
+
+                _fileCollection = new FileCollectionViewModel(Tracker);
+                _transferCollection = new TransferCollectionViewModel(Tracker);
+            }
         }
 
         protected override void OnLoadData()
@@ -19,7 +33,22 @@ namespace Put.io.Core.ViewModels
             _transferCollection.LoadData();
         }
 
+        public void SelectFile(FileViewModel selected)
+        {
+            if (selected.IsExpandable)
+            {
+                FileCollection.SelectedFile = selected;
+                FileCollection.ExpandFile(selected);
+                return;
+            }
+
+            //TODO: IsOpenable
+
+        }
+
         #region Properties
+        private ProgressTracker Tracker { get; set; }
+
         private FileCollectionViewModel _fileCollection;
         public FileCollectionViewModel FileCollection
         {
@@ -45,6 +74,28 @@ namespace Put.io.Core.ViewModels
                 OnPropertyChanged();
             }
         }
+        #endregion
+
+        #region Events
+
+        public event WorkingStatusChangedHandler OnWorkingStatusChanged;
+
+        private void WorkingStatusChanged(bool isWorking)
+        {
+            if (OnWorkingStatusChanged != null)
+                OnWorkingStatusChanged(isWorking);
+        }
+
+        #endregion
+
+        #region ProgressMonitor
+        
+        private void Tracker_OnProgressChanged(bool isWorking)
+        {
+            WorkingStatusChanged(isWorking);
+        }
+
+
         #endregion
     }
 }

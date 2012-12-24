@@ -2,6 +2,7 @@
 using Put.io.Core.Common;
 using Put.io.Core.Models;
 using Put.io.Core.Extensions;
+using Put.io.Core.ProgressTracking;
 
 namespace Put.io.Core.ViewModels
 {
@@ -24,19 +25,20 @@ namespace Put.io.Core.ViewModels
             }
         }
 
-        #region Methods
-
-        private Api.Rest.Files _restApi;
-        private Api.Rest.Files RestApi
+        public FileCollectionViewModel(ProgressTracker tracker)
+            : this()
         {
-            //TODO: Use proper API key
-            get { return _restApi ?? (_restApi = new Api.Rest.Files("PUTIO_KEY")); }
+            ProgressTracker = tracker;
         }
+
+        #region Methods
 
         protected override void OnLoadData()
         {
             if (IsInDesignMode)
                 return;
+
+            var transactionID = ProgressTracker.StartNewTransaction();
 
             RestApi.ListFiles(null, response =>
             {
@@ -45,6 +47,8 @@ namespace Put.io.Core.ViewModels
 
                 //These root items will then be displayed as default
                 CurrentFileList = AllFiles;
+
+                ProgressTracker.CompleteTransaction(transactionID);
             });
         }
 
@@ -59,10 +63,14 @@ namespace Put.io.Core.ViewModels
                 return;
             }
 
+            var transactionID = ProgressTracker.StartNewTransaction();
+
             RestApi.ListFiles(file.File.FileID, response =>
             {
                 file.Children = response.Data.ToModelList().ToObservableCollection();
-                CurrentFileList = file.Children;                           
+                CurrentFileList = file.Children;
+
+                ProgressTracker.CompleteTransaction(transactionID);                        
             });
         }
 
@@ -83,6 +91,7 @@ namespace Put.io.Core.ViewModels
 
         #region Properties
         private ObservableCollection<FileViewModel> AllFiles { get; set; }
+        private ProgressTracker ProgressTracker { get; set; }
 
         private ObservableCollection<FileViewModel> _currentFileList;
         public ObservableCollection<FileViewModel> CurrentFileList
@@ -108,6 +117,13 @@ namespace Put.io.Core.ViewModels
                 _selectedFile = value;
                 OnPropertyChanged();
             }
+        }
+
+        private Api.Rest.Files _restApi;
+        private Api.Rest.Files RestApi
+        {
+            //TODO: Use proper API key
+            get { return _restApi ?? (_restApi = new Api.Rest.Files("PUTIO_KEY")); }
         }
         #endregion
     }
