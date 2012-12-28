@@ -3,10 +3,11 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Phone.Controls;
 using Put.io.Core.Authentication;
+using Put.io.Wp8.UserControls.Popups;
 
 namespace Put.io.Wp8.UserControls
 {
-    public partial class ApiKeyFetcher : UserControl
+    public partial class ApiKeyFetcher : UserControl, IPopupClient
     {
         public ApiKeyFetcher()
         {
@@ -29,5 +30,9 @@ namespace Put.io.Wp8.UserControls
             MessageBox.Show(result.Token);
             e.Cancel = true;
         }
+
+        public event CloseHandler OnClose;
+        public UIElement UiElement { get { return this; } }
+        public UserControl UserControl { get { return this; } }
     }
 }

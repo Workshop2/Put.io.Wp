@@ -97,6 +97,9 @@
     <Compile Include="UserControls\ApiKeyFetcher.xaml.cs">
       <DependentUpon>ApiKeyFetcher.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\Popups\IPopupClient.cs" />
+    <Compile Include="UserControls\Popups\RectangleSpacing.cs" />
+    <Compile Include="UserControls\Popups\PopupWrapper.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

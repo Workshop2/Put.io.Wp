@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:a="clr-namespace:Put.io.Wp8"
     xmlns:viewModels="clr-namespace:Put.io.Core.ViewModels;assembly=Put.io.Core"
-    x:Class="Put.io.Wp8.MainPage"
+    x:Class="Put.io.Wp8.Views.MainPage"
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"

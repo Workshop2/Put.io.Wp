@@ -1,19 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using Put.io.Core.Models;
 using Put.io.Core.ViewModels;
-using Put.io.Wp8.Resources;
 using Put.io.Wp8.UserControls;
+using Put.io.Wp8.UserControls.Popups;
 
-namespace Put.io.Wp8
+namespace Put.io.Wp8.Views
 {
     public partial class MainPage : PhoneApplicationPage
     {
@@ -94,12 +89,20 @@ namespace Put.io.Wp8
 
         protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
         {
+            if (Popup != null && Popup.IsOpen)
+            {
+                Popup.Close();
+                e.Cancel = true;
+                return;
+            }
+
             if (Pivot.SelectedItem == FilesPivot)
             {
                 if (App.ViewModel.FileCollection.NavigateUp())
                 {
                     Files.SelectedItem = null;
                     e.Cancel = true;
+                    return;
                 }
             }
         }
@@ -137,19 +140,32 @@ namespace Put.io.Wp8
 
         #endregion
 
+        private PopupWrapper Popup { get; set; }
         private void ApplicationBarMenuItem_OnClick(object sender, EventArgs e)
         {
             const int vertOffset = 48;
             const int horizOffset = 40;
+
             var appHost = Application.Current.Host.Content;
+            var pageSize = new Size(appHost.ActualWidth, appHost.ActualHeight);
+            var spacing = new RectangleSpacing(vertOffset, horizOffset, pageSize);
+            Popup = new PopupWrapper(new ApiKeyFetcher(), spacing);
+            Popup.OnClose += Popup_OnClose;
+            Popup.Open();
 
-            var loginWindow = new Popup();
-            var userControl = new ApiKeyFetcher { Width = appHost.ActualWidth - (horizOffset * 2), Height = appHost.ActualHeight - (vertOffset * 2) - 60 };
+            //var loginWindow = new Popup();
+            //var userControl = new ApiKeyFetcher { Width = appHost.ActualWidth - (horizOffset * 2), Height = appHost.ActualHeight - (vertOffset * 2) - 60 };
 
-            loginWindow.Child = userControl;
-            loginWindow.VerticalOffset = vertOffset;
-            loginWindow.HorizontalOffset = horizOffset;
-            loginWindow.IsOpen = true;
+            //loginWindow.Child = userControl;
+            //loginWindow.VerticalOffset = vertOffset;
+            //loginWindow.HorizontalOffset = horizOffset;
+            //loginWindow.IsOpen = true;
+        }
+
+        private void Popup_OnClose()
+        {
+            Popup.OnClose -= Popup_OnClose;
+            Popup = null;
         }
     }
 }
