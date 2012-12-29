@@ -1,4 +1,6 @@
-﻿namespace Put.io.Core.Models
+﻿using System;
+
+namespace Put.io.Core.Models
 {
     public enum StatusType
     {

@@ -1,5 +1,6 @@
 using System;
 using System.IO.IsolatedStorage;
+using GalaSoft.MvvmLight.Ioc;
 using Put.io.Api.UrlHelper;
 using Put.io.Core.Common;
 using Put.io.Core.InvokeSynchronising;
@@ -13,9 +14,8 @@ namespace Put.io.Core.ViewModels
 
     public class MainViewModel : ViewModelBase
     {
-        /// <summary>
-        /// Initializes a new instance of the MainViewModel class.
-        /// </summary>
+        #region Constructors
+        [PreferredConstructor]
         public MainViewModel()
         {
             if (IsInDesignMode)
@@ -23,25 +23,24 @@ namespace Put.io.Core.ViewModels
                 _fileCollection = new FileCollectionViewModel();
                 _transferCollection = new TransferCollectionViewModel();
             }
-            else
-            {
-                Tracker = new ProgressTracker();
-                Tracker.OnProgressChanged += Tracker_OnProgressChanged;
-
-                Settings = new SettingsRepository(IsolatedStorageSettings.ApplicationSettings);
-
-                _fileCollection = new FileCollectionViewModel(Tracker, Settings);
-                _transferCollection = new TransferCollectionViewModel(Tracker, Settings);
-
-                ValidateKey();
-            }
         }
 
         public MainViewModel(IPropertyChangedInvoke invokeDelegate)
             : this()
         {
-            
+            Invoker = invokeDelegate;
+
+            Tracker = new ProgressTracker();
+            Tracker.OnProgressChanged += Tracker_OnProgressChanged;
+
+            Settings = new SettingsRepository(IsolatedStorageSettings.ApplicationSettings);
+
+            _fileCollection = new FileCollectionViewModel(Tracker, Settings, Invoker);
+            _transferCollection = new TransferCollectionViewModel(Tracker, Settings, Invoker);
+
+            ValidateKey();
         }
+        #endregion
 
         private void ValidateKey()
         {

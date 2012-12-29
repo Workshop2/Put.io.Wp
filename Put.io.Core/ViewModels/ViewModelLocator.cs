@@ -29,6 +29,7 @@ namespace Put.io.Core.ViewModels
         /// </summary>
         public ViewModelLocator()
         {
+            //TODO: Stop this doing stuff in runtime
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
             ////if (ViewModelBase.IsInDesignModeStatic)

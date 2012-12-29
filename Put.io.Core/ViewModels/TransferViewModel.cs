@@ -13,6 +13,9 @@ namespace Put.io.Core.ViewModels
             {
                 if (_transfer == value) return;
 
+                if (_transfer != null)
+                    _transfer.Invoker = Invoker;
+
                 _transfer = value;
                 OnPropertyChanged();
             }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using Put.io.Core.Common;
+using Put.io.Core.InvokeSynchronising;
 using Put.io.Core.Models;
 using Put.io.Core.Extensions;
 using Put.io.Core.ProgressTracking;
@@ -26,8 +27,8 @@ namespace Put.io.Core.ViewModels
             }
         }
 
-        public FileCollectionViewModel(ProgressTracker tracker, ISettingsRepository settings)
-            : this()
+        public FileCollectionViewModel(ProgressTracker tracker, ISettingsRepository settings, IPropertyChangedInvoke invoker)
+            : base(invoker)
         {
             ProgressTracker = tracker;
             Settings = settings;
@@ -45,7 +46,7 @@ namespace Put.io.Core.ViewModels
             RestApi.ListFiles(null, response =>
             {
                 //Store these down as our root items
-                AllFiles = response.Data.ToModelList().ToObservableCollection();
+                AllFiles = response.Data.ToModelList(Invoker).ToObservableCollection();
 
                 //These root items will then be displayed as default
                 CurrentFileList = AllFiles;
@@ -69,7 +70,7 @@ namespace Put.io.Core.ViewModels
 
             RestApi.ListFiles(file.File.FileID, response =>
             {
-                file.Children = response.Data.ToModelList().ToObservableCollection();
+                file.Children = response.Data.ToModelList(Invoker).ToObservableCollection();
                 CurrentFileList = file.Children;
 
                 ProgressTracker.CompleteTransaction(transactionID);

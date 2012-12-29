@@ -11,15 +11,26 @@ namespace Put.io.Core.Common
     public abstract class ViewModelBase : GalaSoft.MvvmLight.ViewModelBase
     {
         public bool IsDataLoaded { get; private set; }
+        public IPropertyChangedInvoke Invoker { get; set; }
+
+        protected ViewModelBase()
+        {
+        }
 
         protected ViewModelBase(IPropertyChangedInvoke invokeHandler)
         {
-            
+            Invoker = invokeHandler;
         }
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
+            if (Invoker != null)
+            {
+                Invoker.HandleCall(RaisePropertyChanged, propertyName);
+                return;
+            }
+
             RaisePropertyChanged(propertyName);
         }
 

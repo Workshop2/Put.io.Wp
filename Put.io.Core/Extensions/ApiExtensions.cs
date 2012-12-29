@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Put.io.Api.ResponseObjects.Files;
+using Put.io.Api.ResponseObjects.Transfers;
+using Put.io.Core.InvokeSynchronising;
 using Put.io.Core.Models;
 using System.Linq;
 using Put.io.Core.ViewModels;
+using File = Put.io.Core.Models.File;
+using Transfer = Put.io.Core.Models.Transfer;
 
 namespace Put.io.Core.Extensions
 {
@@ -22,15 +27,15 @@ namespace Put.io.Core.Extensions
             };
         }
 
-        public static List<FileViewModel> ToModelList(this Api.ResponseObjects.Files.FileList @this)
+        public static List<FileViewModel> ToModelList(this FileList @this, IPropertyChangedInvoke invoker)
         {
             if (@this == null || @this.files == null)
                 return new List<FileViewModel>();
 
-            return @this.files.Select(x => new FileViewModel{File = x.ToModel()}).ToList();
+            return @this.files.Select(x => new FileViewModel { File = x.ToModel(), Invoker = invoker }).ToList();
         }
 
-        public static Transfer ToModel(this Api.ResponseObjects.Transfers.Transfer @this)
+        public static Transfer ToModel(this Api.ResponseObjects.Transfers.Transfer @this, IPropertyChangedInvoke invoker)
         {
             return new Transfer
             {
@@ -38,16 +43,17 @@ namespace Put.io.Core.Extensions
                 Size = @this.size,
                 PercentComplete = @this.percent_done,
                 TransferID = @this.id,
-                Status = @this.status.ToStatusType()
+                Status = @this.status.ToStatusType(),
+                Invoker = invoker
             };
         }
 
-        public static List<TransferViewModel> ToModelList(this Api.ResponseObjects.Transfers.TransferList @this)
+        public static List<TransferViewModel> ToModelList(this TransferList @this, IPropertyChangedInvoke invoker)
         {
-            if(@this == null || @this.Transfers == null)
+            if (@this == null || @this.Transfers == null)
                 return new List<TransferViewModel>();
 
-            return @this.Transfers.Select(x => new TransferViewModel {Transfer = x.ToModel()}).ToList();
+            return @this.Transfers.Select(x => new TransferViewModel { Transfer = x.ToModel(invoker), Invoker = invoker }).ToList();
         }
 
         public static StatusType ToStatusType(this string @this)

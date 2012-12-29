@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using Put.io.Api.Rest;
 using Put.io.Core.Common;
+using Put.io.Core.InvokeSynchronising;
 using Put.io.Core.Models;
 using Put.io.Core.Extensions;
 using Put.io.Core.ProgressTracking;
@@ -26,8 +27,8 @@ namespace Put.io.Core.ViewModels
             }
         }
 
-        public TransferCollectionViewModel(ProgressTracker tracker, ISettingsRepository settings)
-            : this()
+        public TransferCollectionViewModel(ProgressTracker tracker, ISettingsRepository settings, IPropertyChangedInvoke invoker)
+            : base(invoker)
         {
             ProgressTracker = tracker;
             Settings = settings;
@@ -42,7 +43,7 @@ namespace Put.io.Core.ViewModels
             
             rester.ListTransfers(response =>
             {
-                Transfers = response.Data.ToModelList().ToObservableCollection();
+                Transfers = response.Data.ToModelList(Invoker).ToObservableCollection();
 
                 if (Updater != null)
                     Updater.Dispose();

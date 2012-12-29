@@ -21,7 +21,7 @@ namespace Put.io.Core.Transfers
         public AutonomousUpdater(ObservableCollection<TransferViewModel> transferCollection, ISettingsRepository settings)
         {
             Settings = settings;
-            //transferCollection.CollectionChanged += CollectionChanged;
+            transferCollection.CollectionChanged += CollectionChanged;
             Collection = transferCollection;
             Tasks = new Dictionary<int, Task>();
 
@@ -42,7 +42,7 @@ namespace Put.io.Core.Transfers
             var factory = new TaskFactory();
             foreach (var task in newTasks)
             {
-                if (task.Transfer.Status != StatusType.Downloading)
+                if (task.Transfer.Status != StatusType.Downloading && task.Transfer.Status != StatusType.InQueue)
                     continue;
 
                 var toProcess = task;
@@ -63,14 +63,7 @@ namespace Put.io.Core.Transfers
             var rester = new Api.Rest.Transfers(Settings.ApiKey);
             rester.GetTransfer(task.Transfer.TransferID, response =>
             {
-
-                try
-                {
-                    task.Transfer.PercentComplete = response.Data.transfer.percent_done;
-                }
-                catch (Exception)
-                {
-                }
+                task.Transfer.PercentComplete = response.Data.transfer.percent_done;
                 Thread.Sleep(Sleep);
                 ProcessSomething(task);
             });
@@ -103,7 +96,7 @@ namespace Put.io.Core.Transfers
 
             if (disposing)
             {
-                //Collection.CollectionChanged -= CollectionChanged;
+                Collection.CollectionChanged -= CollectionChanged;
                 Tasks.Clear();
             }
 
