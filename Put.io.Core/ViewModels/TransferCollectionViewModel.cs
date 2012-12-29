@@ -7,6 +7,7 @@ using Put.io.Core.Extensions;
 using Put.io.Core.ProgressTracking;
 using Put.io.Core.Storage;
 using Put.io.Core.Transfers;
+using System.Linq;
 
 namespace Put.io.Core.ViewModels
 {
@@ -18,7 +19,7 @@ namespace Put.io.Core.ViewModels
             {
                 _transfers = new ObservableCollection<TransferViewModel>
                 {
-                    new TransferViewModel{Transfer = new Transfer{Name = "Transfer 1", PercentComplete = 55, Size = 4324233, TransferID = 1}},
+                    new TransferViewModel{Transfer = new Transfer{Name = "Transfer 1", PercentComplete = 55, Size = 4324233, TransferID = 1, PercentCompleteString = "55%", TimeRemainingString = "2 minutes"}, IsOpen = true},
                     new TransferViewModel{Transfer = new Transfer{Name = "Transfer 2", PercentComplete = 64, Size = 3432423, TransferID = 2}},
                     new TransferViewModel{Transfer = new Transfer{Name = "Transfer 3", PercentComplete = 24, Size = 6422, TransferID = 3}},
                     new TransferViewModel{Transfer = new Transfer{Name = "Transfer 4", PercentComplete = 99, Size = 22453, TransferID = 4}},
@@ -43,12 +44,12 @@ namespace Put.io.Core.ViewModels
             
             rester.ListTransfers(response =>
             {
-                Transfers = response.Data.ToModelList(Invoker).ToObservableCollection();
+                Transfers = response.Data.ToModelList(Invoker).OrderBy(x => x.Transfer.Name).ToObservableCollection();
 
                 if (Updater != null)
                     Updater.Dispose();
 
-                Updater = new AutonomousUpdater(Transfers, Settings);
+                Updater = new AutonomousUpdater(Transfers, Settings, Invoker);
             });
         }
 

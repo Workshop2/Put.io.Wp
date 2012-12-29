@@ -6,5 +6,6 @@ namespace Put.io.Core.InvokeSynchronising
     {
         bool RequiresInvoke();
         void HandleCall(Action<string> raisePropertyChanged, string propertyName);
+        void HandleCall(Action toCall);
     }
 }

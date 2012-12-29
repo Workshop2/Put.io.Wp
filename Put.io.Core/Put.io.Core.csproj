@@ -86,8 +86,11 @@
     <Compile Include="Authentication\CallbackHandler.cs" />
     <Compile Include="Authentication\CallbackResult.cs" />
     <Compile Include="Common\ViewModelBase.cs" />
+    <Compile Include="Converters\StatusTypeIsIndeterminate.cs" />
     <Compile Include="Extensions\ApiExtensions.cs" />
+    <Compile Include="Extensions\GeneralExtensions.cs" />
     <Compile Include="Extensions\IEnuermableExtensions.cs" />
+    <Compile Include="Extensions\TimeSpan.cs" />
     <Compile Include="InvokeSynchronising\IPropertyChangedInvoke.cs" />
     <Compile Include="InvokeSynchronising\PropertyChangedInvoke.cs" />
     <Compile Include="Models\ContentType.cs" />

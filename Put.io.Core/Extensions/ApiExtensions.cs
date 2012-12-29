@@ -44,7 +44,8 @@ namespace Put.io.Core.Extensions
                 PercentComplete = @this.percent_done,
                 TransferID = @this.id,
                 Status = @this.status.ToStatusType(),
-                Invoker = invoker
+                Invoker = invoker,
+                TimeRemaining = (@this.estimated_time ?? 0)
             };
         }
 

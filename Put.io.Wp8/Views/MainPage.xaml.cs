@@ -60,12 +60,6 @@ namespace Put.io.Wp8.Views
 
             //Clear selection to avoid problems down the road
             selector.SelectedItem = null;
-
-            //// Navigate to the new page
-            //NavigationService.Navigate(new Uri("/DetailsPage.xaml?selectedItem=" + (MainLongListSelector.SelectedItem as ItemViewModel).ID, UriKind.Relative));
-
-            //// Reset selected item to null (no selection)
-            //MainLongListSelector.SelectedItem = null;
         }
 
         protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
@@ -158,6 +152,25 @@ namespace Put.io.Wp8.Views
                 return;
             }
 
+        }
+
+        private void TransferSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selector = sender as LongListSelector;
+
+            // If selected item is null (no selection) do nothing
+            if (selector == null || selector.SelectedItem == null)
+                return;
+
+            var selected = selector.SelectedItem as TransferViewModel;
+
+            if (selected == null)
+                return;
+
+            App.ViewModel.SelectTransfer(selected);
+
+            //Clear selection to avoid problems down the road
+            selector.SelectedItem = null;
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿using Put.io.Core.Common;
+﻿using System;
+using System.Globalization;
+using Put.io.Core.Common;
+using Put.io.Core.Extensions;
 
 namespace Put.io.Core.Models
 {
@@ -54,6 +57,8 @@ namespace Put.io.Core.Models
 
                 _percentComplete = value;
                 OnPropertyChanged();
+
+                PercentCompleteString = _percentComplete.ToString(CultureInfo.InvariantCulture) + CultureInfo.CurrentUICulture.NumberFormat.PercentSymbol;
             }
         }
 
@@ -70,6 +75,52 @@ namespace Put.io.Core.Models
             }
         }
 
+        private string _percentCompleteString;
+        public string PercentCompleteString
+        {
+            get { return _percentCompleteString; }
+            set
+            {
+                if (_percentCompleteString == value) return;
+
+                _percentCompleteString = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _timeRemaining;
+        public int TimeRemaining
+        {
+            get { return _timeRemaining; }
+            set
+            {
+                if (_timeRemaining == value) return;
+
+                _timeRemaining = value;
+                OnPropertyChanged();
+
+                SetTimeRemainingString();
+            }
+        }
+
+        private string _timeRemainingString;
+        public string TimeRemainingString
+        {
+            get { return _timeRemainingString; }
+            set
+            {
+                if (_timeRemainingString == value) return;
+
+                _timeRemainingString = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private void SetTimeRemainingString()
+        {
+            var timeSpan = new TimeSpan(0, 0, TimeRemaining);
+            TimeRemainingString = timeSpan.ToReadableString();
+        }
         #endregion
     }
 }

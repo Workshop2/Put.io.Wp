@@ -66,6 +66,11 @@ namespace Put.io.Core.ViewModels
 
         }
 
+        public void SelectTransfer(TransferViewModel selected)
+        {
+            selected.IsOpen = !selected.IsOpen;
+        }
+
         #region Properties
         private ProgressTracker Tracker { get; set; }
         private ISettingsRepository Settings { get; set; }

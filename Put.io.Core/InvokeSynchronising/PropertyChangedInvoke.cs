@@ -27,5 +27,16 @@ namespace Put.io.Core.InvokeSynchronising
 
             raisePropertyChanged(propertyName);
         }
+
+        public void HandleCall(Action toCall)
+        {
+            if (RequiresInvoke())
+            {
+                InvokeReference.BeginInvoke(toCall);
+                return;
+            }
+
+            toCall();
+        }
     }
 }

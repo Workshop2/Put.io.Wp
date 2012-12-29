@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Threading;
 using System.Threading.Tasks;
-using Put.io.Core.Models;
+using Put.io.Api.ResponseObjects.Transfers;
+using Put.io.Core.InvokeSynchronising;
 using Put.io.Core.Storage;
 using Put.io.Core.ViewModels;
+using Put.io.Core.Extensions;
 using System.Linq;
 
 namespace Put.io.Core.Transfers
@@ -14,71 +14,56 @@ namespace Put.io.Core.Transfers
     public class AutonomousUpdater : IDisposable
     {
         private ObservableCollection<TransferViewModel> Collection { get; set; }
-        private Dictionary<int, Task> Tasks { get; set; }
+        private readonly TimeSpan _sleep = new TimeSpan(0, 0, 5);
+        private IPropertyChangedInvoke Invoker { get; set; }
         private ISettingsRepository Settings { get; set; }
-        private readonly TimeSpan Sleep = new TimeSpan(0, 0, 5);
 
-        public AutonomousUpdater(ObservableCollection<TransferViewModel> transferCollection, ISettingsRepository settings)
+        public AutonomousUpdater(ObservableCollection<TransferViewModel> transferCollection, ISettingsRepository settings, IPropertyChangedInvoke invoker)
         {
             Settings = settings;
-            transferCollection.CollectionChanged += CollectionChanged;
             Collection = transferCollection;
-            Tasks = new Dictionary<int, Task>();
+            Invoker = invoker;
 
-            MergeTasks();
+            new TaskFactory().StartNew(Tick);
         }
 
-        private void MergeTasks()
+        private void Tick()
         {
-            var matching = Tasks.Where(x => Collection.Any(y => y.Transfer.TransferID == x.Key)).ToList();
-            var removed = Tasks.Where(x => !Collection.Any(y => y.Transfer.TransferID == x.Key)).ToList();
-            var newTasks = Collection.Where(x => !Tasks.Any(y => y.Key == x.Transfer.TransferID)).ToList();
-
-            foreach (var task in removed)
-            {
-                Tasks.Remove(task.Key);
-            }
-
-            var factory = new TaskFactory();
-            foreach (var task in newTasks)
-            {
-                if (task.Transfer.Status != StatusType.Downloading && task.Transfer.Status != StatusType.InQueue)
-                    continue;
-
-                var toProcess = task;
-                var newTask = factory.StartNew(() => ProcessSomething(toProcess));
-                Tasks.Add(toProcess.Transfer.TransferID, newTask);
-            }
-
-        }
-
-        private void ProcessSomething(TransferViewModel task)
-        {
-            if (task.Transfer.Status != StatusType.Downloading)
+            if (_disposed)
                 return;
-
-            if (Tasks.All(x => x.Key != task.Transfer.TransferID))
-                return;
-
-            var rester = new Api.Rest.Transfers(Settings.ApiKey);
-            rester.GetTransfer(task.Transfer.TransferID, response =>
+            
+            var rest = new Api.Rest.Transfers(Settings.ApiKey);
+            rest.ListTransfers(response =>
             {
-                task.Transfer.PercentComplete = response.Data.transfer.percent_done;
-                Thread.Sleep(Sleep);
-                ProcessSomething(task);
+                if (response.Data == null) return;
+
+                MergeTransfers(response.Data);
+                Thread.Sleep(_sleep);
+                Tick();
             });
         }
 
-        private void CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void MergeTransfers(TransferList data)
         {
-            switch (e.Action)
+            foreach (var transfer in data.Transfers)
             {
-                case NotifyCollectionChangedAction.Reset:
-                    Tasks.Clear();
-                    break;
-                default:
-                    MergeTasks();
-                    break;
+                var source = transfer.ToModel(Invoker);
+                var target = Collection.FirstOrDefault(x => x.Transfer.TransferID == source.TransferID);
+
+                if (target == null)
+                {
+                    Invoker.HandleCall(() => Collection.Add(new TransferViewModel { Invoker = Invoker, Transfer = source }));
+                    continue;
+                }
+
+                GeneralExtensions.Copy(source, target.Transfer);
+            }
+
+            var toDelete = Collection.Where(x => !data.Transfers.Any(y => y.id == x.Transfer.TransferID)).ToList();
+            foreach (var model in toDelete)
+            {
+                var model1 = model;
+                Invoker.HandleCall(() => Collection.Remove(model1));
             }
         }
 
@@ -96,8 +81,7 @@ namespace Put.io.Core.Transfers
 
             if (disposing)
             {
-                Collection.CollectionChanged -= CollectionChanged;
-                Tasks.Clear();
+                //TODO: Dispose
             }
 
             _disposed = true;
