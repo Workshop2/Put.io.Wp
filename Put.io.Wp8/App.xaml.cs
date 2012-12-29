@@ -5,6 +5,8 @@ using System.Windows.Markup;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Put.io.Core.InvokeSynchronising;
+using Put.io.Core.Themes;
 using Put.io.Core.ViewModels;
 using Put.io.Wp8.Resources;
 
@@ -12,7 +14,7 @@ namespace Put.io.Wp8
 {
     public partial class App : Application
     {
-        private static MainViewModel viewModel = null;
+        private static MainViewModel _viewModel;
 
         /// <summary>
         /// A static ViewModel used by the views to bind against.
@@ -20,12 +22,8 @@ namespace Put.io.Wp8
         /// <returns>The MainViewModel object.</returns>
         public static MainViewModel ViewModel
         {
-            get
-            {
-                // Delay creation of the view model until necessary
-                return viewModel ?? (viewModel = new MainViewModel());
-            }
-            set { viewModel = value; }
+            get { return _viewModel ?? (_viewModel = new MainViewModel(new PropertyChangedInvoke(RootFrame))); }
+            set { _viewModel = value; }
         }
 
         /// <summary>

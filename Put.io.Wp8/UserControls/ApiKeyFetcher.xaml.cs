@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Phone.Controls;
@@ -7,32 +10,102 @@ using Put.io.Wp8.UserControls.Popups;
 
 namespace Put.io.Wp8.UserControls
 {
-    public partial class ApiKeyFetcher : UserControl, IPopupClient
+    public delegate void ApiKeyFoundHandler(string apiKey);
+
+    public partial class ApiKeyFetcher : IPopupClient
     {
+        private readonly Uri _landingPage = App.ViewModel.AuthenticateUrl;
+
         public ApiKeyFetcher()
         {
             InitializeComponent();
 
+            SetupBrowser();
+            SetLandingPage();
+        }
+
+        private void SetupBrowser()
+        {
+            var clear = new[]
+            {
+                Browser.ClearInternetCacheAsync(),
+                Browser.ClearCookiesAsync()
+            };
+
+            Task.WaitAll(clear, (int) new TimeSpan(0, 0, 10).TotalMilliseconds);
+
+            var cookies = new CookieContainer().GetCookies(new Uri("https://api.put.io/"));
+            foreach (Cookie cookie in cookies)
+            {
+                cookie.Discard = true;
+                cookie.Expired = true;
+            }
+
             Browser.Navigating += BrowserNavigating;
-            Browser.Navigate(new Uri(App.ViewModel.AuthenticateUrl(), UriKind.Absolute));
+            Browser.Navigated += BrowserNavigated;
+            Browser.NavigationFailed += BrowserNavigationFailed;
+        }
+
+        private void SetLandingPage()
+        {
+            Browser.Navigate(_landingPage);
+        }
+
+        private void BrowserNavigationFailed(object sender, System.Windows.Navigation.NavigationFailedEventArgs e)
+        {
+            e.Handled = true;
+
+            if (e.Exception != null)
+                DisplayError();
+        }
+
+        private void BrowserNavigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
+        {
+            Progress.Visibility = Visibility.Collapsed;
+            BrowserGrid.Visibility = Visibility.Visible;
         }
 
         private void BrowserNavigating(object sender, NavigatingEventArgs e)
         {
+            BrowserGrid.Visibility = Visibility.Collapsed;
+            Progress.Visibility = Visibility.Visible;
+
             var url = e.Uri.ToString();
             var callbackHandler = new CallbackHandler();
             var result = callbackHandler.ParseAccessToken(url);
 
-            if (result.Status != CallbackStatus.Success) return;
+            if (result.Status != CallbackStatus.Success)
+            {
+                //If we are being navigated away from the API domain, lets error :)
+                if (!e.Uri.Segments.Any(x => x.Equals(@"oauth2/", StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    DisplayError();
+                }
 
-            Browser.Visibility = Visibility.Collapsed;
+                return;
+            }
 
-            MessageBox.Show(result.Token);
             e.Cancel = true;
+
+            if (OnClose != null)
+            {
+                OnClose();
+            }
+
+            if (OnKeyFound != null)
+            {
+                OnKeyFound(result.Token);
+            }
+        }
+
+        private void DisplayError()
+        {
+            MessageBox.Show("Unable to detect login, please try again");
+            SetLandingPage();
         }
 
         public event CloseHandler OnClose;
-        public UIElement UiElement { get { return this; } }
+        public event ApiKeyFoundHandler OnKeyFound;
         public UserControl UserControl { get { return this; } }
     }
 }

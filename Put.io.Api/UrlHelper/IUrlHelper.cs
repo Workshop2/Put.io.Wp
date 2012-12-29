@@ -16,6 +16,7 @@
 
         //Transfer API
         string ListTransfers();
+        string GetTransfer();
 
         //Account Info API
         string AccountInfo();

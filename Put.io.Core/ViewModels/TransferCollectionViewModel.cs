@@ -4,6 +4,8 @@ using Put.io.Core.Common;
 using Put.io.Core.Models;
 using Put.io.Core.Extensions;
 using Put.io.Core.ProgressTracking;
+using Put.io.Core.Storage;
+using Put.io.Core.Transfers;
 
 namespace Put.io.Core.ViewModels
 {
@@ -24,27 +26,44 @@ namespace Put.io.Core.ViewModels
             }
         }
 
-        public TransferCollectionViewModel(ProgressTracker tracker)
+        public TransferCollectionViewModel(ProgressTracker tracker, ISettingsRepository settings)
             : this()
         {
             ProgressTracker = tracker;
+            Settings = settings;
         }
 
         protected override void OnLoadData()
         {
-            if (IsInDesignMode)
+            if (IsInDesignMode || string.IsNullOrEmpty(Settings.ApiKey))
                 return;
 
-            var rester = new Transfers("PUTIO_KEY");
-
+            var rester = new Api.Rest.Transfers(Settings.ApiKey);
+            
             rester.ListTransfers(response =>
             {
                 Transfers = response.Data.ToModelList().ToObservableCollection();
+
+                if (Updater != null)
+                    Updater.Dispose();
+
+                Updater = new AutonomousUpdater(Transfers, Settings);
             });
+        }
+
+        public void Refresh()
+        {
+            if (Transfers != null)
+                Transfers.Clear();
+
+            SelectedTransfer = null;
+            OnLoadData();
         }
 
         #region Properties
         private ProgressTracker ProgressTracker { get; set; }
+        private ISettingsRepository Settings { get; set; }
+        private AutonomousUpdater Updater { get; set; }
 
         private ObservableCollection<TransferViewModel> _transfers;
         public ObservableCollection<TransferViewModel> Transfers

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Put.io.Core.Models;
 using System.Linq;
 using Put.io.Core.ViewModels;
@@ -36,7 +37,8 @@ namespace Put.io.Core.Extensions
                 Name = @this.name,
                 Size = @this.size,
                 PercentComplete = @this.percent_done,
-                TransferID = @this.id
+                TransferID = @this.id,
+                Status = @this.status.ToStatusType()
             };
         }
 
@@ -46,6 +48,13 @@ namespace Put.io.Core.Extensions
                 return new List<TransferViewModel>();
 
             return @this.Transfers.Select(x => new TransferViewModel {Transfer = x.ToModel()}).ToList();
+        }
+
+        public static StatusType ToStatusType(this string @this)
+        {
+            StatusType output;
+
+            return Enum.TryParse(@this.Replace("_", string.Empty), true, out output) ? output : StatusType.Other;
         }
     }
 }

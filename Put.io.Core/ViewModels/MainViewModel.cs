@@ -1,6 +1,11 @@
+using System;
+using System.IO.IsolatedStorage;
 using Put.io.Api.UrlHelper;
 using Put.io.Core.Common;
+using Put.io.Core.InvokeSynchronising;
 using Put.io.Core.ProgressTracking;
+using Put.io.Core.Storage;
+using Put.io.Core.Themes;
 
 namespace Put.io.Core.ViewModels
 {
@@ -23,9 +28,24 @@ namespace Put.io.Core.ViewModels
                 Tracker = new ProgressTracker();
                 Tracker.OnProgressChanged += Tracker_OnProgressChanged;
 
-                _fileCollection = new FileCollectionViewModel(Tracker);
-                _transferCollection = new TransferCollectionViewModel(Tracker);
+                Settings = new SettingsRepository(IsolatedStorageSettings.ApplicationSettings);
+
+                _fileCollection = new FileCollectionViewModel(Tracker, Settings);
+                _transferCollection = new TransferCollectionViewModel(Tracker, Settings);
+
+                ValidateKey();
             }
+        }
+
+        public MainViewModel(IPropertyChangedInvoke invokeDelegate)
+            : this()
+        {
+            
+        }
+
+        private void ValidateKey()
+        {
+            InvalidApiKey = string.IsNullOrEmpty(Settings.ApiKey);
         }
 
         protected override void OnLoadData()
@@ -49,6 +69,7 @@ namespace Put.io.Core.ViewModels
 
         #region Properties
         private ProgressTracker Tracker { get; set; }
+        private ISettingsRepository Settings { get; set; }
 
         private FileCollectionViewModel _fileCollection;
         public FileCollectionViewModel FileCollection
@@ -82,9 +103,22 @@ namespace Put.io.Core.ViewModels
             get { return _urlSetup ?? (_urlSetup = new UrlHelperFactory().GetUrlDetails()); }
         }
 
-        public string AuthenticateUrl()
+        public Uri AuthenticateUrl
         {
-            return UrlSetup.AuthenticateUrl();
+            get { return new Uri(UrlSetup.AuthenticateUrl(), UriKind.Absolute); }
+        }
+
+        private bool _invalidApiKey;
+        public bool InvalidApiKey
+        {
+            get { return _invalidApiKey; }
+            set
+            {
+                if (_invalidApiKey == value) return;
+
+                _invalidApiKey = value;
+                OnPropertyChanged();
+            }
         }
         #endregion
 
@@ -101,13 +135,24 @@ namespace Put.io.Core.ViewModels
         #endregion
 
         #region ProgressMonitor
-        
+
         private void Tracker_OnProgressChanged(bool isWorking)
         {
             WorkingStatusChanged(isWorking);
         }
 
 
+        #endregion
+
+        #region SettingsManagement
+        public void ChangeKey(string apikey)
+        {
+            Settings.ApiKey = apikey;
+            ValidateKey();
+
+            FileCollection.Refresh(true);
+            TransferCollection.Refresh();
+        }
         #endregion
     }
 }

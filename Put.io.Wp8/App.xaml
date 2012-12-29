@@ -5,7 +5,8 @@
              xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:viewModels="clr-namespace:Put.io.Core.ViewModels;assembly=Put.io.Core" 
+             xmlns:viewModels="clr-namespace:Put.io.Core.ViewModels;assembly=Put.io.Core"
+             xmlns:converters="clr-namespace:WindowsPhoneEssentials.Converters;assembly=WindowsPhoneEssentials"
              mc:Ignorable="d">
     
     <!--Application Resources-->
@@ -16,6 +17,7 @@
             <viewModels:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
             <ResourceDictionary.MergedDictionaries></ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
+        <converters:BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
     </Application.Resources>
     
     

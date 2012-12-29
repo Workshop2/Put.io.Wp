@@ -1,15 +1,21 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Put.io.Core.Annotations;
+using Put.io.Core.InvokeSynchronising;
 
 namespace Put.io.Core.Common
 {
     /// <summary>
-    /// Wraps up the MVVM Lite implementation of ViewModelBase with the ability to detect property names automatically
+    /// Wraps up the MVVM Lite implementation of ViewModelBase with the ability to detect property names automatically and with added lovelynous of cross thread handling
     /// </summary>
     public abstract class ViewModelBase : GalaSoft.MvvmLight.ViewModelBase
     {
         public bool IsDataLoaded { get; private set; }
+
+        protected ViewModelBase(IPropertyChangedInvoke invokeHandler)
+        {
+            
+        }
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

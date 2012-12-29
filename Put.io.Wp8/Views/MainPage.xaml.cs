@@ -24,26 +24,7 @@ namespace Put.io.Wp8.Views
 
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
-
-            //Browser.Navigating += Browser_Navigating;
-            //var urlHelper = new Api.UrlHelper.UrlHelperFactory().GetUrlDetails();
-            //Browser.Navigate(new Uri(urlHelper.AuthenticateUrl(), UriKind.Absolute));
         }
-
-        //private void Browser_Navigating(object sender, NavigatingEventArgs e)
-        //{
-        //    var url = e.Uri.ToString();
-        //    var callbackHandler = new CallbackHandler();
-        //    var result = callbackHandler.ParseAccessToken(url);
-
-        //    if (result.Status == CallbackStatus.Success)
-        //    {
-        //        Browser.Visibility = Visibility.Collapsed;
-
-        //        MessageBox.Show(result.Token);
-        //        e.Cancel = true;
-        //    }
-        //}
 
         // Load data for the ViewModel Items
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -141,7 +122,7 @@ namespace Put.io.Wp8.Views
         #endregion
 
         private PopupWrapper Popup { get; set; }
-        private void ApplicationBarMenuItem_OnClick(object sender, EventArgs e)
+        private void LoginClicked(object sender, EventArgs e)
         {
             const int vertOffset = 48;
             const int horizOffset = 40;
@@ -149,23 +130,34 @@ namespace Put.io.Wp8.Views
             var appHost = Application.Current.Host.Content;
             var pageSize = new Size(appHost.ActualWidth, appHost.ActualHeight);
             var spacing = new RectangleSpacing(vertOffset, horizOffset, pageSize);
-            Popup = new PopupWrapper(new ApiKeyFetcher(), spacing);
+            var apiKeyFetcher = new ApiKeyFetcher();
+            apiKeyFetcher.OnKeyFound += App.ViewModel.ChangeKey;
+
+            Popup = new PopupWrapper(apiKeyFetcher, spacing, ApplicationBar);
             Popup.OnClose += Popup_OnClose;
             Popup.Open();
-
-            //var loginWindow = new Popup();
-            //var userControl = new ApiKeyFetcher { Width = appHost.ActualWidth - (horizOffset * 2), Height = appHost.ActualHeight - (vertOffset * 2) - 60 };
-
-            //loginWindow.Child = userControl;
-            //loginWindow.VerticalOffset = vertOffset;
-            //loginWindow.HorizontalOffset = horizOffset;
-            //loginWindow.IsOpen = true;
         }
 
         private void Popup_OnClose()
         {
             Popup.OnClose -= Popup_OnClose;
             Popup = null;
+        }
+
+        private void RefreshClicked(object sender, EventArgs e)
+        {
+            if (Pivot.SelectedItem == FilesPivot)
+            {
+                App.ViewModel.FileCollection.Refresh();
+                return;
+            }
+            
+            if (Pivot.SelectedItem == TransfersPivot)
+            {
+                App.ViewModel.TransferCollection.Refresh();
+                return;
+            }
+
         }
     }
 }

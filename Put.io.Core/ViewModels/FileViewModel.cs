@@ -28,9 +28,12 @@ namespace Put.io.Core.ViewModels
             {
                 if (_children == value) return;
 
-                foreach (var fileViewModel in value)
+                if (value != null)
                 {
-                    fileViewModel.Parent = this;
+                    foreach (var fileViewModel in value)
+                    {
+                        fileViewModel.Parent = this;
+                    }
                 }
 
                 _children = value;

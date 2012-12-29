@@ -1,24 +1,9 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using Put.io.Core.Annotations;
-using Put.io.Core.ViewModels;
+﻿using Put.io.Core.Common;
 
 namespace Put.io.Core.Models
 {
-    public class File : INotifyPropertyChanged
+    public class File : ViewModelBase
     {
-        #region INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
-
         #region Properties
 
         private int _fileID;

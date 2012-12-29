@@ -24,7 +24,7 @@ namespace Put.io.Api.Rest
         /// <param name="callback">The callback method to use once completed</param>
         public void ListFiles(int? parentID, Action<IRestResponse<FileList>> callback)
         {
-            var request = new RestRequest(UrlHelper.ListFiles(), Method.GET);
+            var request = NewRequest(UrlHelper.ListFiles(), Method.GET);
             
             if (parentID.HasValue && parentID.Value > 0)
                 request.AddParameter("parent_id", parentID.Value);
@@ -39,7 +39,7 @@ namespace Put.io.Api.Rest
         /// <param name="callback">The callback method to use once completed</param>
         public void GetFile(int fileID, Action<IRestResponse<GetFileResponse>> callback)
         {
-            var request = new RestRequest(UrlHelper.GetFile(), Method.GET);
+            var request = NewRequest(UrlHelper.GetFile(), Method.GET);
             
             request.AddUrlSegment("id", fileID.ToString(CultureInfo.InvariantCulture));
 
@@ -72,7 +72,7 @@ namespace Put.io.Api.Rest
 
         private IRestRequest GetMp4Request(int fileID, Method method)
         {
-            var request = new RestRequest(UrlHelper.FileMp4(), method);
+            var request = NewRequest(UrlHelper.FileMp4(), method);
             
             request.AddUrlSegment("id", fileID.ToString(CultureInfo.InvariantCulture));
 
@@ -86,7 +86,7 @@ namespace Put.io.Api.Rest
         /// <param name="callback">The callback method to use once completed</param>
         public void DownloadFile(int fileID, Action<IRestResponse> callback)
         {
-            var request = new RestRequest(UrlHelper.DownloadFile(), Method.HEAD);
+            var request = NewRequest(UrlHelper.DownloadFile(), Method.HEAD);
             
             request.AddUrlSegment("id", fileID.ToString(CultureInfo.InvariantCulture));
 

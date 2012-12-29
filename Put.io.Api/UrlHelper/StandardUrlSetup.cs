@@ -57,6 +57,11 @@ namespace Put.io.Api.UrlHelper
         {
             return "/transfers/list";
         }
+
+        public string GetTransfer()
+        {
+            return "/transfers/{id}";
+        }
         public string AccountInfo()
         {
             return "/account/info";

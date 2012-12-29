@@ -3,6 +3,7 @@ using Put.io.Core.Common;
 using Put.io.Core.Models;
 using Put.io.Core.Extensions;
 using Put.io.Core.ProgressTracking;
+using Put.io.Core.Storage;
 
 namespace Put.io.Core.ViewModels
 {
@@ -25,17 +26,18 @@ namespace Put.io.Core.ViewModels
             }
         }
 
-        public FileCollectionViewModel(ProgressTracker tracker)
+        public FileCollectionViewModel(ProgressTracker tracker, ISettingsRepository settings)
             : this()
         {
             ProgressTracker = tracker;
+            Settings = settings;
         }
 
         #region Methods
 
         protected override void OnLoadData()
         {
-            if (IsInDesignMode)
+            if (IsInDesignMode || string.IsNullOrEmpty(Settings.ApiKey))
                 return;
 
             var transactionID = ProgressTracker.StartNewTransaction();
@@ -70,7 +72,7 @@ namespace Put.io.Core.ViewModels
                 file.Children = response.Data.ToModelList().ToObservableCollection();
                 CurrentFileList = file.Children;
 
-                ProgressTracker.CompleteTransaction(transactionID);                        
+                ProgressTracker.CompleteTransaction(transactionID);
             });
         }
 
@@ -87,11 +89,42 @@ namespace Put.io.Core.ViewModels
             return false;
         }
 
+        public void Refresh()
+        {
+            Refresh(false);
+        }
+
+        public void Refresh(bool allFiles)
+        {
+            if (CurrentFileList != null)
+                CurrentFileList.Clear();
+
+            if (allFiles)
+            {
+                if (AllFiles != null)
+                    AllFiles.Clear();
+
+                SelectedFile = null;
+            }
+
+            if (SelectedFile == null)
+            {
+                OnLoadData();
+            }
+            else
+            {
+                SelectedFile.Children = null;
+
+                ExpandFile(SelectedFile);
+            }
+        }
+
         #endregion
 
         #region Properties
         private ObservableCollection<FileViewModel> AllFiles { get; set; }
         private ProgressTracker ProgressTracker { get; set; }
+        private ISettingsRepository Settings { get; set; }
 
         private ObservableCollection<FileViewModel> _currentFileList;
         public ObservableCollection<FileViewModel> CurrentFileList
@@ -123,7 +156,7 @@ namespace Put.io.Core.ViewModels
         private Api.Rest.Files RestApi
         {
             //TODO: Use proper API key
-            get { return _restApi ?? (_restApi = new Api.Rest.Files("PUTIO_KEY")); }
+            get { return _restApi ?? (_restApi = new Api.Rest.Files(Settings.ApiKey)); }
         }
         #endregion
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using Microsoft.Phone.Shell;
 
 namespace Put.io.Wp8.UserControls.Popups
 {
@@ -9,7 +10,8 @@ namespace Put.io.Wp8.UserControls.Popups
         public event CloseHandler OnClose;
         private IPopupClient Client { get; set; }
         private Popup PopupDisplay { get; set; }
-
+        private IApplicationBar ApplicationBar { get; set; }
+        private bool ApplicationBarPreviousState { get; set; }
         public PopupWrapper(IPopupClient client, RectangleSpacing spacing)
         {
             Client = client;
@@ -21,13 +23,18 @@ namespace Put.io.Wp8.UserControls.Popups
             if (spacing.AdjustedHeight.HasValue)
                 Client.UserControl.Height = spacing.AdjustedHeight.Value;
             
-
             PopupDisplay = new Popup
             {
-                Child = Client.UiElement,
+                Child = Client.UserControl,
                 VerticalOffset = spacing.Top,
                 HorizontalOffset = spacing.Left
             };
+        }
+
+        public PopupWrapper(IPopupClient client, RectangleSpacing spacing, IApplicationBar applicationBar)
+            :this(client, spacing)
+        {
+            ApplicationBar = applicationBar;
         }
 
         public void Close()
@@ -36,10 +43,21 @@ namespace Put.io.Wp8.UserControls.Popups
 
             if (OnClose != null)
                 OnClose();
+
+            if (ApplicationBar != null && ApplicationBarPreviousState)
+            {
+                ApplicationBar.IsVisible = true;
+            }
         }
 
         public void Open()
         {
+            if (ApplicationBar != null)
+            {
+                ApplicationBarPreviousState = ApplicationBar.IsVisible;
+                ApplicationBar.IsVisible = false;
+            }
+
             PopupDisplay.IsOpen = true;
         }
 
