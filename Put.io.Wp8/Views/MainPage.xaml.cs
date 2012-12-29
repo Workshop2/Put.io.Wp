@@ -184,22 +184,19 @@ namespace Put.io.Wp8.Views
             if (pivot == null)
                 return;
 
-            var clearButton = FindClearButton();
+            var clearButtonFound = FindClearButton();
 
             if (pivot.SelectedItem == FilesPivot)
             {
-                if (clearButton != null)
-                    ApplicationBar.Buttons.Remove(clearButton);
+                if (clearButtonFound)
+                    ApplicationBar.Buttons.Remove(ClearButton);
             }
 
             if (pivot.SelectedItem == TransfersPivot)
             {
-                if (clearButton == null)
+                if (!clearButtonFound)
                 {
-                    var newButton = new ApplicationBarIconButton(new Uri(@"/Assets/AppBar/delete.png", UriKind.Relative));
-                    newButton.Text = "Cleanup";
-                    newButton.Click += ClearupClick;
-                    ApplicationBar.Buttons.Add(newButton);
+                    ApplicationBar.Buttons.Add(ClearButton);
                 }
             }
         }
@@ -209,14 +206,19 @@ namespace Put.io.Wp8.Views
             App.ViewModel.TransferCollection.Clearup();
         }
 
-        private ApplicationBarIconButton FindClearButton()
+        private ApplicationBarIconButton ClearButton { get; set; }
+        private bool FindClearButton()
         {
             var matching = ApplicationBar.Buttons.Cast<ApplicationBarIconButton>()
                               .Where(button => button.Text.Equals("Cleanup", StringComparison.InvariantCultureIgnoreCase));
 
             var applicationBarIconButtons = matching as IList<ApplicationBarIconButton> ?? matching.ToList();
             var clearButton = applicationBarIconButtons.FirstOrDefault();
-            return clearButton;
+
+            if (clearButton != null)
+                ClearButton = clearButton;
+
+            return clearButton != null;
         }
     }
 }

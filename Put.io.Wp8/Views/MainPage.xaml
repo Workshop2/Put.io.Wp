@@ -44,7 +44,7 @@
                     <DataTemplate>
                         <StackPanel Margin="0,0,0,10">
                             <TextBlock Text="{Binding Transfer.Name}" />
-                            <ProgressBar Maximum="100" Value="{Binding Transfer.PercentComplete}" IsIndeterminate="{Binding Transfer.Status, Converter={StaticResource StatusTypeIsIndeterminate}}" Margin="0,6,0,10" Padding="0" />
+                            <ProgressBar Maximum="100" Value="{Binding Transfer.PercentComplete}" IsIndeterminate="{Binding Transfer.Status, Converter={StaticResource StatusTypeIsIndeterminate}}" Margin="0,6,0,2" Padding="0" />
 
                             <Grid Visibility="{Binding IsOpen, Converter={StaticResource VisibilityOfBool}}" Margin="0,0,0,10">
                                 <Grid.ColumnDefinitions>
@@ -90,7 +90,7 @@
             <shell:ApplicationBar.Buttons>
                 <shell:ApplicationBarIconButton Text="Refresh" IconUri="/Assets/AppBar/refresh.png" Click="RefreshClicked" />
                 <shell:ApplicationBarIconButton Text="Settings" IconUri="/Assets/AppBar/feature.settings.png" />
-                <shell:ApplicationBarIconButton Text="Cleanup" IconUri="/Assets/AppBar/delete.png" />
+                <shell:ApplicationBarIconButton Text="Cleanup" IconUri="/Assets/AppBar/delete.png" Click="ClearupClick" />
             </shell:ApplicationBar.Buttons>
             <shell:ApplicationBar.MenuItems>
                 <shell:ApplicationBarMenuItem Text="Login" Click="LoginClicked"></shell:ApplicationBarMenuItem>

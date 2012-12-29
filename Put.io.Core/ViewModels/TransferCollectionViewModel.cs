@@ -42,15 +42,18 @@ namespace Put.io.Core.ViewModels
                 return;
 
             var rester = new Api.Rest.Transfers(Settings.ApiKey);
+            var transaction = ProgressTracker.StartNewTransaction();
             
             rester.ListTransfers(response =>
             {
                 Transfers = response.Data.ToModelList(Invoker).OrderBy(x => x.Transfer.Name).ToObservableCollection();
-
+                
                 if (Updater != null)
                     Updater.Dispose();
 
                 Updater = new AutonomousUpdater(Transfers, Settings, Invoker);
+
+                ProgressTracker.CompleteTransaction(transaction);
             });
         }
 
@@ -69,11 +72,14 @@ namespace Put.io.Core.ViewModels
 
             if (!toClear.Any())
                 return;
-            
+
             var rester = new Api.Rest.Transfers(Settings.ApiKey);
+            var transaction = ProgressTracker.StartNewTransaction();
+
             rester.DeleteTransfers(toClear, response =>
             {
                 Refresh();
+                ProgressTracker.CompleteTransaction(transaction);
             });
         }
 

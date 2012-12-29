@@ -8,6 +8,7 @@ namespace Put.io.Core.Models
         Downloading,
         InQueue,
         Other,
-        Seeding
+        Seeding,
+        Completing
     }
 }

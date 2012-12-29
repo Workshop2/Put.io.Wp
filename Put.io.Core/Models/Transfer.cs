@@ -35,6 +35,12 @@ namespace Put.io.Core.Models
                 return;
             }
 
+            if (Status == StatusType.Completing)
+            {
+                FurtherInformation = "Completing download...";
+                return;
+            }
+
             FurtherInformation = string.Empty;
         }
 
