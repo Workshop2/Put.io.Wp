@@ -17,6 +17,7 @@
         //Transfer API
         string ListTransfers();
         string GetTransfer();
+        string CancelTransfers();
 
         //Account Info API
         string AccountInfo();

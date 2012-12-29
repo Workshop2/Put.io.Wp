@@ -37,7 +37,7 @@ namespace Put.io.Core.Extensions
 
         public static Transfer ToModel(this Api.ResponseObjects.Transfers.Transfer @this, IPropertyChangedInvoke invoker)
         {
-            return new Transfer
+            var result = new Transfer
             {
                 Name = @this.name,
                 Size = @this.size,
@@ -47,6 +47,9 @@ namespace Put.io.Core.Extensions
                 Invoker = invoker,
                 TimeRemaining = (@this.estimated_time ?? 0)
             };
+
+            result.UpdateFurtherInformation();
+            return result;
         }
 
         public static List<TransferViewModel> ToModelList(this TransferList @this, IPropertyChangedInvoke invoker)

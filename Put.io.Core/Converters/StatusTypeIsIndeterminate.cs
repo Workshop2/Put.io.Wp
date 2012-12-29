@@ -15,7 +15,6 @@ namespace Put.io.Core.Converters
                 {
                     case StatusType.InQueue:
                         return true;
-                        break;
                 }
             }
 

@@ -158,5 +158,6 @@ namespace Put.io.Core.ViewModels
             TransferCollection.Refresh();
         }
         #endregion
+
     }
 }

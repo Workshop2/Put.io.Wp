@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -24,6 +26,8 @@ namespace Put.io.Wp8.Views
 
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
+
+            Pivot_OnSelectionChanged(Pivot, null);
         }
 
         // Load data for the ViewModel Items
@@ -145,7 +149,7 @@ namespace Put.io.Wp8.Views
                 App.ViewModel.FileCollection.Refresh();
                 return;
             }
-            
+
             if (Pivot.SelectedItem == TransfersPivot)
             {
                 App.ViewModel.TransferCollection.Refresh();
@@ -171,6 +175,48 @@ namespace Put.io.Wp8.Views
 
             //Clear selection to avoid problems down the road
             selector.SelectedItem = null;
+        }
+
+        private void Pivot_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var pivot = sender as Pivot;
+
+            if (pivot == null)
+                return;
+
+            var clearButton = FindClearButton();
+
+            if (pivot.SelectedItem == FilesPivot)
+            {
+                if (clearButton != null)
+                    ApplicationBar.Buttons.Remove(clearButton);
+            }
+
+            if (pivot.SelectedItem == TransfersPivot)
+            {
+                if (clearButton == null)
+                {
+                    var newButton = new ApplicationBarIconButton(new Uri(@"/Assets/AppBar/delete.png", UriKind.Relative));
+                    newButton.Text = "Cleanup";
+                    newButton.Click += ClearupClick;
+                    ApplicationBar.Buttons.Add(newButton);
+                }
+            }
+        }
+
+        private void ClearupClick(object sender, EventArgs e)
+        {
+            App.ViewModel.TransferCollection.Clearup();
+        }
+
+        private ApplicationBarIconButton FindClearButton()
+        {
+            var matching = ApplicationBar.Buttons.Cast<ApplicationBarIconButton>()
+                              .Where(button => button.Text.Equals("Cleanup", StringComparison.InvariantCultureIgnoreCase));
+
+            var applicationBarIconButtons = matching as IList<ApplicationBarIconButton> ?? matching.ToList();
+            var clearButton = applicationBarIconButtons.FirstOrDefault();
+            return clearButton;
         }
     }
 }

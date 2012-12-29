@@ -7,6 +7,37 @@ namespace Put.io.Core.Models
 {
     public class Transfer : ViewModelBase
     {
+
+        public void UpdateFurtherInformation()
+        {
+            if (Status == StatusType.Downloading)
+            {
+                var timeSpan = new TimeSpan(0, 0, TimeRemaining);
+                FurtherInformation = timeSpan.ToReadableString();
+                return;
+            }
+
+            if (Status == StatusType.InQueue)
+            {
+                FurtherInformation = "In queue, waiting for download to start...";
+                return;
+            }
+
+            if (Status == StatusType.Completed)
+            {
+                FurtherInformation = "Download complete.";
+                return;
+            }
+
+            if (Status == StatusType.Seeding)
+            {
+                FurtherInformation = "Seeding with other users.";
+                return;
+            }
+
+            FurtherInformation = string.Empty;
+        }
+
         #region Properties
         private string _name;
         public string Name
@@ -99,27 +130,21 @@ namespace Put.io.Core.Models
                 _timeRemaining = value;
                 OnPropertyChanged();
 
-                SetTimeRemainingString();
+                UpdateFurtherInformation();
             }
         }
 
-        private string _timeRemainingString;
-        public string TimeRemainingString
+        private string _furtherInformation;
+        public string FurtherInformation
         {
-            get { return _timeRemainingString; }
+            get { return _furtherInformation; }
             set
             {
-                if (_timeRemainingString == value) return;
+                if (_furtherInformation == value) return;
 
-                _timeRemainingString = value;
+                _furtherInformation = value;
                 OnPropertyChanged();
             }
-        }
-
-        private void SetTimeRemainingString()
-        {
-            var timeSpan = new TimeSpan(0, 0, TimeRemaining);
-            TimeRemainingString = timeSpan.ToReadableString();
         }
         #endregion
     }

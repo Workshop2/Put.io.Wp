@@ -22,29 +22,29 @@
         <shell:ProgressIndicator IsIndeterminate="True" Text="Loading..." />
     </shell:SystemTray.ProgressIndicator>
 
-    <phone:Pivot x:Name="Pivot">
+    <phone:Pivot x:Name="Pivot" SelectionChanged="Pivot_OnSelectionChanged">
         <phone:PivotItem Header="Files" x:Name="FilesPivot">
-            <StackPanel>
+            <Grid>
                 <TextBlock Text="Please login to continue." Visibility="{Binding InvalidApiKey, Converter={StaticResource VisibilityOfBool}}" />
                 <phone:LongListSelector x:Name="Files" Grid.Row="1" Margin="12,0,12,0" ItemsSource="{Binding FileCollection.CurrentFileList}" SelectionChanged="FileSelectionChanged">
                     <phone:LongListSelector.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Margin="0,0,0,17">
-                                <TextBlock Text="{Binding File.Name}"></TextBlock>
-                                <TextBlock Text="{Binding File.Size}"></TextBlock>
+                                <TextBlock Text="{Binding File.Name}" />
+                                <TextBlock Text="{Binding File.Size}" />
                             </StackPanel>
                         </DataTemplate>
                     </phone:LongListSelector.ItemTemplate>
                 </phone:LongListSelector>
-            </StackPanel>
+            </Grid>
         </phone:PivotItem>
         <phone:PivotItem Header="Transfers" x:Name="TransfersPivot">
             <phone:LongListSelector Grid.Row="1" Margin="12,0,12,0" ItemsSource="{Binding TransferCollection.Transfers}" SelectionChanged="TransferSelectionChanged">
                 <phone:LongListSelector.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Margin="0,0,0,10">
-                            <TextBlock Text="{Binding Transfer.Name}"></TextBlock>
-                            <ProgressBar Maximum="100" Value="{Binding Transfer.PercentComplete}" IsIndeterminate="{Binding Transfer.Status, Converter={StaticResource StatusTypeIsIndeterminate}}" Margin="0,4,0,0" Padding="0" />
+                            <TextBlock Text="{Binding Transfer.Name}" />
+                            <ProgressBar Maximum="100" Value="{Binding Transfer.PercentComplete}" IsIndeterminate="{Binding Transfer.Status, Converter={StaticResource StatusTypeIsIndeterminate}}" Margin="0,6,0,10" Padding="0" />
 
                             <Grid Visibility="{Binding IsOpen, Converter={StaticResource VisibilityOfBool}}" Margin="0,0,0,10">
                                 <Grid.ColumnDefinitions>
@@ -52,7 +52,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Text="{Binding Transfer.TimeRemainingString}" Grid.Column="0" TextWrapping="Wrap" Padding="3" Foreground="{StaticResource PhoneTextLowContrastBrush}" />
+                                <TextBlock Text="{Binding Transfer.FurtherInformation}" Grid.Column="0" TextWrapping="Wrap" Padding="3" Foreground="{StaticResource PhoneTextLowContrastBrush}" />
                                 <TextBlock Text="{Binding Transfer.PercentCompleteString}" Grid.Column="1" Padding="3" />
                             </Grid>
                         </StackPanel>
@@ -90,6 +90,7 @@
             <shell:ApplicationBar.Buttons>
                 <shell:ApplicationBarIconButton Text="Refresh" IconUri="/Assets/AppBar/refresh.png" Click="RefreshClicked" />
                 <shell:ApplicationBarIconButton Text="Settings" IconUri="/Assets/AppBar/feature.settings.png" />
+                <shell:ApplicationBarIconButton Text="Cleanup" IconUri="/Assets/AppBar/delete.png" />
             </shell:ApplicationBar.Buttons>
             <shell:ApplicationBar.MenuItems>
                 <shell:ApplicationBarMenuItem Text="Login" Click="LoginClicked"></shell:ApplicationBarMenuItem>

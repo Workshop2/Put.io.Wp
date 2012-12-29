@@ -15,6 +15,7 @@ namespace Put.io.Core.Transfers
     {
         private ObservableCollection<TransferViewModel> Collection { get; set; }
         private readonly TimeSpan _sleep = new TimeSpan(0, 0, 5);
+        private readonly TimeSpan _startupDelay = new TimeSpan(0, 0, 10);
         private IPropertyChangedInvoke Invoker { get; set; }
         private ISettingsRepository Settings { get; set; }
 
@@ -24,21 +25,28 @@ namespace Put.io.Core.Transfers
             Collection = transferCollection;
             Invoker = invoker;
 
-            new TaskFactory().StartNew(Tick);
+            new TaskFactory().StartNew(Startup);
+        }
+
+        private void Startup()
+        {
+            Thread.Sleep(_startupDelay);
+            Tick();
         }
 
         private void Tick()
         {
+            Thread.Sleep(_sleep);
+
             if (_disposed)
                 return;
-            
+
             var rest = new Api.Rest.Transfers(Settings.ApiKey);
             rest.ListTransfers(response =>
             {
                 if (response.Data == null) return;
 
                 MergeTransfers(response.Data);
-                Thread.Sleep(_sleep);
                 Tick();
             });
         }

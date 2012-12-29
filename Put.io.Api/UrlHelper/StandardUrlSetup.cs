@@ -62,6 +62,12 @@ namespace Put.io.Api.UrlHelper
         {
             return "/transfers/{id}";
         }
+
+        public string CancelTransfers()
+        {
+            return "/transfers/cancel";
+        }
+
         public string AccountInfo()
         {
             return "/account/info";

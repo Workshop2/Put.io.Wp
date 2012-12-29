@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Globalization;
 using Put.io.Api.Rest;
 using Put.io.Core.Common;
 using Put.io.Core.InvokeSynchronising;
@@ -19,7 +20,7 @@ namespace Put.io.Core.ViewModels
             {
                 _transfers = new ObservableCollection<TransferViewModel>
                 {
-                    new TransferViewModel{Transfer = new Transfer{Name = "Transfer 1", PercentComplete = 55, Size = 4324233, TransferID = 1, PercentCompleteString = "55%", TimeRemainingString = "2 minutes"}, IsOpen = true},
+                    new TransferViewModel{Transfer = new Transfer{Name = "Transfer 1", PercentComplete = 55, Size = 4324233, TransferID = 1, PercentCompleteString = "55%", FurtherInformation = "2 minutes"}, IsOpen = true},
                     new TransferViewModel{Transfer = new Transfer{Name = "Transfer 2", PercentComplete = 64, Size = 3432423, TransferID = 2}},
                     new TransferViewModel{Transfer = new Transfer{Name = "Transfer 3", PercentComplete = 24, Size = 6422, TransferID = 3}},
                     new TransferViewModel{Transfer = new Transfer{Name = "Transfer 4", PercentComplete = 99, Size = 22453, TransferID = 4}},
@@ -60,6 +61,20 @@ namespace Put.io.Core.ViewModels
 
             SelectedTransfer = null;
             OnLoadData();
+        }
+
+        public void Clearup()
+        {
+            var toClear = Transfers.Where(x => x.Transfer.Status == StatusType.Completed).Select(x => x.Transfer.TransferID).ToList();
+
+            if (!toClear.Any())
+                return;
+            
+            var rester = new Api.Rest.Transfers(Settings.ApiKey);
+            rester.DeleteTransfers(toClear, response =>
+            {
+                Refresh();
+            });
         }
 
         #region Properties
