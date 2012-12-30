@@ -7,8 +7,7 @@ namespace Put.io.Core.Models
 {
     public class Transfer : ViewModelBase
     {
-
-        public void UpdateFurtherInformation()
+        private void UpdateFurtherInformation()
         {
             if (Status == StatusType.Downloading)
             {
@@ -42,6 +41,28 @@ namespace Put.io.Core.Models
             }
 
             FurtherInformation = string.Empty;
+        }
+
+        private void UpdateCancelText()
+        {
+            switch (Status)
+            {
+                case StatusType.Seeding:
+                    CancelText = "Stop seeding";
+                    break;
+                case StatusType.Completed:
+                    CancelText = "Clear finished transfer";
+                    break;
+                default:
+                    CancelText = "Cancel transfer";
+                    break;
+            }
+        }
+
+        public void UpdateAllDynamicFields()
+        {
+            UpdateFurtherInformation();
+            UpdateCancelText();
         }
 
         #region Properties
@@ -109,6 +130,7 @@ namespace Put.io.Core.Models
 
                 _status = value;
                 OnPropertyChanged();
+                UpdateCancelText();
             }
         }
 
@@ -131,12 +153,12 @@ namespace Put.io.Core.Models
             get { return _timeRemaining; }
             set
             {
+                UpdateFurtherInformation();
+
                 if (_timeRemaining == value) return;
 
                 _timeRemaining = value;
                 OnPropertyChanged();
-
-                UpdateFurtherInformation();
             }
         }
 
@@ -149,6 +171,20 @@ namespace Put.io.Core.Models
                 if (_furtherInformation == value) return;
 
                 _furtherInformation = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _cancelText;
+        public string CancelText
+        {
+            get { return _cancelText; }
+            set
+            {
+                if (_cancelText == value || string.IsNullOrEmpty(value)) 
+                    return;
+
+                _cancelText = value;
                 OnPropertyChanged();
             }
         }

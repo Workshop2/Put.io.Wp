@@ -5,6 +5,7 @@
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     xmlns:a="clr-namespace:Put.io.Wp8"
     xmlns:viewModels="clr-namespace:Put.io.Core.ViewModels;assembly=Put.io.Core"
     x:Class="Put.io.Wp8.Views.MainPage"
@@ -59,6 +60,12 @@
                                 <TextBlock Text="{Binding Transfer.FurtherInformation}" Grid.Column="0" TextWrapping="Wrap" Padding="3" Foreground="{StaticResource PhoneTextLowContrastBrush}" />
                                 <TextBlock Text="{Binding Transfer.PercentCompleteString}" Grid.Column="1" Padding="3" />
                             </Grid>
+
+                            <toolkit:ContextMenuService.ContextMenu>
+                                <toolkit:ContextMenu>
+                                    <toolkit:MenuItem Header="{Binding Transfer.CancelText}" Click="CancelTransfer" CommandParameter="{Binding Transfer}" />
+                                </toolkit:ContextMenu>
+                            </toolkit:ContextMenuService.ContextMenu>
                         </StackPanel>
                     </DataTemplate>
                 </phone:LongListSelector.ItemTemplate>

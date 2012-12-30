@@ -28,7 +28,7 @@ namespace Put.io.Core.ViewModels
             set
             {
                 if (_isOpen == value) return;
-
+                //------------------------------------------------------- LETS GET THIS CLASS SORTED - STOP BEING A LAZY ASS YOU DOUCHE ;)
                 _isOpen = value;
                 OnPropertyChanged();
             }

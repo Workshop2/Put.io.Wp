@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Put.io.Core.Models;
 using Put.io.Core.ViewModels;
 using Put.io.Wp8.UserControls;
 using Put.io.Wp8.UserControls.Popups;
@@ -219,6 +220,21 @@ namespace Put.io.Wp8.Views
                 ClearButton = clearButton;
 
             return clearButton != null;
+        }
+
+        private void CancelTransfer(object sender, RoutedEventArgs e)
+        {
+            var senderConverted = sender as MenuItem;
+
+            if (senderConverted == null)
+                return;
+
+            var selectedItem = senderConverted.CommandParameter as Transfer;
+
+            if (selectedItem == null)
+                return;
+
+            App.ViewModel.TransferCollection.CancelTransfer(selectedItem);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using Put.io.Api.Rest;
 using Put.io.Core.Common;
@@ -43,11 +44,11 @@ namespace Put.io.Core.ViewModels
 
             var rester = new Api.Rest.Transfers(Settings.ApiKey);
             var transaction = ProgressTracker.StartNewTransaction();
-            
+
             rester.ListTransfers(response =>
             {
                 Transfers = response.Data.ToModelList(Invoker).OrderBy(x => x.Transfer.Name).ToObservableCollection();
-                
+
                 if (Updater != null)
                     Updater.Dispose();
 
@@ -76,7 +77,7 @@ namespace Put.io.Core.ViewModels
             var rester = new Api.Rest.Transfers(Settings.ApiKey);
             var transaction = ProgressTracker.StartNewTransaction();
 
-            rester.DeleteTransfers(toClear, response =>
+            rester.CancelTransfers(toClear, response =>
             {
                 Refresh();
                 ProgressTracker.CompleteTransaction(transaction);
@@ -114,5 +115,19 @@ namespace Put.io.Core.ViewModels
             }
         }
         #endregion
+
+        public void CancelTransfer(Transfer selectedItem)
+        {
+            var toCancel = new List<int> { selectedItem.TransferID };
+
+            var rester = new Api.Rest.Transfers(Settings.ApiKey);
+            var transaction = ProgressTracker.StartNewTransaction();
+
+            rester.CancelTransfers(toCancel, response =>
+            {
+                Refresh();
+                ProgressTracker.CompleteTransaction(transaction);
+            });
+        }
     }
 }

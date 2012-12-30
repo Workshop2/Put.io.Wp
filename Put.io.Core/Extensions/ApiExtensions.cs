@@ -48,7 +48,7 @@ namespace Put.io.Core.Extensions
                 TimeRemaining = (@this.estimated_time ?? 0)
             };
 
-            result.UpdateFurtherInformation();
+            result.UpdateAllDynamicFields();
             return result;
         }
 

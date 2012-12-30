@@ -33,7 +33,7 @@ namespace Put.io.Api.Rest
             RestClient.ExecuteAsync(request, callback);
         }
 
-        public void DeleteTransfers(List<int> transferIDs, Action<IRestResponse<GetTransferResponse>> callback)
+        public void CancelTransfers(List<int> transferIDs, Action<IRestResponse<GetTransferResponse>> callback)
         {
             var request = NewRequest(UrlHelper.CancelTransfers(), Method.POST);
             
