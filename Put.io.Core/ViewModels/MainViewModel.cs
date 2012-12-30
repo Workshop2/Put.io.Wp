@@ -22,6 +22,7 @@ namespace Put.io.Core.ViewModels
             {
                 _fileCollection = new FileCollectionViewModel();
                 _transferCollection = new TransferCollectionViewModel();
+                InvalidApiKey = true;
             }
         }
 

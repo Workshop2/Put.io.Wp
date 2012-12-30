@@ -25,7 +25,11 @@
     <phone:Pivot x:Name="Pivot" SelectionChanged="Pivot_OnSelectionChanged">
         <phone:PivotItem Header="Files" x:Name="FilesPivot">
             <Grid>
-                <TextBlock Text="Please login to continue." Visibility="{Binding InvalidApiKey, Converter={StaticResource VisibilityOfBool}}" />
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <HyperlinkButton Visibility="{Binding InvalidApiKey, Converter={StaticResource VisibilityOfBool}}" Click="LoginClicked">Please login to continue.</HyperlinkButton>
                 <phone:LongListSelector x:Name="Files" Grid.Row="1" Margin="12,0,12,0" ItemsSource="{Binding FileCollection.CurrentFileList}" SelectionChanged="FileSelectionChanged">
                     <phone:LongListSelector.ItemTemplate>
                         <DataTemplate>

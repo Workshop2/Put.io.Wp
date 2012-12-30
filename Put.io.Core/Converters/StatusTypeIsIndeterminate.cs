@@ -14,6 +14,8 @@ namespace Put.io.Core.Converters
                 switch ((StatusType)value)
                 {
                     case StatusType.InQueue:
+                    case StatusType.Completing:
+                    case StatusType.Seeding:
                         return true;
                 }
             }
