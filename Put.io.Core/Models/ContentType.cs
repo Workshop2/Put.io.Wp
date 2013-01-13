@@ -14,18 +14,20 @@ namespace Put.io.Core.Models
     public static class ContentTypeParser
     {
         private static readonly string[] DirectoryTypes = new string[] { "application/x-directory" };
-        private static readonly string[] VideoTypes = new string[] { "" };
-        private static readonly string[] MusicTypes = new string[] { "" };
 
         public static ContentType ParseString(string type)
         {
             if (DirectoryTypes.Any(x => x.Equals(type, StringComparison.InvariantCultureIgnoreCase)))
                 return ContentType.Directory;
 
-            if (VideoTypes.Any(x => x.Equals(type, StringComparison.InvariantCultureIgnoreCase)))
+            var typeParts = type.Split('/');
+            if (!typeParts.Any())
+                return ContentType.Other;
+
+            if (typeParts[0].Equals("video", StringComparison.InvariantCultureIgnoreCase))
                 return ContentType.Video;
 
-            if (MusicTypes.Any(x => x.Equals(type, StringComparison.InvariantCultureIgnoreCase)))
+            if (typeParts[0].Equals("audio", StringComparison.InvariantCultureIgnoreCase))
                 return ContentType.Music;
             
             return ContentType.Other;

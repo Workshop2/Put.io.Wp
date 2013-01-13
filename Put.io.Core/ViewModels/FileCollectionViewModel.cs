@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Put.io.Core.Common;
 using Put.io.Core.InvokeSynchronising;
 using Put.io.Core.Models;
@@ -47,7 +48,7 @@ namespace Put.io.Core.ViewModels
             RestApi.ListFiles(null, response =>
             {
                 //Store these down as our root items
-                AllFiles = response.Data.ToModelList(Invoker).OrderBy(x => x.File.Name).ToObservableCollection();
+                AllFiles = OrderCollection(response.Data.ToModelList(Invoker));
 
                 //These root items will then be displayed as default
                 CurrentFileList = AllFiles;
@@ -71,13 +72,30 @@ namespace Put.io.Core.ViewModels
 
             RestApi.ListFiles(file.File.FileID, response =>
             {
-                file.Children = response.Data.ToModelList(Invoker).OrderBy(x => x.File.Name).ToObservableCollection();
+                file.Children = OrderCollection(response.Data.ToModelList(Invoker));
                 CurrentFileList = file.Children;
 
                 ProgressTracker.CompleteTransaction(transactionID);
             });
         }
 
+        /// <summary>
+        /// Orders a collection by directories first, then by name
+        /// </summary>
+        private static ObservableCollection<FileViewModel> OrderCollection(IEnumerable<FileViewModel> collection)
+        {
+            var result = collection
+                .OrderBy(x => x.File.ContentType != ContentType.Directory)
+                .ThenBy(x => x.File.Name)
+                .ToObservableCollection();
+
+            return result;
+        }
+
+        /// <summary>
+        /// This will usually hit when pressing the back button
+        /// </summary>
+        /// <returns>Has the event been handled?</returns>
         public bool NavigateUp()
         {
             if (SelectedFile != null)
@@ -91,11 +109,18 @@ namespace Put.io.Core.ViewModels
             return false;
         }
 
+        /// <summary>
+        /// Refreshes the current view of files
+        /// </summary>
         public void Refresh()
         {
             Refresh(false);
         }
 
+        /// <summary>
+        /// Refreshes the current view of files
+        /// </summary>
+        /// <param name="allFiles">Clears down all files to be refreshed</param>
         public void Refresh(bool allFiles)
         {
             if (CurrentFileList != null)
@@ -157,7 +182,6 @@ namespace Put.io.Core.ViewModels
         private Api.Rest.Files _restApi;
         private Api.Rest.Files RestApi
         {
-            //TODO: Use proper API key
             get { return _restApi ?? (_restApi = new Api.Rest.Files(Settings.ApiKey)); }
         }
         #endregion

@@ -7,7 +7,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:Put.io.Core.ViewModels;assembly=Put.io.Core"
              xmlns:converters="clr-namespace:WindowsPhoneEssentials.Converters;assembly=WindowsPhoneEssentials"
-             xmlns:converters1="clr-namespace:Put.io.Core.Converters;assembly=Put.io.Core"
+             xmlns:PutIoConverters="clr-namespace:Put.io.Core.Converters;assembly=Put.io.Core"
              mc:Ignorable="d">
     
     <!--Application Resources-->
@@ -19,7 +19,8 @@
             <ResourceDictionary.MergedDictionaries></ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
         <converters:BooleanToVisibilityConverter x:Key="VisibilityOfBool" />
-        <converters1:StatusTypeIsIndeterminate x:Key="StatusTypeIsIndeterminate" />
+        <PutIoConverters:StatusTypeIsIndeterminate x:Key="StatusTypeIsIndeterminate" />
+        <PutIoConverters:IconFromType x:Key="IconFromType" />
     </Application.Resources>
     
     

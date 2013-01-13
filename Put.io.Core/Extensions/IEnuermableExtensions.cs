@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace Put.io.Core.Extensions
 {
-    public static class IEnumerableExtensions
+    public static class EnumerableExtensions
     {
          public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> list)
          {
