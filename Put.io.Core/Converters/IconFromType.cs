@@ -26,6 +26,9 @@ namespace Put.io.Core.Converters
                     case ContentType.Video:
                         icon = "video.png";
                         break;
+                    case ContentType.Image:
+                        icon = "image.png";
+                        break;
                 }
             }
 

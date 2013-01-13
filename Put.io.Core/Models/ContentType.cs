@@ -8,6 +8,7 @@ namespace Put.io.Core.Models
         Directory,
         Video,
         Music,
+        Image,
         Other
     }
 
@@ -29,6 +30,9 @@ namespace Put.io.Core.Models
 
             if (typeParts[0].Equals("audio", StringComparison.InvariantCultureIgnoreCase))
                 return ContentType.Music;
+
+            if (typeParts[0].Equals("image", StringComparison.InvariantCultureIgnoreCase))
+                return ContentType.Image;
             
             return ContentType.Other;
         }

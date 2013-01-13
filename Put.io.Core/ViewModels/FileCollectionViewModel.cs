@@ -23,8 +23,8 @@ namespace Put.io.Core.ViewModels
                     new FileViewModel{ File = new File{FileID = 12345, ContentType = ContentType.Directory, Mp4Available = false, Name = "Test Item", ParentID = 1, ScreenShot = null, Size = 96349382}},
                     new FileViewModel{ File = new File{FileID = 5324, ContentType = ContentType.Video, Mp4Available = true, Name = "Test Item2", ParentID = 1, ScreenShot = null, Size = 5235}},
                     new FileViewModel{ File = new File{FileID = 2342, ContentType = ContentType.Music, Mp4Available = false, Name = "Test Item3", ParentID = 1, ScreenShot = null, Size = 234245}},
-                    new FileViewModel{ File = new File{FileID = 6234, ContentType = ContentType.Other, Mp4Available = true, Name = "Test Item4", ParentID = 1, ScreenShot = null, Size = 6542}},
-                    new FileViewModel{ File = new File{FileID = 12531, ContentType = ContentType.Directory, Mp4Available = false, Name = "Test Item5", ParentID = 1, ScreenShot = null, Size = 123677543}}
+                    new FileViewModel{ File = new File{FileID = 6234, ContentType = ContentType.Image, Mp4Available = true, Name = "Test Item4", ParentID = 1, ScreenShot = null, Size = 6542}},
+                    new FileViewModel{ File = new File{FileID = 12531, ContentType = ContentType.Other, Mp4Available = false, Name = "Test Item5", ParentID = 1, ScreenShot = null, Size = 123677543}}
                 };
             }
         }
@@ -146,6 +146,19 @@ namespace Put.io.Core.ViewModels
             }
         }
 
+        private void UpdateCurrentPath()
+        {
+            if (CurrentFileList == null || !CurrentFileList.Any())
+            {
+                CurrentPath = string.Empty;
+                return;
+            }
+
+            var first = CurrentFileList.First();
+
+            CurrentPath = first.Path();
+        }
+
         #endregion
 
         #region Properties
@@ -163,6 +176,8 @@ namespace Put.io.Core.ViewModels
 
                 _currentFileList = value;
                 OnPropertyChanged();
+
+                UpdateCurrentPath();
             }
         }
 
@@ -183,6 +198,19 @@ namespace Put.io.Core.ViewModels
         private Api.Rest.Files RestApi
         {
             get { return _restApi ?? (_restApi = new Api.Rest.Files(Settings.ApiKey)); }
+        }
+
+        private string _currentPath;
+        public string CurrentPath
+        {
+            get { return _currentPath; }
+            set
+            {
+                if (_currentPath == value) return;
+
+                _currentPath = value;
+                OnPropertyChanged();
+            }
         }
         #endregion
     }

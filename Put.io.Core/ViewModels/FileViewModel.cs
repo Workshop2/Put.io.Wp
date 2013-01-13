@@ -7,6 +7,11 @@ namespace Put.io.Core.ViewModels
 {
     public class FileViewModel : ViewModelBase
     {
+        public FileViewModel()
+        {
+            
+        }
+
         private File _file;
         public File File
         {
@@ -49,6 +54,31 @@ namespace Put.io.Core.ViewModels
             {
                 return File.ContentType == ContentType.Directory;
             }
+        }
+
+        public string Path()
+        {
+            if (Parent == null)
+                return " / ";
+
+            var path = Parent.Path();
+            path += string.Format("{0} / ", ShrinkFileName(Parent.File.Name));
+
+            return path;
+        }
+
+        private const int MaxFileName = 20;
+        private string ShrinkFileName(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                name = string.Empty;
+
+            if (name.Length > MaxFileName + 3)
+            {
+                name = name.Substring(0, name.Length - (name.Length - MaxFileName)) + "...";
+            }
+
+            return name;
         }
     }
 }

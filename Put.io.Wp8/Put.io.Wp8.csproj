@@ -142,9 +142,9 @@
     <Content Include="Assets\ApplicationIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Icons\camera.png" />
     <Content Include="Assets\Icons\folder.png" />
     <Content Include="Assets\Icons\music.png" />
+    <Content Include="Assets\Icons\image.png" />
     <Content Include="Assets\Icons\ribbon.png" />
     <Content Include="Assets\Icons\video.png" />
     <Content Include="Assets\Tiles\FlipCycleTileLarge.png">
