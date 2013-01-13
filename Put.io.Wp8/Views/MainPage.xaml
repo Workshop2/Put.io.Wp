@@ -35,6 +35,11 @@
                     <phone:LongListSelector.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Margin="0,0,0,17">
+                                <Rectangle Height="20" Width="20" Fill="{StaticResource PhoneContrastBackgroundBrush}" >
+                                	<Rectangle.OpacityMask>
+                                		<ImageBrush Stretch="Fill" ImageSource="/Assets/Icons/folder.png"/>
+                                	</Rectangle.OpacityMask>
+                                </Rectangle>
                                 <TextBlock Text="{Binding File.Name}" />
                                 <TextBlock Text="{Binding File.Size}" />
                             </StackPanel>
@@ -48,7 +53,16 @@
                 <phone:LongListSelector.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Margin="0,0,0,10">
-                            <TextBlock Text="{Binding Transfer.Name}" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="{Binding Transfer.Name}" Grid.Column="0" />
+                                <TextBlock Text="{Binding PercentCompleteString}" Grid.Column="1" Foreground="{StaticResource PhoneTextLowContrastBrush}" />
+
+                            </Grid>
                             <ProgressBar Maximum="100" Value="{Binding Transfer.PercentComplete}" IsIndeterminate="{Binding Transfer.Status, Converter={StaticResource StatusTypeIsIndeterminate}}" Margin="0,6,0,2" Padding="0" />
 
                             <Grid Visibility="{Binding IsOpen, Converter={StaticResource VisibilityOfBool}}" Margin="0,0,0,10">
@@ -57,13 +71,13 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Text="{Binding Transfer.FurtherInformation}" Grid.Column="0" TextWrapping="Wrap" Padding="3" Foreground="{StaticResource PhoneTextLowContrastBrush}" />
-                                <TextBlock Text="{Binding Transfer.PercentCompleteString}" Grid.Column="1" Padding="3" />
+                                <TextBlock Text="{Binding FurtherInformation}" Grid.Column="0" TextWrapping="Wrap" Padding="3" Foreground="{StaticResource PhoneTextLowContrastBrush}" />
+                                <TextBlock Text="{Binding TransferSpeed}" Grid.Column="1" Padding="3" Foreground="{StaticResource PhoneTextLowContrastBrush}" />
                             </Grid>
 
                             <toolkit:ContextMenuService.ContextMenu>
                                 <toolkit:ContextMenu>
-                                    <toolkit:MenuItem Header="{Binding Transfer.CancelText}" Click="CancelTransfer" CommandParameter="{Binding Transfer}" />
+                                    <toolkit:MenuItem Header="{Binding CancelText}" Click="CancelTransfer" CommandParameter="{Binding Transfer}" />
                                 </toolkit:ContextMenu>
                             </toolkit:ContextMenuService.ContextMenu>
                         </StackPanel>

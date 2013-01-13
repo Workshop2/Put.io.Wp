@@ -77,7 +77,7 @@ namespace Put.io.Wp8.UserControls
             if (result.Status != CallbackStatus.Success)
             {
                 //If we are being navigated away from the API domain, lets error :)
-                if (!e.Uri.Segments.Any(x => x.Equals(@"oauth2/", StringComparison.InvariantCultureIgnoreCase)))
+                if (!UrlWithinKnownWaters(e))
                 {
                     DisplayError();
                 }
@@ -96,6 +96,15 @@ namespace Put.io.Wp8.UserControls
             {
                 OnKeyFound(result.Token);
             }
+        }
+
+        //TODO: Make this dynamic - maybe download from x-volt.com?
+        private static bool UrlWithinKnownWaters(NavigatingEventArgs e)
+        {
+            if (e.Uri.AbsoluteUri.Equals("https://api.put.io/login", StringComparison.InvariantCultureIgnoreCase))
+                return true;
+
+            return e.Uri.Segments.Any(x => x.Equals(@"oauth2/", StringComparison.InvariantCultureIgnoreCase));
         }
 
         private void DisplayError()

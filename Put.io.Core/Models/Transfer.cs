@@ -7,63 +7,6 @@ namespace Put.io.Core.Models
 {
     public class Transfer : ViewModelBase
     {
-        private void UpdateFurtherInformation()
-        {
-            if (Status == StatusType.Downloading)
-            {
-                var timeSpan = new TimeSpan(0, 0, TimeRemaining);
-                FurtherInformation = timeSpan.ToReadableString();
-                return;
-            }
-
-            if (Status == StatusType.InQueue)
-            {
-                FurtherInformation = "In queue, waiting for download to start...";
-                return;
-            }
-
-            if (Status == StatusType.Completed)
-            {
-                FurtherInformation = "Download complete.";
-                return;
-            }
-
-            if (Status == StatusType.Seeding)
-            {
-                FurtherInformation = "Seeding with other users.";
-                return;
-            }
-
-            if (Status == StatusType.Completing)
-            {
-                FurtherInformation = "Completing download...";
-                return;
-            }
-
-            FurtherInformation = string.Empty;
-        }
-
-        private void UpdateCancelText()
-        {
-            switch (Status)
-            {
-                case StatusType.Seeding:
-                    CancelText = "Stop seeding";
-                    break;
-                case StatusType.Completed:
-                    CancelText = "Clear finished transfer";
-                    break;
-                default:
-                    CancelText = "Cancel transfer";
-                    break;
-            }
-        }
-
-        public void UpdateAllDynamicFields()
-        {
-            UpdateFurtherInformation();
-            UpdateCancelText();
-        }
 
         #region Properties
         private string _name;
@@ -115,8 +58,6 @@ namespace Put.io.Core.Models
 
                 _percentComplete = value;
                 OnPropertyChanged();
-
-                PercentCompleteString = _percentComplete.ToString(CultureInfo.InvariantCulture) + CultureInfo.CurrentUICulture.NumberFormat.PercentSymbol;
             }
         }
 
@@ -130,20 +71,6 @@ namespace Put.io.Core.Models
 
                 _status = value;
                 OnPropertyChanged();
-                UpdateCancelText();
-            }
-        }
-
-        private string _percentCompleteString;
-        public string PercentCompleteString
-        {
-            get { return _percentCompleteString; }
-            set
-            {
-                if (_percentCompleteString == value) return;
-
-                _percentCompleteString = value;
-                OnPropertyChanged();
             }
         }
 
@@ -153,8 +80,6 @@ namespace Put.io.Core.Models
             get { return _timeRemaining; }
             set
             {
-                UpdateFurtherInformation();
-
                 if (_timeRemaining == value) return;
 
                 _timeRemaining = value;
@@ -162,29 +87,15 @@ namespace Put.io.Core.Models
             }
         }
 
-        private string _furtherInformation;
-        public string FurtherInformation
+        private int _downSpeed;
+        public int DownSpeed
         {
-            get { return _furtherInformation; }
+            get { return _downSpeed; }
             set
             {
-                if (_furtherInformation == value) return;
+                if (_downSpeed == value) return;
 
-                _furtherInformation = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _cancelText;
-        public string CancelText
-        {
-            get { return _cancelText; }
-            set
-            {
-                if (_cancelText == value || string.IsNullOrEmpty(value)) 
-                    return;
-
-                _cancelText = value;
+                _downSpeed = value;
                 OnPropertyChanged();
             }
         }

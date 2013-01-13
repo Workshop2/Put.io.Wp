@@ -45,10 +45,10 @@ namespace Put.io.Core.Extensions
                 TransferID = @this.id,
                 Status = @this.status.ToStatusType(),
                 Invoker = invoker,
-                TimeRemaining = (@this.estimated_time ?? 0)
+                TimeRemaining = (@this.estimated_time ?? 0),
+                DownSpeed = @this.down_speed
             };
 
-            result.UpdateAllDynamicFields();
             return result;
         }
 
@@ -57,7 +57,7 @@ namespace Put.io.Core.Extensions
             if (@this == null || @this.Transfers == null)
                 return new List<TransferViewModel>();
 
-            return @this.Transfers.Select(x => new TransferViewModel { Transfer = x.ToModel(invoker), Invoker = invoker }).ToList();
+            return @this.Transfers.Select(x => new TransferViewModel { Invoker = invoker, Transfer = x.ToModel(invoker) }).ToList();
         }
 
         public static StatusType ToStatusType(this string @this)

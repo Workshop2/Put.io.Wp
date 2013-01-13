@@ -90,6 +90,7 @@
     <Compile Include="Extensions\ApiExtensions.cs" />
     <Compile Include="Extensions\GeneralExtensions.cs" />
     <Compile Include="Extensions\IEnuermableExtensions.cs" />
+    <Compile Include="Extensions\SizeExtensions.cs" />
     <Compile Include="Extensions\TimeSpan.cs" />
     <Compile Include="InvokeSynchronising\IPropertyChangedInvoke.cs" />
     <Compile Include="InvokeSynchronising\PropertyChangedInvoke.cs" />

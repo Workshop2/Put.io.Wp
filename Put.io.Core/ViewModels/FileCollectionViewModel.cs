@@ -5,6 +5,7 @@ using Put.io.Core.Models;
 using Put.io.Core.Extensions;
 using Put.io.Core.ProgressTracking;
 using Put.io.Core.Storage;
+using System.Linq;
 
 namespace Put.io.Core.ViewModels
 {
@@ -46,7 +47,7 @@ namespace Put.io.Core.ViewModels
             RestApi.ListFiles(null, response =>
             {
                 //Store these down as our root items
-                AllFiles = response.Data.ToModelList(Invoker).ToObservableCollection();
+                AllFiles = response.Data.ToModelList(Invoker).OrderBy(x => x.File.Name).ToObservableCollection();
 
                 //These root items will then be displayed as default
                 CurrentFileList = AllFiles;
@@ -70,7 +71,7 @@ namespace Put.io.Core.ViewModels
 
             RestApi.ListFiles(file.File.FileID, response =>
             {
-                file.Children = response.Data.ToModelList(Invoker).ToObservableCollection();
+                file.Children = response.Data.ToModelList(Invoker).OrderBy(x => x.File.Name).ToObservableCollection();
                 CurrentFileList = file.Children;
 
                 ProgressTracker.CompleteTransaction(transactionID);

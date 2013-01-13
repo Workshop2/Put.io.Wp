@@ -21,7 +21,7 @@ namespace Put.io.Core.ViewModels
             {
                 _transfers = new ObservableCollection<TransferViewModel>
                 {
-                    new TransferViewModel{Transfer = new Transfer{Name = "Transfer 1", PercentComplete = 55, Size = 4324233, TransferID = 1, PercentCompleteString = "55%", FurtherInformation = "2 minutes"}, IsOpen = true},
+                    new TransferViewModel{Transfer = new Transfer{Name = "Transfer 1", PercentComplete = 55, Size = 4324233, TransferID = 1}, IsOpen = true, PercentCompleteString = "55%", FurtherInformation = "2 minutes", TransferSpeed = "2 MB/s"},
                     new TransferViewModel{Transfer = new Transfer{Name = "Transfer 2", PercentComplete = 64, Size = 3432423, TransferID = 2}},
                     new TransferViewModel{Transfer = new Transfer{Name = "Transfer 3", PercentComplete = 24, Size = 6422, TransferID = 3}},
                     new TransferViewModel{Transfer = new Transfer{Name = "Transfer 4", PercentComplete = 99, Size = 22453, TransferID = 4}},
