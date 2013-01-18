@@ -44,7 +44,7 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 
-                                <Rectangle Grid.Column="0" Height="40" Width="40" Margin="0 6 6 6" VerticalAlignment="Center" HorizontalAlignment="Center" Fill="{StaticResource PhoneContrastBackgroundBrush}" >
+                                <Rectangle Grid.Column="0" Height="50" Width="50" Margin="0 6 6 6" VerticalAlignment="Center" HorizontalAlignment="Center" Fill="{StaticResource PhoneContrastBackgroundBrush}" >
                                 	<Rectangle.OpacityMask>
                                         <ImageBrush Stretch="UniformToFill" ImageSource="{Binding File.ContentType, Converter={StaticResource IconFromType}}"/>
                                 	</Rectangle.OpacityMask>
@@ -57,21 +57,25 @@
             </Grid>
         </phone:PivotItem>
         <phone:PivotItem Header="Transfers" x:Name="TransfersPivot">
-            <phone:LongListSelector Grid.Row="1" Margin="12,0,12,0" ItemsSource="{Binding TransferCollection.Transfers}" SelectionChanged="TransferSelectionChanged">
+            <phone:LongListSelector Grid.Row="1" Margin="12,0,12,0" ItemsSource="{Binding TransferCollection.Transfers}">
                 <phone:LongListSelector.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Margin="0,0,0,10">
+                        <StackPanel Margin="0,0,0,10" Tap="UIElement_OnTap">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition Height="15" />
+                                </Grid.RowDefinitions>
 
                                 <TextBlock Text="{Binding Transfer.Name}" Grid.Column="0" />
                                 <TextBlock Text="{Binding PercentCompleteString}" Grid.Column="1" Foreground="{StaticResource PhoneTextLowContrastBrush}" />
 
+                                <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" Maximum="100" Value="{Binding Transfer.PercentComplete}" IsIndeterminate="{Binding Transfer.Status, Converter={StaticResource StatusTypeIsIndeterminate}}" Height="4" Margin="0" Padding="0" />
                             </Grid>
-                            <ProgressBar Maximum="100" Value="{Binding Transfer.PercentComplete}" IsIndeterminate="{Binding Transfer.Status, Converter={StaticResource StatusTypeIsIndeterminate}}" Margin="0,6,0,2" Padding="0" />
 
                             <Grid Visibility="{Binding IsOpen, Converter={StaticResource VisibilityOfBool}}" Margin="0,0,0,10">
                                 <Grid.ColumnDefinitions>

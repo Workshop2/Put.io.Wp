@@ -1,17 +1,54 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Put.io.Core.Common;
+using Put.io.Core.Extensions;
+using Put.io.Core.InvokeSynchronising;
 using Put.io.Core.Models;
 using System.Linq;
+using Put.io.Core.ProgressTracking;
+using Put.io.Core.Storage;
 
 namespace Put.io.Core.ViewModels
 {
     public class FileViewModel : ViewModelBase
     {
+        protected ISettingsRepository Settings { get; set; }
+        protected ProgressTracker ProgressTracker { get; set; }
+
         public FileViewModel()
         {
-            
+            if (IsInDesignMode)
+            {
+                File = new File { ScreenShot = @"http://i.imgur.com/pq7lih.jpg", Name = "This is a very long file name, oh my very long like most torrents" };
+                ScreenShot = new BitmapImage(new Uri(File.ScreenShot, UriKind.Absolute));
+                SizeInformation = "2.4 GB";
+                CreatedDate = DateTime.Now.ToShortDateString();
+            }
         }
 
+
+        public FileViewModel(ISettingsRepository settings, ProgressTracker tracker, IPropertyChangedInvoke invoker)
+            : this()
+        {
+            Settings = settings;
+            ProgressTracker = tracker;
+            Invoker = invoker;
+        }
+
+        #region Methods
+        
+        private void UpdateDynamicFields()
+        {
+            SizeInformation = File.Size.ToFileSize();
+            CreatedDate = File.CreatedDate.ToString(CultureInfo.CurrentCulture);
+        }
+
+        #endregion
+
+        #region Properties
         private File _file;
         public File File
         {
@@ -22,6 +59,9 @@ namespace Put.io.Core.ViewModels
 
                 _file = value;
                 OnPropertyChanged();
+
+                if (_file != null)
+                    UpdateDynamicFields();
             }
         }
 
@@ -56,6 +96,11 @@ namespace Put.io.Core.ViewModels
             }
         }
 
+        public bool IsOpenable
+        {
+            get { return File.ContentType == ContentType.Video; } //TODO: Work out betterer
+        }
+
         public string Path()
         {
             if (Parent == null)
@@ -80,5 +125,65 @@ namespace Put.io.Core.ViewModels
 
             return name;
         }
+
+        private ImageSource _screenShot;
+        public ImageSource ScreenShot
+        {
+            get
+            {
+                if (_screenShot != null)
+                    return _screenShot;
+
+                if (string.IsNullOrEmpty(File.ScreenShot))
+                    return null;
+
+                //Download image with progress indication
+                var transaction = ProgressTracker.StartNewTransaction();
+
+                var imageSource = new BitmapImage();
+                imageSource.ImageOpened += (sender, args) => ProgressTracker.CompleteTransaction(transaction);
+                imageSource.ImageFailed += (sender, args) => ProgressTracker.CompleteTransaction(transaction);
+
+                //Start the download
+                imageSource.UriSource = new Uri(File.ScreenShot, UriKind.Absolute);
+
+                _screenShot = imageSource;
+                return _screenShot;
+            }
+            set
+            {
+                if (_screenShot == value) return;
+
+                _screenShot = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _sizeInformation;
+        public string SizeInformation
+        {
+            get { return _sizeInformation; }
+            set
+            {
+                if (_sizeInformation == value) return;
+
+                _sizeInformation = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _createdDate;
+        public string CreatedDate
+        {
+            get { return _createdDate; }
+            set
+            {
+                if (_createdDate == value) return;
+
+                _createdDate = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
     }
 }

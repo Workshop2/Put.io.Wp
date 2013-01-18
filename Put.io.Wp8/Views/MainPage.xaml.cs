@@ -4,17 +4,21 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Put.io.Core.Models;
+using Put.io.Core.ProgressTracking;
 using Put.io.Core.ViewModels;
 using Put.io.Wp8.UserControls;
 using Put.io.Wp8.UserControls.Popups;
+using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace Put.io.Wp8.Views
 {
     public partial class MainPage : PhoneApplicationPage
     {
+        private PopupWrapper Popup { get; set; }
 
         // Constructor
         public MainPage()
@@ -40,6 +44,7 @@ namespace Put.io.Wp8.Views
             }
 
             App.ViewModel.OnWorkingStatusChanged += ViewModel_OnWorkingStatusChanged;
+            App.ViewModel.OnOpenFilePopup += ViewModel_OnOpenFilePopup;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -120,7 +125,20 @@ namespace Put.io.Wp8.Views
 
         #endregion
 
-        private PopupWrapper Popup { get; set; }
+        private void ViewModel_OnOpenFilePopup(FileViewModel file, ProgressTracker tracker)
+        {
+            const int vertOffset = 48;
+            const int horizOffset = 40;
+            var appHost = Application.Current.Host.Content;
+            var pageSize = new Size(appHost.ActualWidth, appHost.ActualHeight);
+            var spacing = new RectangleSpacing(vertOffset, horizOffset, pageSize);
+            var apiKeyFetcher = new VideoFilePopup(file, tracker);
+            Popup = new PopupWrapper(apiKeyFetcher, spacing, ApplicationBar);
+            Popup.OnClose += Popup_OnClose;
+            Popup.Open();
+        }
+
+
         private void LoginClicked(object sender, EventArgs e)
         {
             const int vertOffset = 48;
@@ -159,24 +177,38 @@ namespace Put.io.Wp8.Views
 
         }
 
-        private void TransferSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void UIElement_OnTap(object sender, GestureEventArgs e)
         {
-            var selector = sender as LongListSelector;
-
-            // If selected item is null (no selection) do nothing
-            if (selector == null || selector.SelectedItem == null)
+            var obj = sender as FrameworkElement;
+            if (obj == null)
                 return;
 
-            var selected = selector.SelectedItem as TransferViewModel;
-
-            if (selected == null)
+            var currentObject = obj.DataContext as TransferViewModel;
+            if (currentObject == null)
                 return;
 
-            App.ViewModel.SelectTransfer(selected);
+            App.ViewModel.SelectTransfer(currentObject);
 
-            //Clear selection to avoid problems down the road
-            selector.SelectedItem = null;
+            e.Handled = true;
         }
+
+        //private void TransferSelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    var selector = sender as LongListSelector;
+
+        //    // If selected item is null (no selection) do nothing
+        //    if (selector == null || selector.SelectedItem == null)
+        //        return;
+
+        //    var selected = selector.SelectedItem as TransferViewModel;
+
+        //    if (selected == null)
+        //        return;
+
+
+        //    //Clear selection to avoid problems down the road
+        //    selector.SelectedItem = null;
+        //}
 
         private void Pivot_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {

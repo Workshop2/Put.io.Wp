@@ -86,12 +86,48 @@ namespace Put.io.Api.Rest
         /// <param name="callback">The callback method to use once completed</param>
         public void DownloadFile(int fileID, Action<IRestResponse> callback)
         {
-            var request = NewRequest(UrlHelper.DownloadFile(), Method.HEAD);
-            
+            GetHeaderFile(fileID, callback, UrlHelper.DownloadFile());
+        }
+
+        /// <summary>
+        /// Gets the URI of the specified file to stream
+        /// </summary>
+        /// <param name="fileID"></param>
+        /// <param name="callback"></param>
+        public void StreamFile(int fileID, Action<IRestResponse> callback)
+        {
+            GetHeaderFile(fileID, callback, UrlHelper.StreamFile());
+        }
+
+        /// <summary>
+        /// Gets the URI of the specified mp4 to download
+        /// </summary>
+        /// <param name="fileID"></param>
+        /// <param name="callback"></param>
+        public void DownloadMp4(int fileID, Action<IRestResponse> callback)
+        {
+            GetHeaderFile(fileID, callback, UrlHelper.DownloadMp4());
+        }
+
+        /// <summary>
+        /// Gets the URI of the specified mp4 stream
+        /// </summary>
+        /// <param name="fileID"></param>
+        /// <param name="callback"></param>
+        public void StreamMp4(int fileID, Action<IRestResponse> callback)
+        {
+            GetHeaderFile(fileID, callback, UrlHelper.StreamMp4());
+        }
+
+        private void GetHeaderFile(int fileID, Action<IRestResponse> callback, string url)
+        {
+            var request = NewRequest(url, Method.HEAD);
+
             request.AddUrlSegment("id", fileID.ToString(CultureInfo.InvariantCulture));
 
             RestClient.ExecuteAsync(request, callback);
         }
+
 
         //Non-critical api calls
         // GET /files/search/<query>/page/<page_no>

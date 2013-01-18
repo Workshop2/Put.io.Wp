@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Put.io.Core.Common;
 using Put.io.Core.InvokeSynchronising;
@@ -48,7 +49,7 @@ namespace Put.io.Core.ViewModels
             RestApi.ListFiles(null, response =>
             {
                 //Store these down as our root items
-                AllFiles = OrderCollection(response.Data.ToModelList(Invoker));
+                AllFiles = OrderCollection(response.Data.ToModelList(Invoker, Settings, ProgressTracker));
 
                 //These root items will then be displayed as default
                 CurrentFileList = AllFiles;
@@ -72,7 +73,7 @@ namespace Put.io.Core.ViewModels
 
             RestApi.ListFiles(file.File.FileID, response =>
             {
-                file.Children = OrderCollection(response.Data.ToModelList(Invoker));
+                file.Children = OrderCollection(response.Data.ToModelList(Invoker, Settings, ProgressTracker));
                 CurrentFileList = file.Children;
 
                 ProgressTracker.CompleteTransaction(transactionID);
@@ -159,6 +160,18 @@ namespace Put.io.Core.ViewModels
             CurrentPath = first.Path();
         }
 
+        public void GetMp4Status(FileViewModel context, Action<Mp4Status> action)
+        {
+            var rester = new Api.Rest.Files(Settings.ApiKey);
+            var transaction = ProgressTracker.StartNewTransaction();
+
+            rester.Mp4Status(context.File.FileID, response =>
+            {
+                ProgressTracker.CompleteTransaction(transaction);
+                action(response.Data.ToMp4Status());
+            });
+        }
+
         #endregion
 
         #region Properties
@@ -213,5 +226,6 @@ namespace Put.io.Core.ViewModels
             }
         }
         #endregion
+
     }
 }

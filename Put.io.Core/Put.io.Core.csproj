@@ -87,8 +87,10 @@
     <Compile Include="Authentication\CallbackResult.cs" />
     <Compile Include="Common\ViewModelBase.cs" />
     <Compile Include="Converters\IconFromType.cs" />
+    <Compile Include="Converters\InvertBool.cs" />
     <Compile Include="Converters\StatusTypeIsIndeterminate.cs" />
     <Compile Include="Extensions\ApiExtensions.cs" />
+    <Compile Include="Extensions\DateExtensions.cs" />
     <Compile Include="Extensions\GeneralExtensions.cs" />
     <Compile Include="Extensions\IEnuermableExtensions.cs" />
     <Compile Include="Extensions\SizeExtensions.cs" />

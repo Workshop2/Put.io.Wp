@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="Put.io.Wp8.UserControls.VideoFilePopup"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:viewModels="clr-namespace:Put.io.Core.ViewModels;assembly=Put.io.Core"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    d:DesignHeight="800" d:DesignWidth="480">
+
+    <UserControl.DataContext>
+        <viewModels:FileViewModel />
+    </UserControl.DataContext>
+
+    <Grid x:Name="LayoutRoot" Background="{StaticResource PhoneChromeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="75" />
+            <RowDefinition Height="75" />
+            <RowDefinition Height="75" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="{Binding File.Name}" FontFamily="{StaticResource PhoneFontFamilyNormal}" FontSize="{StaticResource PhoneFontSizeLarge}" Margin="20,10,5,5" TextWrapping="Wrap" />
+
+        <Image Grid.Row="1" Stretch="Uniform" Margin="20" Source="{Binding ScreenShot}" />
+
+        <Grid Grid.Row="2" Margin="20 40 0 40">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="140" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="File Size:" TextAlignment="Right" Margin="0 0 10 0" />
+            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding SizeInformation}" Foreground="{StaticResource PhoneTextMidContrastBrush}" />
+
+            <TextBlock Grid.Column="0" Grid.Row="1" Text="Creation Date:" TextAlignment="Right" Margin="0 0 10 0" />
+            <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding CreatedDate}" Foreground="{StaticResource PhoneTextMidContrastBrush}" />
+        </Grid>
+
+        <Button Grid.Row="3" IsEnabled="False" Name="ConvertMp4">Convert to MP4</Button>
+        <Button Grid.Row="4" IsEnabled="False" Name="DownloadMp4">Download MP4</Button>
+        <Button Grid.Row="5" IsEnabled="False" Name="StreamMp4">Stream MP4</Button>
+    </Grid>
+</UserControl>

@@ -1,4 +1,5 @@
-﻿using Put.io.Core.Common;
+﻿using System;
+using Put.io.Core.Common;
 
 namespace Put.io.Core.Models
 {
@@ -98,6 +99,18 @@ namespace Put.io.Core.Models
             }
         }
 
+        private DateTime _createdDate;
+        public DateTime CreatedDate
+        {
+            get { return _createdDate; }
+            set
+            {
+                if (_createdDate == value) return;
+
+                _createdDate = value;
+                OnPropertyChanged();
+            }
+        }
         #endregion
     }
 }

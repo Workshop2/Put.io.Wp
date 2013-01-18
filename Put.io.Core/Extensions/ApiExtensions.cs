@@ -5,6 +5,8 @@ using Put.io.Api.ResponseObjects.Transfers;
 using Put.io.Core.InvokeSynchronising;
 using Put.io.Core.Models;
 using System.Linq;
+using Put.io.Core.ProgressTracking;
+using Put.io.Core.Storage;
 using Put.io.Core.ViewModels;
 using File = Put.io.Core.Models.File;
 using Transfer = Put.io.Core.Models.Transfer;
@@ -23,16 +25,17 @@ namespace Put.io.Core.Extensions
                 Mp4Available = @this.is_mp4_available,
                 ParentID = @this.parent_id,
                 ScreenShot = @this.screenshot,
-                Size = @this.size
+                Size = @this.size,
+                CreatedDate = @this.created_at.ToDateTime()
             };
         }
 
-        public static List<FileViewModel> ToModelList(this FileList @this, IPropertyChangedInvoke invoker)
+        public static List<FileViewModel> ToModelList(this FileList @this, IPropertyChangedInvoke invoker, ISettingsRepository settings, ProgressTracker tracker)
         {
             if (@this == null || @this.files == null)
                 return new List<FileViewModel>();
 
-            return @this.files.Select(x => new FileViewModel { File = x.ToModel(), Invoker = invoker }).ToList();
+            return @this.files.Select(x => new FileViewModel(settings, tracker, invoker) { File = x.ToModel() }).ToList();
         }
 
         public static Transfer ToModel(this Api.ResponseObjects.Transfers.Transfer @this, IPropertyChangedInvoke invoker)
@@ -65,6 +68,13 @@ namespace Put.io.Core.Extensions
             StatusType output;
 
             return Enum.TryParse(@this.Replace("_", string.Empty), true, out output) ? output : StatusType.Other;
+        }
+
+        public static Mp4Status ToMp4Status(this Mp4 @this)
+        {
+            Mp4Status output;
+
+            return Enum.TryParse(@this.mp4.status.Replace("_", string.Empty), true, out output) ? output : Mp4Status.NotAvailable;
         }
     }
 }

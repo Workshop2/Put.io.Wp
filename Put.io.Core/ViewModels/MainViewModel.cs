@@ -6,11 +6,11 @@ using Put.io.Core.Common;
 using Put.io.Core.InvokeSynchronising;
 using Put.io.Core.ProgressTracking;
 using Put.io.Core.Storage;
-using Put.io.Core.Themes;
 
 namespace Put.io.Core.ViewModels
 {
     public delegate void WorkingStatusChangedHandler(bool isWorking);
+    public delegate void OpenFilePopupHandler(FileViewModel file, ProgressTracker tracker);
 
     public class MainViewModel : ViewModelBase
     {
@@ -63,7 +63,11 @@ namespace Put.io.Core.ViewModels
                 return;
             }
 
-            //TODO: IsOpenable
+            if (selected.IsOpenable)
+            {
+                OpenFilePopup(selected);
+                return;
+            }
 
         }
 
@@ -137,6 +141,13 @@ namespace Put.io.Core.ViewModels
                 OnWorkingStatusChanged(isWorking);
         }
 
+        public event OpenFilePopupHandler OnOpenFilePopup;
+
+        private void OpenFilePopup(FileViewModel file)
+        {
+            if (OnOpenFilePopup != null)
+                OnOpenFilePopup(file, Tracker);
+        }
         #endregion
 
         #region ProgressMonitor

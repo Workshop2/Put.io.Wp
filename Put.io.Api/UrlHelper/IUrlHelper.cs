@@ -13,6 +13,9 @@
         string GetFile();
         string FileMp4();
         string DownloadFile();
+        string StreamFile();
+        string DownloadMp4();
+        string StreamMp4();
 
         //Transfer API
         string ListTransfers();

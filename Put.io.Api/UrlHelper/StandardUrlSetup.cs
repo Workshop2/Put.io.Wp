@@ -53,6 +53,21 @@ namespace Put.io.Api.UrlHelper
             return "/files/{id}/download";
         }
 
+        public string StreamFile()
+        {
+            return "/files/{id}/stream";
+        }
+
+        public string DownloadMp4()
+        {
+            return "/files/{id}/mp4/download";
+        }
+
+        public string StreamMp4()
+        {
+            return "/files/{id}/mp4/stream";
+        }
+
         public string ListTransfers()
         {
             return "/transfers/list";

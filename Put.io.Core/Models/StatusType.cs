@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Put.io.Core.Models
+﻿namespace Put.io.Core.Models
 {
     public enum StatusType
     {
@@ -10,5 +8,13 @@ namespace Put.io.Core.Models
         Other,
         Seeding,
         Completing
+    }
+
+    public enum Mp4Status
+    {
+        NotAvailable,
+        InQueue,
+        Converting,
+        Completed
     }
 }
