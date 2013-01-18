@@ -1,4 +1,4 @@
-﻿<Application x:Class="Put.io.Wp8.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+﻿<Application x:Class="Put.io.Wp.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
              xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone" 
              xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone" 
@@ -7,11 +7,12 @@
              xmlns:viewModels="clr-namespace:Put.io.Core.ViewModels;assembly=Put.io.Core"
              xmlns:converters="clr-namespace:WindowsPhoneEssentials.Converters;assembly=WindowsPhoneEssentials"
              xmlns:PutIoConverters="clr-namespace:Put.io.Core.Converters;assembly=Put.io.Core"
+             xmlns:local="clr-namespace:Put.io.Wp"
              mc:Ignorable="d">
     
     <!--Application Resources-->
     <Application.Resources>
-        <local:LocalizedStrings xmlns:local="clr-namespace:Put.io.Wp8" x:Key="LocalizedStrings" />
+        <local:LocalizedStrings x:Key="LocalizedStrings" />
         
         <ResourceDictionary x:Key="Locator">
             <viewModels:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />

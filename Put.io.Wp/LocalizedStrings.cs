@@ -1,6 +1,6 @@
-﻿using Put.io.Wp8.Resources;
+﻿using Put.io.Wp.Resources;
 
-namespace Put.io.Wp8
+namespace Put.io.Wp
 {
     /// <summary>
     /// Provides access to string resources.

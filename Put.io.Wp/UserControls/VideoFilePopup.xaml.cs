@@ -2,9 +2,9 @@
 using Put.io.Core.Models;
 using Put.io.Core.ProgressTracking;
 using Put.io.Core.ViewModels;
-using Put.io.Wp8.UserControls.Popups;
+using Put.io.Wp.UserControls.Popups;
 
-namespace Put.io.Wp8.UserControls
+namespace Put.io.Wp.UserControls
 {
     public partial class VideoFilePopup : IPopupClient
     {

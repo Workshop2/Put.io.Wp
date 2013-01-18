@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Put.io.Wp8.UserControls.Popups
+namespace Put.io.Wp.UserControls.Popups
 {
     public class RectangleSpacing
     {

@@ -4,17 +4,16 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Put.io.Core.Models;
 using Put.io.Core.ProgressTracking;
 using Put.io.Core.ViewModels;
-using Put.io.Wp8.UserControls;
-using Put.io.Wp8.UserControls.Popups;
+using Put.io.Wp.UserControls;
+using Put.io.Wp.UserControls.Popups;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
-namespace Put.io.Wp8.Views
+namespace Put.io.Wp.Views
 {
     public partial class MainPage : PhoneApplicationPage
     {

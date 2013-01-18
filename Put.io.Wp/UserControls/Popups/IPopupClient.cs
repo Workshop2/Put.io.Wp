@@ -1,7 +1,6 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
-namespace Put.io.Wp8.UserControls.Popups
+namespace Put.io.Wp.UserControls.Popups
 {
     public delegate void CloseHandler();
 

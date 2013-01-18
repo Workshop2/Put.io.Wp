@@ -1,9 +1,7 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls.Primitives;
+﻿using System.Windows.Controls.Primitives;
 using Microsoft.Phone.Shell;
 
-namespace Put.io.Wp8.UserControls.Popups
+namespace Put.io.Wp.UserControls.Popups
 {
     public class PopupWrapper
     {

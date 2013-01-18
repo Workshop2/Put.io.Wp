@@ -6,11 +6,10 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Put.io.Core.InvokeSynchronising;
-using Put.io.Core.Themes;
 using Put.io.Core.ViewModels;
-using Put.io.Wp8.Resources;
+using Put.io.Wp.Resources;
 
-namespace Put.io.Wp8
+namespace Put.io.Wp
 {
     public partial class App : Application
     {
@@ -224,7 +223,7 @@ namespace Put.io.Wp8
                 FlowDirection flow = (FlowDirection)Enum.Parse(typeof(FlowDirection), AppResources.ResourceFlowDirection);
                 RootFrame.FlowDirection = flow;
             }
-            catch
+            catch(Exception e)
             {
                 // If an exception is caught here it is most likely due to either
                 // ResourceLangauge not being correctly set to a supported language

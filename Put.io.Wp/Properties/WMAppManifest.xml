@@ -5,7 +5,7 @@
     <Language code="en-GB" />
     <Language code="en-US" />
   </Languages>
-  <App xmlns="" ProductID="{df2b9045-c0b9-4e90-aead-433aa73c10ec}" Title="Put.io.Wp8" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="Put.io.Wp8 author" Description="Sample description" Publisher="Put.io.Wp8" PublisherID="{dc3cfb28-1428-40d4-8bb2-c9ed62685cca}">
+  <App xmlns="" ProductID="{df2b9045-c0b9-4e90-aead-433aa73c10ec}" Title="Put.io.Wp" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="Simon Colmer" Description="Sample description" Publisher="X-Volt Studios" PublisherID="{dc3cfb28-1428-40d4-8bb2-c9ed62685cca}">
     <IconPath IsRelative="true" IsResource="false">Assets\ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />
@@ -18,12 +18,12 @@
       <DefaultTask Name="_default" NavigationPage="/Views/MainPage.xaml" />
     </Tasks>
     <Tokens>
-      <PrimaryToken TokenID="Put.io.Wp8Token" TaskName="_default">
+      <PrimaryToken TokenID="Put.io.WpToken" TaskName="_default">
         <TemplateFlip>
           <SmallImageURI IsRelative="true" IsResource="false">Assets\Tiles\FlipCycleTileSmall.png</SmallImageURI>
           <Count>0</Count>
           <BackgroundImageURI IsRelative="true" IsResource="false">Assets\Tiles\FlipCycleTileMedium.png</BackgroundImageURI>
-          <Title>Put.io.Wp8</Title>
+          <Title>Put.io.Wp</Title>
           <BackContent>
           </BackContent>
           <BackBackgroundImageURI>

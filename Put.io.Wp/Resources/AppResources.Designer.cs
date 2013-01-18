@@ -8,11 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Put.io.Wp8.Resources
+namespace Put.io.Wp.Resources
 {
-    using System;
-
-
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -45,7 +42,7 @@ namespace Put.io.Wp8.Resources
             {
                 if (object.ReferenceEquals(resourceMan, null))
                 {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Put.io.Wp8.Resources.AppResources", typeof(AppResources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Put.io.Wp.Resources.AppResources", typeof(AppResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

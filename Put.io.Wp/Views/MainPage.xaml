@@ -6,9 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-    xmlns:a="clr-namespace:Put.io.Wp8"
     xmlns:viewModels="clr-namespace:Put.io.Core.ViewModels;assembly=Put.io.Core"
-    x:Class="Put.io.Wp8.Views.MainPage"
+    x:Class="Put.io.Wp.Views.MainPage"
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -30,8 +29,8 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <HyperlinkButton Visibility="{Binding InvalidApiKey, Converter={StaticResource VisibilityOfBool}}" Click="LoginClicked">Please login to continue.</HyperlinkButton>
                 <TextBlock Text="{Binding FileCollection.CurrentPath}" Foreground="{StaticResource PhoneTextLowContrastBrush}" />
+                <HyperlinkButton Visibility="{Binding InvalidApiKey, Converter={StaticResource VisibilityOfBool}}" Click="LoginClicked">Please login to continue.</HyperlinkButton>
                 <phone:LongListSelector x:Name="Files" Grid.Row="1" Margin="5,0,5,0" ItemsSource="{Binding FileCollection.CurrentFileList}" SelectionChanged="FileSelectionChanged">
                     <phone:LongListSelector.ItemTemplate>
                         <DataTemplate>

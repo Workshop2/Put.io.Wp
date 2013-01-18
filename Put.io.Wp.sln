@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Put.io.Wp8", "Put.io.Wp8\Put.io.Wp8.csproj", "{DF2B9045-C0B9-4E90-AEAD-433AA73C10EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Put.io.Wp", "Put.io.Wp\Put.io.Wp.csproj", "{DF2B9045-C0B9-4E90-AEAD-433AA73C10EC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Put.io.Api", "Put.io.Api\Put.io.Api.csproj", "{A2A19BA8-C48C-4F66-8D95-143ACF8F9033}"
 EndProject

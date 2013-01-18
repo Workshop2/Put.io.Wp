@@ -6,9 +6,9 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Phone.Controls;
 using Put.io.Core.Authentication;
-using Put.io.Wp8.UserControls.Popups;
+using Put.io.Wp.UserControls.Popups;
 
-namespace Put.io.Wp8.UserControls
+namespace Put.io.Wp.UserControls
 {
     public delegate void ApiKeyFoundHandler(string apiKey);
 
