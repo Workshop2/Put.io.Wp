@@ -14,6 +14,10 @@ namespace Put.io.Wp.UserControls
 
     public partial class ApiKeyFetcher : IPopupClient
     {
+        public event CloseHandler OnClose;
+        public event RedirectHandler OnRedirect;
+        public event ApiKeyFoundHandler OnKeyFound;
+        public UserControl UserControl { get { return this; } }
         private readonly Uri _landingPage = App.ViewModel.AuthenticateUrl;
 
         public ApiKeyFetcher()
@@ -113,8 +117,10 @@ namespace Put.io.Wp.UserControls
             SetLandingPage();
         }
 
-        public event CloseHandler OnClose;
-        public event ApiKeyFoundHandler OnKeyFound;
-        public UserControl UserControl { get { return this; } }
+        public void Close()
+        {
+        
+        }
+
     }
 }

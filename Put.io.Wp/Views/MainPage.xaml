@@ -59,7 +59,7 @@
             <phone:LongListSelector Grid.Row="1" Margin="12,0,12,0" ItemsSource="{Binding TransferCollection.Transfers}">
                 <phone:LongListSelector.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Margin="0,0,0,10" Tap="UIElement_OnTap">
+                        <StackPanel Margin="0,0,0,10" Tap="TransferSelectionChanged">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition />

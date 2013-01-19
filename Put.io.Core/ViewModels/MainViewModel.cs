@@ -65,6 +65,7 @@ namespace Put.io.Core.ViewModels
 
             if (selected.IsOpenable)
             {
+                FileCollection.SelectedFile = selected;
                 OpenFilePopup(selected);
                 return;
             }

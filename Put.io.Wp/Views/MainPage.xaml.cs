@@ -91,22 +91,6 @@ namespace Put.io.Wp.Views
             }
         }
 
-        // Sample code for building a localized ApplicationBar
-        //private void BuildLocalizedApplicationBar()
-        //{
-        //    // Set the page's ApplicationBar to a new instance of ApplicationBar.
-        //    ApplicationBar = new ApplicationBar();
-
-        //    // Create a new button and set the text value to the localized string from AppResources.
-        //    ApplicationBarIconButton appBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/appbar.add.rest.png", UriKind.Relative));
-        //    appBarButton.Text = AppResources.AppBarButtonText;
-        //    ApplicationBar.Buttons.Add(appBarButton);
-
-        //    // Create a new menu item with the localized string from AppResources.
-        //    ApplicationBarMenuItem appBarMenuItem = new ApplicationBarMenuItem(AppResources.AppBarMenuItemText);
-        //    ApplicationBar.MenuItems.Add(appBarMenuItem);
-        //}
-
         #region ProgressBar
 
         private ProgressIndicator ProgressBar
@@ -124,41 +108,51 @@ namespace Put.io.Wp.Views
 
         #endregion
 
-        private void ViewModel_OnOpenFilePopup(FileViewModel file, ProgressTracker tracker)
+        #region Popups
+
+        private void SetupPopup(IPopupClient apiKeyFetcher)
         {
             const int vertOffset = 48;
             const int horizOffset = 40;
             var appHost = Application.Current.Host.Content;
             var pageSize = new Size(appHost.ActualWidth, appHost.ActualHeight);
             var spacing = new RectangleSpacing(vertOffset, horizOffset, pageSize);
-            var apiKeyFetcher = new VideoFilePopup(file, tracker);
+
             Popup = new PopupWrapper(apiKeyFetcher, spacing, ApplicationBar);
-            Popup.OnClose += Popup_OnClose;
+            Popup.OnClose += PopupOnClose;
+            Popup.OnRedirect += PopupOnRedirect;
             Popup.Open();
         }
 
-
+        private void ViewModel_OnOpenFilePopup(FileViewModel file, ProgressTracker tracker)
+        {
+            var videoFilePopup = new VideoFilePopup(file, tracker);
+            SetupPopup(videoFilePopup);
+        }
+        
         private void LoginClicked(object sender, EventArgs e)
         {
-            const int vertOffset = 48;
-            const int horizOffset = 40;
-
-            var appHost = Application.Current.Host.Content;
-            var pageSize = new Size(appHost.ActualWidth, appHost.ActualHeight);
-            var spacing = new RectangleSpacing(vertOffset, horizOffset, pageSize);
             var apiKeyFetcher = new ApiKeyFetcher();
             apiKeyFetcher.OnKeyFound += App.ViewModel.ChangeKey;
 
-            Popup = new PopupWrapper(apiKeyFetcher, spacing, ApplicationBar);
-            Popup.OnClose += Popup_OnClose;
-            Popup.Open();
+            SetupPopup(apiKeyFetcher);
         }
 
-        private void Popup_OnClose()
+        private void PopupOnClose()
         {
-            Popup.OnClose -= Popup_OnClose;
+            Popup.OnClose -= PopupOnClose;
+            Popup.OnRedirect -= PopupOnRedirect;
             Popup = null;
         }
+
+        private void PopupOnRedirect(string uri)
+        {
+            NavigationService.Navigate(new Uri(uri, UriKind.Relative));
+        }
+
+        #endregion
+
+        #region ApplicationBar
 
         private void RefreshClicked(object sender, EventArgs e)
         {
@@ -176,7 +170,29 @@ namespace Put.io.Wp.Views
 
         }
 
-        private void UIElement_OnTap(object sender, GestureEventArgs e)
+        private void ClearupClick(object sender, EventArgs e)
+        {
+            App.ViewModel.TransferCollection.Clearup();
+        }
+
+        private ApplicationBarIconButton ClearButton { get; set; }
+        private bool FindClearButton()
+        {
+            var matching = ApplicationBar.Buttons.Cast<ApplicationBarIconButton>()
+                              .Where(button => button.Text.Equals("Cleanup", StringComparison.InvariantCultureIgnoreCase));
+
+            var applicationBarIconButtons = matching as IList<ApplicationBarIconButton> ?? matching.ToList();
+            var clearButton = applicationBarIconButtons.FirstOrDefault();
+
+            if (clearButton != null)
+                ClearButton = clearButton;
+
+            return clearButton != null;
+        }
+
+        #endregion
+
+        private void TransferSelectionChanged(object sender, GestureEventArgs e)
         {
             var obj = sender as FrameworkElement;
             if (obj == null)
@@ -190,24 +206,6 @@ namespace Put.io.Wp.Views
 
             e.Handled = true;
         }
-
-        //private void TransferSelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //    var selector = sender as LongListSelector;
-
-        //    // If selected item is null (no selection) do nothing
-        //    if (selector == null || selector.SelectedItem == null)
-        //        return;
-
-        //    var selected = selector.SelectedItem as TransferViewModel;
-
-        //    if (selected == null)
-        //        return;
-
-
-        //    //Clear selection to avoid problems down the road
-        //    selector.SelectedItem = null;
-        //}
 
         private void Pivot_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -231,26 +229,6 @@ namespace Put.io.Wp.Views
                     ApplicationBar.Buttons.Add(ClearButton);
                 }
             }
-        }
-
-        private void ClearupClick(object sender, EventArgs e)
-        {
-            App.ViewModel.TransferCollection.Clearup();
-        }
-
-        private ApplicationBarIconButton ClearButton { get; set; }
-        private bool FindClearButton()
-        {
-            var matching = ApplicationBar.Buttons.Cast<ApplicationBarIconButton>()
-                              .Where(button => button.Text.Equals("Cleanup", StringComparison.InvariantCultureIgnoreCase));
-
-            var applicationBarIconButtons = matching as IList<ApplicationBarIconButton> ?? matching.ToList();
-            var clearButton = applicationBarIconButtons.FirstOrDefault();
-
-            if (clearButton != null)
-                ClearButton = clearButton;
-
-            return clearButton != null;
         }
 
         private void CancelTransfer(object sender, RoutedEventArgs e)

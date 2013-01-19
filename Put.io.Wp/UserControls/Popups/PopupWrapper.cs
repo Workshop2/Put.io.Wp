@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls.Primitives;
+﻿using System;
+using System.Windows.Controls.Primitives;
 using Microsoft.Phone.Shell;
 
 namespace Put.io.Wp.UserControls.Popups
@@ -10,10 +11,13 @@ namespace Put.io.Wp.UserControls.Popups
         private Popup PopupDisplay { get; set; }
         private IApplicationBar ApplicationBar { get; set; }
         private bool ApplicationBarPreviousState { get; set; }
+        public event RedirectHandler OnRedirect;
+
         public PopupWrapper(IPopupClient client, RectangleSpacing spacing)
         {
             Client = client;
             Client.OnClose += Close;
+            Client.OnRedirect += ClientOnOnRedirect;
 
             if (spacing.AdjustedWidth.HasValue)
                 Client.UserControl.Width = spacing.AdjustedWidth.Value;
@@ -38,6 +42,7 @@ namespace Put.io.Wp.UserControls.Popups
         public void Close()
         {
             PopupDisplay.IsOpen = false;
+            Client.Close();
 
             if (OnClose != null)
                 OnClose();
@@ -59,6 +64,14 @@ namespace Put.io.Wp.UserControls.Popups
             PopupDisplay.IsOpen = true;
         }
 
+        private void ClientOnOnRedirect(string uri)
+        {
+            if (OnRedirect != null)
+                OnRedirect(uri);
+
+            Close();
+        }
+        
         public bool IsOpen { get { return PopupDisplay.IsOpen; } }
     }
 }

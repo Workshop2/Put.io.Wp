@@ -1,4 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Navigation;
 using Put.io.Core.Models;
 using Put.io.Core.ProgressTracking;
 using Put.io.Core.ViewModels;
@@ -8,6 +11,10 @@ namespace Put.io.Wp.UserControls
 {
     public partial class VideoFilePopup : IPopupClient
     {
+        public event CloseHandler OnClose;
+        public event RedirectHandler OnRedirect;
+        public UserControl UserControl { get { return this; } }
+
         private FileViewModel CurrentFile { get; set; }
         private ProgressTracker ProgressTracker { get; set; }
 
@@ -39,7 +46,22 @@ namespace Put.io.Wp.UserControls
             });
         }
 
-        public event CloseHandler OnClose;
-        public UserControl UserControl { get { return this; } }
+        private void Redirect(string uri)
+        {
+            if (OnRedirect != null)
+            {
+                OnRedirect(uri);
+            }
+        }
+
+        private void StreamMp4_OnClick(object sender, RoutedEventArgs e)
+        {
+            Redirect("/Views/StreamVideo.xaml");
+        }
+        public void Close()
+        {
+            if (App.ViewModel.FileCollection.SelectedFile == CurrentFile)
+                App.ViewModel.FileCollection.NavigateUp();
+        }
     }
 }
