@@ -11,23 +11,30 @@ namespace Put.io.Wp.Views
         public StreamVideo()
         {
             InitializeComponent();
-
-            //TODO: Implement connection detection, implement controls, maybe detect size of download
-
-
-            PreviousState = MediaElementState.Stopped;
-            Player.CurrentStateChanged += PlayerOnCurrentStateChanged;
-            Player.MediaFailed += PlayerOnMediaFailed;
             
-            App.ViewModel.FileCollection.GetMp4Url(App.ViewModel.FileCollection.SelectedFile, (Uri uri) =>
+            this.Loaded += (object sender, RoutedEventArgs e) =>
             {
-                Dispatcher.BeginInvoke(() =>
+                var url = this.NavigationContext.QueryString["url"];
+                if (string.IsNullOrEmpty(url))
                 {
-                    Player.Source = uri;
-                    Player.Play();
-                });
-            });
+                    MessageBox.Show("No url found");
+                    if (NavigationService.CanGoBack)
+                    {
+                        NavigationService.GoBack();
+                    }
+
+                    return;
+                }
+                //TODO: Implement connection detection, implement controls, maybe detect size of download
+                PreviousState = MediaElementState.Stopped;
+                Player.CurrentStateChanged += PlayerOnCurrentStateChanged;
+                Player.MediaFailed += PlayerOnMediaFailed;
+
+                Player.Source = new Uri(url, UriKind.Absolute);
+                Player.Play();
+            };
         }
+
 
         private void PlayerOnMediaFailed(object sender, ExceptionRoutedEventArgs exceptionRoutedEventArgs)
         {
@@ -60,9 +67,6 @@ namespace Put.io.Wp.Views
         protected override void OnNavigatingFrom(System.Windows.Navigation.NavigatingCancelEventArgs e)
         {
             Player.Stop();
-
-            //Change the selected file to its parent
-            App.ViewModel.FileCollection.NavigateUp();
         }
     }
 }

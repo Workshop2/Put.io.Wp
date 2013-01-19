@@ -48,7 +48,8 @@ namespace Put.io.Wp.Views
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            App.ViewModel.OnWorkingStatusChanged -= ViewModel_OnWorkingStatusChanged;
+            //App.ViewModel.OnWorkingStatusChanged -= ViewModel_OnWorkingStatusChanged;
+            App.ViewModel.OnOpenFilePopup -= ViewModel_OnOpenFilePopup;
         }
 
         // Handle selection changed on LongListSelector

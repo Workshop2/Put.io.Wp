@@ -175,8 +175,13 @@ namespace Put.io.Core.ViewModels
         public void GetMp4Url(FileViewModel selectedFile, Action<Uri> action)
         {
             var rester = new Api.Rest.Files(Settings.ApiKey);
+            var transaction = ProgressTracker.StartNewTransaction();
 
-            rester.StreamMp4(selectedFile.File.FileID, response => action(response.ResponseUri));
+            rester.StreamMp4(selectedFile.File.FileID, response =>
+            {
+                ProgressTracker.CompleteTransaction(transaction);
+                action(response.ResponseUri);
+            });
         }
 
         #endregion

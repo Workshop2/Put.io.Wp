@@ -1,7 +1,5 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
 using Put.io.Core.Models;
 using Put.io.Core.ProgressTracking;
 using Put.io.Core.ViewModels;
@@ -31,7 +29,7 @@ namespace Put.io.Wp.UserControls
 
         private void GetMp4Status(FileViewModel context)
         {
-            App.ViewModel.FileCollection.GetMp4Status(context, (Mp4Status mp4Available) =>
+            App.ViewModel.FileCollection.GetMp4Status(context, mp4Available =>
             {
                 switch (mp4Available)
                 {
@@ -56,7 +54,19 @@ namespace Put.io.Wp.UserControls
 
         private void StreamMp4_OnClick(object sender, RoutedEventArgs e)
         {
-            Redirect("/Views/StreamVideo.xaml");
+            StreamMp4.IsEnabled = false;
+            DownloadMp4.IsEnabled = false;
+
+            //TODO: Check URI
+            App.ViewModel.FileCollection.GetMp4Url(CurrentFile, uri =>
+            {
+                Redirect(string.Format("/Views/StreamVideo.xaml?url={0}", uri.AbsoluteUri));
+                Dispatcher.BeginInvoke(() =>
+                {
+                    StreamMp4.IsEnabled = true;
+                    DownloadMp4.IsEnabled = true;
+                });
+            });
         }
         public void Close()
         {
