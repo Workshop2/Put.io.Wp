@@ -1,4 +1,8 @@
-﻿using System.Windows;
+﻿using System;
+using System.Globalization;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using Put.io.Core.Models;
 using Put.io.Core.ProgressTracking;
@@ -15,6 +19,7 @@ namespace Put.io.Wp.UserControls
 
         private FileViewModel CurrentFile { get; set; }
         private ProgressTracker ProgressTracker { get; set; }
+        private bool Visible { get; set; }
 
         public VideoFilePopup(FileViewModel context, ProgressTracker tracker)
         {
@@ -23,25 +28,91 @@ namespace Put.io.Wp.UserControls
             DataContext = context;
             CurrentFile = context;
             ProgressTracker = tracker;
+            Visible = true;
 
-            GetMp4Status(context);
+            //Put.io assumes that if the file format is of MP4 then we can use it
+            if (CurrentFile.File.Name.EndsWith("mp4", StringComparison.InvariantCultureIgnoreCase))
+            {
+                //TODO: Question put.io on this crap
+                ConvertMp4.Content = "Mp4 unavailable";
+                ConvertMp4.IsEnabled = false;
+                DownloadMp4.IsEnabled = false;
+                StreamMp4.IsEnabled = false;
+                return;
+            }
+
+            App.ViewModel.FileCollection.GetMp4Status(context, (mp4Available, percentDone) =>
+            {
+                if (mp4Available == Mp4Status.InQueue || mp4Available == Mp4Status.Converting)
+                    Task.Factory.StartNew(ConversionInProgress);
+
+                UpdateUi(() => SetupButtons(mp4Available, percentDone));
+            });
         }
 
-        private void GetMp4Status(FileViewModel context)
+        private void UpdateUi(Action action)
         {
-            App.ViewModel.FileCollection.GetMp4Status(context, mp4Available =>
+            if (!Dispatcher.CheckAccess())
             {
-                switch (mp4Available)
+                Dispatcher.BeginInvoke(action);
+                return;
+            }
+
+            action();
+        }
+
+        private void SetupButtons(Mp4Status mp4Available, int percentDone)
+        {
+            switch (mp4Available)
+            {
+                case Mp4Status.Completed:
+                    ConvertMp4.IsEnabled = false;
+                    DownloadMp4.IsEnabled = true;
+                    StreamMp4.IsEnabled = true;
+                    break;
+                case Mp4Status.NotAvailable:
+                    ConvertMp4.IsEnabled = true;
+                    DownloadMp4.IsEnabled = false;
+                    StreamMp4.IsEnabled = false;
+                    break;
+                case Mp4Status.Converting:
+                case Mp4Status.InQueue:
+                    ConvertMp4.IsEnabled = false;
+                    DownloadMp4.IsEnabled = false;
+                    StreamMp4.IsEnabled = false;
+                    break;
+            }
+
+            switch (mp4Available)
+            {
+                case Mp4Status.Converting:
+                    ConvertMp4.Content = string.Format("Converted {0}{1}", percentDone, CultureInfo.CurrentCulture.NumberFormat.PercentSymbol);
+                    break;
+                case Mp4Status.InQueue:
+                    ConvertMp4.Content = "In queue...";
+                    break;
+                default:
+                    ConvertMp4.Content = "Convert to MP4";
+                    break;
+            }
+        }
+
+        private void ConversionInProgress()
+        {
+            if (!Visible)
+                return;
+
+            App.ViewModel.FileCollection.GetMp4Status(CurrentFile, (mp4Available, percentDone) =>
+            {
+                UpdateUi(() => SetupButtons(mp4Available, percentDone));
+
+                if (mp4Available == Mp4Status.Converting || mp4Available == Mp4Status.InQueue)
                 {
-                    case Mp4Status.Completed:
-                        DownloadMp4.IsEnabled = true;
-                        StreamMp4.IsEnabled = true;
-                        break;
-                    case Mp4Status.NotAvailable:
-                        ConvertMp4.IsEnabled = true;
-                        break;
+                    Thread.Sleep(TimeSpan.FromSeconds(15));
+                    Task.Factory.StartNew(ConversionInProgress);
                 }
             });
+
         }
 
         private void Redirect(string uri)
@@ -68,10 +139,18 @@ namespace Put.io.Wp.UserControls
                 });
             });
         }
+
         public void Close()
         {
             if (App.ViewModel.FileCollection.SelectedFile == CurrentFile)
                 App.ViewModel.FileCollection.NavigateUp();
+
+            Visible = false;
+        }
+
+        private void ConvertMp4_OnClick(object sender, RoutedEventArgs e)
+        {
+            App.ViewModel.FileCollection.ConvertToMp4(CurrentFile, () => Task.Factory.StartNew(ConversionInProgress));
         }
     }
 }

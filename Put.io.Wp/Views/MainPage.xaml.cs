@@ -52,6 +52,17 @@ namespace Put.io.Wp.Views
             App.ViewModel.OnOpenFilePopup -= ViewModel_OnOpenFilePopup;
         }
 
+        private void UpdateUi(Action action)
+        {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.BeginInvoke(action);
+                return;
+            }
+
+            action();
+        }
+
         // Handle selection changed on LongListSelector
         private void FileSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -104,7 +115,7 @@ namespace Put.io.Wp.Views
 
         private void ViewModel_OnWorkingStatusChanged(bool isWorking)
         {
-            ProgressBar.IsVisible = isWorking;
+            UpdateUi(() => { ProgressBar.IsVisible = isWorking; });
         }
 
         #endregion
@@ -130,7 +141,7 @@ namespace Put.io.Wp.Views
             var videoFilePopup = new VideoFilePopup(file, tracker);
             SetupPopup(videoFilePopup);
         }
-        
+
         private void LoginClicked(object sender, EventArgs e)
         {
             var apiKeyFetcher = new ApiKeyFetcher();

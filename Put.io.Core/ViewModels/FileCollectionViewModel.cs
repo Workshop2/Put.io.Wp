@@ -160,7 +160,7 @@ namespace Put.io.Core.ViewModels
             CurrentPath = first.Path();
         }
 
-        public void GetMp4Status(FileViewModel context, Action<Mp4Status> action)
+        public void GetMp4Status(FileViewModel context, Action<Mp4Status, int> action)
         {
             var rester = new Api.Rest.Files(Settings.ApiKey);
             var transaction = ProgressTracker.StartNewTransaction();
@@ -168,19 +168,31 @@ namespace Put.io.Core.ViewModels
             rester.Mp4Status(context.File.FileID, response =>
             {
                 ProgressTracker.CompleteTransaction(transaction);
-                action(response.Data.ToMp4Status());
+                action(response.Data.ToMp4Status(), response.Data.mp4.percent_done);
             });
         }
 
-        public void GetMp4Url(FileViewModel selectedFile, Action<Uri> action)
+        public void GetMp4Url(FileViewModel context, Action<Uri> action)
         {
             var rester = new Api.Rest.Files(Settings.ApiKey);
             var transaction = ProgressTracker.StartNewTransaction();
 
-            rester.StreamMp4(selectedFile.File.FileID, response =>
+            rester.StreamMp4(context.File.FileID, response =>
             {
                 ProgressTracker.CompleteTransaction(transaction);
                 action(response.ResponseUri);
+            });
+        }
+
+        public void ConvertToMp4(FileViewModel context, Action action)
+        {
+            var rester = new Api.Rest.Files(Settings.ApiKey);
+            var transaction = ProgressTracker.StartNewTransaction();
+
+            rester.FileToMp4(context.File.FileID, response =>
+            {
+                ProgressTracker.CompleteTransaction(transaction);
+                action();
             });
         }
 
@@ -238,6 +250,5 @@ namespace Put.io.Core.ViewModels
             }
         }
         #endregion
-
     }
 }

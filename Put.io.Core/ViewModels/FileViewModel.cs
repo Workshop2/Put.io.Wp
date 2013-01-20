@@ -44,6 +44,16 @@ namespace Put.io.Core.ViewModels
         {
             SizeInformation = File.Size.ToFileSize();
             CreatedDate = File.CreatedDate.ToString(CultureInfo.CurrentCulture);
+
+            const int maxFileName = 50;
+            if (string.IsNullOrEmpty(File.Name) || File.Name.Length <= maxFileName)
+            {
+                NameTrimmed = File.Name;
+            }
+            else
+            {
+                NameTrimmed = File.Name.Substring(0, maxFileName - 3) + "...";
+            }
         }
 
         #endregion
@@ -181,6 +191,19 @@ namespace Put.io.Core.ViewModels
                 if (_createdDate == value) return;
 
                 _createdDate = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _nameTrimmed;
+        public string NameTrimmed
+        {
+            get { return _nameTrimmed; }
+            set
+            {
+                if (_nameTrimmed == value) return;
+
+                _nameTrimmed = value;
                 OnPropertyChanged();
             }
         }
