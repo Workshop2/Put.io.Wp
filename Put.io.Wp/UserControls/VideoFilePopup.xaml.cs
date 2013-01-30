@@ -131,7 +131,8 @@ namespace Put.io.Wp.UserControls
             //TODO: Check URI
             App.ViewModel.FileCollection.GetMp4Url(CurrentFile, uri =>
             {
-                Redirect(string.Format("/Views/StreamVideo.xaml?url={0}", uri.AbsoluteUri));
+                App.ViewModel.StreamUrls.Push(uri.AbsoluteUri);
+                Redirect("/Views/StreamVideo.xaml");
                 Dispatcher.BeginInvoke(() =>
                 {
                     StreamMp4.IsEnabled = true;

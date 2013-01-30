@@ -14,7 +14,7 @@ namespace Put.io.Wp.Views
             
             this.Loaded += (object sender, RoutedEventArgs e) =>
             {
-                var url = this.NavigationContext.QueryString["url"];
+                var url = App.ViewModel.StreamUrls.Pop();
                 if (string.IsNullOrEmpty(url))
                 {
                     MessageBox.Show("No url found");
