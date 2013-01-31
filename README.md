@@ -18,6 +18,7 @@ Desired Features:
 	Add transfers via browsers
 	Rename Files
 	Restrict usage in trial mode (TBD)
+	Detect album & artist info for music from something like musicbrainz
 		
 Completed Features:
 	Transfers
