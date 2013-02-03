@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Phone.Tasks;
 using Put.io.Core.Models;
 using Put.io.Core.ProgressTracking;
 using Put.io.Core.ViewModels;
@@ -131,8 +132,8 @@ namespace Put.io.Wp.UserControls
             //TODO: Check URI
             App.ViewModel.FileCollection.GetMp4Url(CurrentFile, uri =>
             {
-                App.ViewModel.StreamUrls.Push(uri.AbsoluteUri);
-                Redirect("/Views/StreamVideo.xaml");
+                var task = new WebBrowserTask { Uri = uri };
+                task.Show();
                 Dispatcher.BeginInvoke(() =>
                 {
                     StreamMp4.IsEnabled = true;

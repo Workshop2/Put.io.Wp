@@ -19,8 +19,6 @@ namespace Put.io.Core.ViewModels
         [PreferredConstructor]
         public MainViewModel()
         {
-            StreamUrls = new Stack<string>();
-
             if (IsInDesignMode)
             {
                 _fileCollection = new FileCollectionViewModel();
@@ -83,7 +81,6 @@ namespace Put.io.Core.ViewModels
         #region Properties
         private ProgressTracker Tracker { get; set; }
         private ISettingsRepository Settings { get; set; }
-        public Stack<string> StreamUrls { get; set; }
 
         private FileCollectionViewModel _fileCollection;
         public FileCollectionViewModel FileCollection
