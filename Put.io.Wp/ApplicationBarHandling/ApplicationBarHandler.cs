@@ -12,22 +12,20 @@ namespace Put.io.Wp.ApplicationBarHandling
     {
         private IApplicationBar ApplicationBar { get; set; }
         private IDictionary<ApplicationBarButtons, ApplicationBarIconButton> ButtonCache { get; set; }
-        private IPropertyChangedInvoke PropertyChangedHandler { get; set; }
         public event ButtonClickHandler OnClick;
 
-        public ApplicationBarHandler(IApplicationBar applicationBar, IPropertyChangedInvoke propertyChangedInvoke)
+        public ApplicationBarHandler(IApplicationBar applicationBar)
         {
             ApplicationBar = applicationBar;
             ButtonCache = new Dictionary<ApplicationBarButtons, ApplicationBarIconButton>();
-            PropertyChangedHandler = propertyChangedInvoke;
 
-            PropertyChangedHandler.HandleCall(() =>
-            {
-                ButtonCache.Add(GetButton(@"/Assets/AppBar/refresh.png", "Refresh", ApplicationBarButtons.Refresh));
-                ButtonCache.Add(GetButton(@"/Assets/AppBar/settings.png", "Settings", ApplicationBarButtons.Settings));
-                ButtonCache.Add(GetButton(@"/Assets/AppBar/delete.png", "Cleanup", ApplicationBarButtons.Cleanup));
-                ButtonCache.Add(GetButton(@"/Assets/AppBar/select.png", "Select All", ApplicationBarButtons.SelectAll));
-            });
+            ButtonCache.Add(GetButton(@"/Assets/AppBar/refresh.png", "Refresh", ApplicationBarButtons.Refresh));
+            ButtonCache.Add(GetButton(@"/Assets/AppBar/settings.png", "Settings", ApplicationBarButtons.Settings));
+            ButtonCache.Add(GetButton(@"/Assets/AppBar/delete.png", "Cleanup", ApplicationBarButtons.Cleanup));
+            ButtonCache.Add(GetButton(@"/Assets/AppBar/select.png", "Select All", ApplicationBarButtons.SelectAll));
+            ButtonCache.Add(GetButton(@"/Assets/AppBar/film.png", "to Mp4", ApplicationBarButtons.Convert));
+            ButtonCache.Add(GetButton(@"/Assets/AppBar/select.png", "Select Many", ApplicationBarButtons.Select));
+            ButtonCache.Add(GetButton(@"/Assets/AppBar/delete.png", "delete", ApplicationBarButtons.Delete));
         }
 
         private KeyValuePair<ApplicationBarButtons, ApplicationBarIconButton> GetButton(string icon, string text, ApplicationBarButtons buttonType)

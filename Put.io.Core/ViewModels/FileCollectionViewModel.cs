@@ -8,6 +8,7 @@ using Put.io.Core.Extensions;
 using Put.io.Core.ProgressTracking;
 using Put.io.Core.Storage;
 using System.Linq;
+using RestSharp;
 
 namespace Put.io.Core.ViewModels
 {
@@ -196,6 +197,27 @@ namespace Put.io.Core.ViewModels
             });
         }
 
+        public void ConvertToMp4(List<FileViewModel> selected)
+        {
+            var rester = new Api.Rest.Files(Settings.ApiKey);
+
+            foreach (var file in selected.Where(x => x.File.ContentType == ContentType.Video && !x.File.Name.EndsWith("mp4", StringComparison.InvariantCultureIgnoreCase)))
+            {
+                var fileID = file.File.FileID;
+                var transaction = ProgressTracker.StartNewTransaction();
+
+                rester.Mp4Status(fileID, response =>
+                {
+                    if (response.Data.ToMp4Status() == Mp4Status.NotAvailable)
+                    {
+                        rester.FileToMp4(fileID, response2 => ProgressTracker.CompleteTransaction(transaction));
+                    }
+                    else
+                        ProgressTracker.CompleteTransaction(transaction);
+                });
+            }
+        }
+
         public void GetStreamUrl(FileViewModel context, Action<Uri> action)
         {
             var rester = new Api.Rest.Files(Settings.ApiKey);
@@ -205,6 +227,21 @@ namespace Put.io.Core.ViewModels
             {
                 ProgressTracker.CompleteTransaction(transaction);
                 action(response.ResponseUri);
+            });
+        }
+
+        public void DeleteFiles(List<FileViewModel> selected)
+        {
+            var rester = new Api.Rest.Files(Settings.ApiKey);
+            var transaction = ProgressTracker.StartNewTransaction();
+            var ids = selected.Select(x => x.File.FileID);
+
+            rester.DeleteFiles(ids, response =>
+            {
+                ProgressTracker.CompleteTransaction(transaction);
+
+                if (response.ResponseStatus == ResponseStatus.Completed)
+                    Refresh();
             });
         }
 

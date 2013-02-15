@@ -68,6 +68,11 @@ namespace Put.io.Api.UrlHelper
             return "/files/{id}/mp4/stream";
         }
 
+        public string DeleteFiles()
+        {
+            return "/files/delete";
+        }
+
         public string ListTransfers()
         {
             return "/transfers/list";

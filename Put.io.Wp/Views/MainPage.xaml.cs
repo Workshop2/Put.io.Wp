@@ -28,7 +28,7 @@ namespace Put.io.Wp.Views
             // Set the data context of the LongListSelector control to the sample data
             DataContext = App.ViewModel;
 
-            ButtonHandler = new ApplicationBarHandler(ApplicationBar, App.PropertyChangedInvoke);
+            ButtonHandler = new ApplicationBarHandler(ApplicationBar);
             ButtonHandler.OnClick += ButtonHandlerOnOnClick;
 
             Pivot_OnSelectionChanged(Pivot, null);
@@ -239,7 +239,7 @@ namespace Put.io.Wp.Views
 
         private void SetupFilesApplicationBar()
         {
-            ButtonHandler.DisplayButtons(Files.IsSelectionEnabled ? new[] { ApplicationBarButtons.SelectAll } : new[] { ApplicationBarButtons.Refresh, ApplicationBarButtons.Settings });
+            ButtonHandler.DisplayButtons(Files.IsSelectionEnabled ? new[] { ApplicationBarButtons.SelectAll, ApplicationBarButtons.Convert, ApplicationBarButtons.Delete, } : new[] { ApplicationBarButtons.Select, ApplicationBarButtons.Refresh, ApplicationBarButtons.Settings });
         }
 
         private void ButtonHandlerOnOnClick(ApplicationBarButtons button)
@@ -258,7 +258,62 @@ namespace Put.io.Wp.Views
                 case ApplicationBarButtons.Settings:
                     SettingsClicked();
                     break;
+                case ApplicationBarButtons.Convert:
+                    ConvertClicked();
+                    break;
+                case ApplicationBarButtons.Delete:
+                    DeleteClicked();
+                    break;
+                case ApplicationBarButtons.Select:
+                    SelectClicked();
+                    break;
             }
+        }
+
+        private void SelectClicked()
+        {
+            Files.IsSelectionEnabled = true;
+        }
+
+        private void DeleteClicked()
+        {
+            var selected = SelectedFiles();
+            if (!selected.Any())
+                return;
+
+            var messageBox = new CustomMessageBox
+            {
+                Caption = "Delete?",
+                Message = "Are you sure you want to delete these files?",
+                LeftButtonContent = "yes",
+                RightButtonContent = "no",
+                IsFullScreen = false
+            };
+
+            messageBox.Dismissed += (s1, e1) =>
+            {
+                switch (e1.Result)
+                {
+                    case CustomMessageBoxResult.LeftButton:
+                        App.ViewModel.FileCollection.DeleteFiles(selected);
+                        break;
+                }
+            };
+
+            messageBox.Show();
+        }
+
+        private void ConvertClicked()
+        {
+            var selected = SelectedFiles();
+            Files.IsSelectionEnabled = false;
+
+            App.ViewModel.FileCollection.ConvertToMp4(selected);
+        }
+
+        private List<FileViewModel> SelectedFiles()
+        {
+            return Files.SelectedItems.Cast<FileViewModel>().Distinct().ToList();
         }
 
         private void RefreshClicked()
@@ -274,7 +329,6 @@ namespace Put.io.Wp.Views
                 App.ViewModel.TransferCollection.Refresh();
                 return;
             }
-
         }
 
         private void ClearupClick()
@@ -293,17 +347,14 @@ namespace Put.io.Wp.Views
                 return;
 
             var selected = Files.SelectedItems.Cast<FileViewModel>().Distinct().ToList();
-
             var currentFiles = App.ViewModel.FileCollection.CurrentFileList;
-            //Files.SelectedItems.Clear();
 
             if (currentFiles.Count == selected.Count)
             {
                 Files.IsSelectionEnabled = false;
-                //Files.SelectedItems.Clear();
                 return;
             }
-
+            
             foreach (var model in currentFiles)
             {
                 Files.SelectedItems.Add(model);
@@ -311,5 +362,25 @@ namespace Put.io.Wp.Views
         }
 
         #endregion
+
+        private void Files_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //foreach (FileViewModel addedItem in e.AddedItems)
+            //{
+            //    var items = Files.SelectedItems.Cast<FileViewModel>().ToList();
+
+            //    if (items.Count(x => x.File.FileID == addedItem.File.FileID) == 2)
+            //    {
+            //        for (var i = 0; i < Files.SelectedItems.Count; i++)
+            //        {
+            //            if (Files.SelectedItems[i] == addedItem)
+            //            {
+            //                Files.SelectedItems.RemoveAt(i);
+            //                break;
+            //            }
+            //        }
+            //    }
+            //}
+        }
     }
 }

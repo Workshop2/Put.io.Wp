@@ -5,6 +5,9 @@
         Refresh,
         Settings,
         Cleanup,
-        SelectAll
+        SelectAll,
+        Convert,
+        Select,
+        Delete
     }
 }

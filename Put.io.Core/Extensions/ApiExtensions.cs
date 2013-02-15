@@ -74,6 +74,9 @@ namespace Put.io.Core.Extensions
         {
             Mp4Status output;
 
+            if (@this == null || @this.mp4 == null || string.IsNullOrEmpty(@this.mp4.status))
+                return Mp4Status.NotAvailable;
+
             return Enum.TryParse(@this.mp4.status.Replace("_", string.Empty), true, out output) ? output : Mp4Status.NotAvailable;
         }
     }

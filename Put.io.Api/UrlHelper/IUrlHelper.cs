@@ -16,6 +16,7 @@
         string StreamFile();
         string DownloadMp4();
         string StreamMp4();
+        string DeleteFiles();
 
         //Transfer API
         string ListTransfers();

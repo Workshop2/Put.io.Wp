@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Put.io.Api.ResponseObjects;
 using Put.io.Api.ResponseObjects.Files;
 using RestSharp;
@@ -124,6 +125,24 @@ namespace Put.io.Api.Rest
             var request = NewRequest(url, Method.HEAD);
 
             request.AddUrlSegment("id", fileID.ToString(CultureInfo.InvariantCulture));
+
+            RestClient.ExecuteAsync(request, callback);
+        }
+
+        /// <summary>
+        /// Deletes a list of files. This method is Async
+        /// </summary>
+        /// <param name="fileIDs">Ids of the files to delete</param>
+        /// <param name="callback">The callback method to use once completed</param>
+        public void DeleteFiles(IEnumerable<int> fileIDs, Action<IRestResponse> callback)
+        {
+            var request = NewRequest(UrlHelper.DeleteFiles(), Method.POST);
+
+            var ids = fileIDs.Aggregate(string.Empty, (current, id) => current + (id + ","));
+            if (!string.IsNullOrEmpty(ids))
+                ids = ids.Substring(0, ids.Length - 1);
+
+            request.AddParameter("file_ids", ids);
 
             RestClient.ExecuteAsync(request, callback);
         }
