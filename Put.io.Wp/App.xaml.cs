@@ -21,8 +21,17 @@ namespace Put.io.Wp
         /// <returns>The MainViewModel object.</returns>
         public static MainViewModel ViewModel
         {
-            get { return _viewModel ?? (_viewModel = new MainViewModel(new PropertyChangedInvoke(RootFrame.Dispatcher))); }
+            get { return _viewModel ?? (_viewModel = new MainViewModel(PropertyChangedInvoke)); }
             set { _viewModel = value; }
+        }
+
+        private static PropertyChangedInvoke _propertyChangedInvoke;
+        public static PropertyChangedInvoke PropertyChangedInvoke
+        {
+            get 
+            {
+                return _propertyChangedInvoke ?? (_propertyChangedInvoke = new PropertyChangedInvoke(RootFrame.Dispatcher));
+            }
         }
 
         /// <summary>

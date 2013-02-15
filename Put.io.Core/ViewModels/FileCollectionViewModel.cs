@@ -196,6 +196,18 @@ namespace Put.io.Core.ViewModels
             });
         }
 
+        public void GetStreamUrl(FileViewModel context, Action<Uri> action)
+        {
+            var rester = new Api.Rest.Files(Settings.ApiKey);
+            var transaction = ProgressTracker.StartNewTransaction();
+
+            rester.StreamFile(context.File.FileID, response =>
+            {
+                ProgressTracker.CompleteTransaction(transaction);
+                action(response.ResponseUri);
+            });
+        }
+
         #endregion
 
         #region Properties

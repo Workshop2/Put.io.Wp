@@ -9,6 +9,7 @@ using Microsoft.Phone.Shell;
 using Put.io.Core.Models;
 using Put.io.Core.ProgressTracking;
 using Put.io.Core.ViewModels;
+using Put.io.Wp.ApplicationBarHandling;
 using Put.io.Wp.UserControls;
 using Put.io.Wp.UserControls.Popups;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
@@ -22,17 +23,18 @@ namespace Put.io.Wp.Views
         // Constructor
         public MainPage()
         {
-
             InitializeComponent();
 
             // Set the data context of the LongListSelector control to the sample data
             DataContext = App.ViewModel;
 
-            // Sample code to localize the ApplicationBar
-            //BuildLocalizedApplicationBar();
+            ButtonHandler = new ApplicationBarHandler(ApplicationBar, App.PropertyChangedInvoke);
+            ButtonHandler.OnClick += ButtonHandlerOnOnClick;
 
             Pivot_OnSelectionChanged(Pivot, null);
         }
+
+        #region System
 
         // Load data for the ViewModel Items
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -52,6 +54,10 @@ namespace Put.io.Wp.Views
             App.ViewModel.OnOpenFilePopup -= ViewModel_OnOpenFilePopup;
         }
 
+        /// <summary>
+        /// Ensures the execution of the thread is done on the UI theada
+        /// </summary>
+        /// <param name="action"></param>
         private void UpdateUi(Action action)
         {
             if (!Dispatcher.CheckAccess())
@@ -61,26 +67,6 @@ namespace Put.io.Wp.Views
             }
 
             action();
-        }
-
-        // Handle selection changed on LongListSelector
-        private void FileSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var selector = sender as LongListSelector;
-
-            // If selected item is null (no selection) do nothing
-            if (selector == null || selector.SelectedItem == null)
-                return;
-
-            var selected = selector.SelectedItem as FileViewModel;
-
-            if (selected == null)
-                return;
-
-            App.ViewModel.SelectFile(selected);
-
-            //Clear selection to avoid problems down the road
-            selector.SelectedItem = null;
         }
 
         protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
@@ -94,14 +80,85 @@ namespace Put.io.Wp.Views
 
             if (Pivot.SelectedItem == FilesPivot)
             {
+                if (Files.IsSelectionEnabled)
+                {
+                    Files.IsSelectionEnabled = false;
+                    e.Cancel = true;
+                    return;
+                }
                 if (App.ViewModel.FileCollection.NavigateUp())
                 {
-                    Files.SelectedItem = null;
                     e.Cancel = true;
                     return;
                 }
             }
         }
+
+        private void Pivot_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateApplicationBar();
+        }
+
+        #endregion
+
+        #region Files
+
+        private void FileSelectionChanged(object sender, GestureEventArgs e)
+        {
+            var selector = sender as Grid;
+
+            // If selected item is null (no selection) do nothing
+            if (selector == null || selector.DataContext == null)
+                return;
+
+            var selected = selector.DataContext as FileViewModel;
+
+            if (selected == null)
+                return;
+
+            App.ViewModel.SelectFile(selected);
+        }
+
+        private void IsSelectingChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            UpdateApplicationBar();
+        }
+
+        #endregion
+
+        #region Transfers
+
+        private void TransferSelectionChanged(object sender, GestureEventArgs e)
+        {
+            var obj = sender as FrameworkElement;
+            if (obj == null)
+                return;
+
+            var currentObject = obj.DataContext as TransferViewModel;
+            if (currentObject == null)
+                return;
+
+            App.ViewModel.SelectTransfer(currentObject);
+
+            e.Handled = true;
+        }
+
+        private void CancelTransfer(object sender, RoutedEventArgs e)
+        {
+            var senderConverted = sender as MenuItem;
+
+            if (senderConverted == null)
+                return;
+
+            var selectedItem = senderConverted.CommandParameter as Transfer;
+
+            if (selectedItem == null)
+                return;
+
+            App.ViewModel.TransferCollection.CancelTransfer(selectedItem);
+        }
+
+        #endregion
 
         #region ProgressBar
 
@@ -138,7 +195,7 @@ namespace Put.io.Wp.Views
 
         private void ViewModel_OnOpenFilePopup(FileViewModel file, ProgressTracker tracker)
         {
-            var videoFilePopup = new VideoFilePopup(file, tracker);
+            var videoFilePopup = new VideoFilePopup(file);
             SetupPopup(videoFilePopup);
         }
 
@@ -165,8 +222,46 @@ namespace Put.io.Wp.Views
         #endregion
 
         #region ApplicationBar
+        private ApplicationBarHandler ButtonHandler { get; set; }
 
-        private void RefreshClicked(object sender, EventArgs e)
+        private void UpdateApplicationBar()
+        {
+            if (Pivot.SelectedItem == FilesPivot)
+            {
+                SetupFilesApplicationBar();
+            }
+
+            if (Pivot.SelectedItem == TransfersPivot)
+            {
+                ButtonHandler.DisplayButtons(new[] { ApplicationBarButtons.Refresh, ApplicationBarButtons.Settings, ApplicationBarButtons.Cleanup });
+            }
+        }
+
+        private void SetupFilesApplicationBar()
+        {
+            ButtonHandler.DisplayButtons(Files.IsSelectionEnabled ? new[] { ApplicationBarButtons.SelectAll } : new[] { ApplicationBarButtons.Refresh, ApplicationBarButtons.Settings });
+        }
+
+        private void ButtonHandlerOnOnClick(ApplicationBarButtons button)
+        {
+            switch (button)
+            {
+                case ApplicationBarButtons.Cleanup:
+                    ClearupClick();
+                    break;
+                case ApplicationBarButtons.Refresh:
+                    RefreshClicked();
+                    break;
+                case ApplicationBarButtons.SelectAll:
+                    SelectAllClicked();
+                    break;
+                case ApplicationBarButtons.Settings:
+                    SettingsClicked();
+                    break;
+            }
+        }
+
+        private void RefreshClicked()
         {
             if (Pivot.SelectedItem == FilesPivot)
             {
@@ -182,80 +277,39 @@ namespace Put.io.Wp.Views
 
         }
 
-        private void ClearupClick(object sender, EventArgs e)
+        private void ClearupClick()
         {
             App.ViewModel.TransferCollection.Clearup();
         }
 
-        private ApplicationBarIconButton ClearButton { get; set; }
-        private bool FindClearButton()
+        private void SettingsClicked()
         {
-            var matching = ApplicationBar.Buttons.Cast<ApplicationBarIconButton>()
-                              .Where(button => button.Text.Equals("Cleanup", StringComparison.InvariantCultureIgnoreCase));
 
-            var applicationBarIconButtons = matching as IList<ApplicationBarIconButton> ?? matching.ToList();
-            var clearButton = applicationBarIconButtons.FirstOrDefault();
+        }
 
-            if (clearButton != null)
-                ClearButton = clearButton;
+        private void SelectAllClicked()
+        {
+            if (!Files.IsSelectionEnabled)
+                return;
 
-            return clearButton != null;
+            var selected = Files.SelectedItems.Cast<FileViewModel>().Distinct().ToList();
+
+            var currentFiles = App.ViewModel.FileCollection.CurrentFileList;
+            //Files.SelectedItems.Clear();
+
+            if (currentFiles.Count == selected.Count)
+            {
+                Files.IsSelectionEnabled = false;
+                //Files.SelectedItems.Clear();
+                return;
+            }
+
+            foreach (var model in currentFiles)
+            {
+                Files.SelectedItems.Add(model);
+            }
         }
 
         #endregion
-
-        private void TransferSelectionChanged(object sender, GestureEventArgs e)
-        {
-            var obj = sender as FrameworkElement;
-            if (obj == null)
-                return;
-
-            var currentObject = obj.DataContext as TransferViewModel;
-            if (currentObject == null)
-                return;
-
-            App.ViewModel.SelectTransfer(currentObject);
-
-            e.Handled = true;
-        }
-
-        private void Pivot_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var pivot = sender as Pivot;
-
-            if (pivot == null)
-                return;
-
-            var clearButtonFound = FindClearButton();
-
-            if (pivot.SelectedItem == FilesPivot)
-            {
-                if (clearButtonFound)
-                    ApplicationBar.Buttons.Remove(ClearButton);
-            }
-
-            if (pivot.SelectedItem == TransfersPivot)
-            {
-                if (!clearButtonFound)
-                {
-                    ApplicationBar.Buttons.Add(ClearButton);
-                }
-            }
-        }
-
-        private void CancelTransfer(object sender, RoutedEventArgs e)
-        {
-            var senderConverted = sender as MenuItem;
-
-            if (senderConverted == null)
-                return;
-
-            var selectedItem = senderConverted.CommandParameter as Transfer;
-
-            if (selectedItem == null)
-                return;
-
-            App.ViewModel.TransferCollection.CancelTransfer(selectedItem);
-        }
     }
 }

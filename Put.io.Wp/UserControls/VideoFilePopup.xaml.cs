@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Phone.Tasks;
 using Put.io.Core.Models;
-using Put.io.Core.ProgressTracking;
 using Put.io.Core.ViewModels;
 using Put.io.Wp.UserControls.Popups;
 
@@ -19,26 +18,23 @@ namespace Put.io.Wp.UserControls
         public UserControl UserControl { get { return this; } }
 
         private FileViewModel CurrentFile { get; set; }
-        private ProgressTracker ProgressTracker { get; set; }
         private bool Visible { get; set; }
+        private const int Mp4StatusInterval = 5;
 
-        public VideoFilePopup(FileViewModel context, ProgressTracker tracker)
+        public VideoFilePopup(FileViewModel context)
         {
             InitializeComponent();
 
             DataContext = context;
             CurrentFile = context;
-            ProgressTracker = tracker;
             Visible = true;
 
             //Put.io assumes that if the file format is of MP4 then we can use it
-            if (CurrentFile.File.Name.EndsWith("mp4", StringComparison.InvariantCultureIgnoreCase))
+            if (FileNativeMp4())
             {
-                //TODO: Question put.io on this crap
-                ConvertMp4.Content = "Mp4 unavailable";
                 ConvertMp4.IsEnabled = false;
-                DownloadMp4.IsEnabled = false;
-                StreamMp4.IsEnabled = false;
+                DownloadMp4.IsEnabled = true;
+                StreamMp4.IsEnabled = true;
                 return;
             }
 
@@ -49,6 +45,11 @@ namespace Put.io.Wp.UserControls
 
                 UpdateUi(() => SetupButtons(mp4Available, percentDone));
             });
+        }
+
+        private bool FileNativeMp4()
+        {
+            return CurrentFile.File.Name.EndsWith("mp4", StringComparison.InvariantCultureIgnoreCase);
         }
 
         private void UpdateUi(Action action)
@@ -109,19 +110,11 @@ namespace Put.io.Wp.UserControls
 
                 if (mp4Available == Mp4Status.Converting || mp4Available == Mp4Status.InQueue)
                 {
-                    Thread.Sleep(TimeSpan.FromSeconds(15));
+                    Thread.Sleep(TimeSpan.FromSeconds(Mp4StatusInterval));
                     Task.Factory.StartNew(ConversionInProgress);
                 }
             });
 
-        }
-
-        private void Redirect(string uri)
-        {
-            if (OnRedirect != null)
-            {
-                OnRedirect(uri);
-            }
         }
 
         private void StreamMp4_OnClick(object sender, RoutedEventArgs e)
@@ -129,16 +122,26 @@ namespace Put.io.Wp.UserControls
             StreamMp4.IsEnabled = false;
             DownloadMp4.IsEnabled = false;
 
-            //TODO: Check URI
-            App.ViewModel.FileCollection.GetMp4Url(CurrentFile, uri =>
+            if(FileNativeMp4())
             {
-                var task = new WebBrowserTask { Uri = uri };
-                task.Show();
-                Dispatcher.BeginInvoke(() =>
-                {
-                    StreamMp4.IsEnabled = true;
-                    DownloadMp4.IsEnabled = true;
-                });
+                //TODO: Check URI
+                App.ViewModel.FileCollection.GetStreamUrl(CurrentFile, LaunchVideo);
+                return;
+            }
+
+            //TODO: Check URI
+            App.ViewModel.FileCollection.GetMp4Url(CurrentFile, LaunchVideo);
+        }
+
+        private void LaunchVideo(Uri uri)
+        {
+            var task = new WebBrowserTask {Uri = uri};
+            task.Show();
+
+            Dispatcher.BeginInvoke(() =>
+            {
+                StreamMp4.IsEnabled = true;
+                DownloadMp4.IsEnabled = true;
             });
         }
 

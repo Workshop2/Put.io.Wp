@@ -12,7 +12,7 @@
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
-    SupportedOrientations="PortraitOrLandscape"  Orientation="Portrait"
+    SupportedOrientations="Portrait"  Orientation="Portrait"
     shell:SystemTray.IsVisible="True">
 
     <phone:PhoneApplicationPage.DataContext>
@@ -31,28 +31,29 @@
                 </Grid.RowDefinitions>
                 <TextBlock Text="{Binding FileCollection.CurrentPath}" Foreground="{StaticResource PhoneTextLowContrastBrush}" />
                 <HyperlinkButton Visibility="{Binding InvalidApiKey, Converter={StaticResource VisibilityOfBool}}" Click="LoginClicked">Please login to continue.</HyperlinkButton>
-                <phone:LongListSelector x:Name="Files" Grid.Row="1" Margin="5,0,5,0" ItemsSource="{Binding FileCollection.CurrentFileList}" SelectionChanged="FileSelectionChanged">
-                    <phone:LongListSelector.ItemTemplate>
+                
+                <toolkit:LongListMultiSelector x:Name="Files" Grid.Row="1" Margin="0 8 0 0" ItemsSource="{Binding FileCollection.CurrentFileList}" IsSelectionEnabledChanged="IsSelectingChanged">
+                    <toolkit:LongListMultiSelector.ItemTemplate>
                         <DataTemplate>
-                            <Grid>
+                            <Grid Tap="FileSelectionChanged" Margin="0 -8 0 0">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="50" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 
-                                <Rectangle Grid.Column="0" Height="50" Width="50" Margin="0 6 6 6" VerticalAlignment="Center" HorizontalAlignment="Center" Fill="{StaticResource PhoneContrastBackgroundBrush}" >
+                                <Rectangle Grid.Column="0" Height="50" Width="30" Margin="0 0 20 0" VerticalAlignment="Center" HorizontalAlignment="Center" Fill="{StaticResource PhoneContrastBackgroundBrush}" >
                                 	<Rectangle.OpacityMask>
                                         <ImageBrush Stretch="UniformToFill" ImageSource="{Binding File.ContentType, Converter={StaticResource IconFromType}}"/>
                                 	</Rectangle.OpacityMask>
                                 </Rectangle>
-                                <TextBlock Grid.Column="1" Text="{Binding File.Name}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" Margin="0 -3 0 0" Text="{Binding File.Name}" VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeMedium}" />
                             </Grid>
                         </DataTemplate>
-                    </phone:LongListSelector.ItemTemplate>
-                </phone:LongListSelector>
+                    </toolkit:LongListMultiSelector.ItemTemplate>
+                </toolkit:LongListMultiSelector>
             </Grid>
         </phone:PivotItem>
         <phone:PivotItem Header="Transfers" x:Name="TransfersPivot">
@@ -70,7 +71,7 @@
                                     <RowDefinition Height="15" />
                                 </Grid.RowDefinitions>
 
-                                <TextBlock Text="{Binding Transfer.Name}" Grid.Column="0" />
+                                <TextBlock Text="{Binding Transfer.Name}" Grid.Column="0" FontSize="{StaticResource PhoneFontSizeMediumLarge}" />
                                 <TextBlock Text="{Binding PercentCompleteString}" Grid.Column="1" Foreground="{StaticResource PhoneTextLowContrastBrush}" />
 
                                 <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" Maximum="100" Value="{Binding Transfer.PercentComplete}" IsIndeterminate="{Binding Transfer.Status, Converter={StaticResource StatusTypeIsIndeterminate}}" Height="4" Margin="0" Padding="0" />
@@ -124,9 +125,6 @@
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsMenuEnabled="True">
             <shell:ApplicationBar.Buttons>
-                <shell:ApplicationBarIconButton Text="Refresh" IconUri="/Assets/AppBar/refresh.png" Click="RefreshClicked" />
-                <shell:ApplicationBarIconButton Text="Settings" IconUri="/Assets/AppBar/feature.settings.png" />
-                <shell:ApplicationBarIconButton Text="Cleanup" IconUri="/Assets/AppBar/delete.png" Click="ClearupClick" />
             </shell:ApplicationBar.Buttons>
             <shell:ApplicationBar.MenuItems>
                 <shell:ApplicationBarMenuItem Text="Login" Click="LoginClicked"></shell:ApplicationBarMenuItem>
