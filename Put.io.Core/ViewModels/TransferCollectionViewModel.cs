@@ -52,6 +52,7 @@ namespace Put.io.Core.ViewModels
                 if (Updater != null)
                     Updater.Dispose();
 
+                //Automatically refreshes...every so often
                 Updater = new AutonomousUpdater(Transfers, Settings, Invoker);
 
                 ProgressTracker.CompleteTransaction(transaction);
@@ -63,7 +64,6 @@ namespace Put.io.Core.ViewModels
             if (Transfers != null)
                 Transfers.Clear();
 
-            SelectedTransfer = null;
             OnLoadData();
         }
 
@@ -74,10 +74,20 @@ namespace Put.io.Core.ViewModels
             if (!toClear.Any())
                 return;
 
+            CancelTransfers(toClear);
+        }
+
+        public void CancelTransfer(Transfer selectedItem)
+        {
+            CancelTransfers(new List<int> { selectedItem.TransferID });
+        }
+
+        private void CancelTransfers(List<int> transfers)
+        {
             var rester = new Api.Rest.Transfers(Settings.ApiKey);
             var transaction = ProgressTracker.StartNewTransaction();
 
-            rester.CancelTransfers(toClear, response =>
+            rester.CancelTransfers(transfers, response =>
             {
                 Refresh();
                 ProgressTracker.CompleteTransaction(transaction);
@@ -115,19 +125,5 @@ namespace Put.io.Core.ViewModels
             }
         }
         #endregion
-
-        public void CancelTransfer(Transfer selectedItem)
-        {
-            var toCancel = new List<int> { selectedItem.TransferID };
-
-            var rester = new Api.Rest.Transfers(Settings.ApiKey);
-            var transaction = ProgressTracker.StartNewTransaction();
-
-            rester.CancelTransfers(toCancel, response =>
-            {
-                Refresh();
-                ProgressTracker.CompleteTransaction(transaction);
-            });
-        }
     }
 }

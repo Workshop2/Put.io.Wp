@@ -48,6 +48,7 @@ namespace Put.io.Core.ProgressTracking
         {
             var id = IDGenerator.Next(0, 999999);
 
+            //Like this will ever happen, but its worth being double sure...right? :P
             while (Tracker.Any(x => x == id))
             {
                 id = IDGenerator.Next(0, 999999);

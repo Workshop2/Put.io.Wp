@@ -6,7 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:Put.io.Core.ViewModels;assembly=Put.io.Core"
              xmlns:converters="clr-namespace:WindowsPhoneEssentials.Converters;assembly=WindowsPhoneEssentials"
-             xmlns:PutIoConverters="clr-namespace:Put.io.Core.Converters;assembly=Put.io.Core"
+             xmlns:PutIoConverters="clr-namespace:Put.io.Wp.Converters;assembly=Put.io.Wp"
              xmlns:local="clr-namespace:Put.io.Wp"
              mc:Ignorable="d">
     

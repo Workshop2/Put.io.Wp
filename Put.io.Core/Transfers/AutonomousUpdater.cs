@@ -14,8 +14,8 @@ namespace Put.io.Core.Transfers
     public class AutonomousUpdater : IDisposable
     {
         private ObservableCollection<TransferViewModel> Collection { get; set; }
-        private readonly TimeSpan _sleep = new TimeSpan(0, 0, 5);
-        private readonly TimeSpan _startupDelay = new TimeSpan(0, 0, 10);
+        private readonly TimeSpan _sleep = TimeSpan.FromSeconds(5);
+        private readonly TimeSpan _startupDelay = TimeSpan.FromSeconds(10);
         private IPropertyChangedInvoke Invoker { get; set; }
         private ISettingsRepository Settings { get; set; }
 

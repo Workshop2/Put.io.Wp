@@ -96,6 +96,9 @@
     </Compile>
     <Compile Include="ApplicationBarHandling\ApplicationBarButtons.cs" />
     <Compile Include="ApplicationBarHandling\ApplicationBarHandler.cs" />
+    <Compile Include="Converters\IconFromType.cs" />
+    <Compile Include="Converters\InvertBool.cs" />
+    <Compile Include="Converters\StatusTypeIsIndeterminate.cs" />
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="UserControls\ApiKeyFetcher.xaml.cs">
       <DependentUpon>ApiKeyFetcher.xaml</DependentUpon>
