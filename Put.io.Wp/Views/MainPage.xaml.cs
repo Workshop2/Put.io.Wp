@@ -39,18 +39,18 @@ namespace Put.io.Wp.Views
         // Load data for the ViewModel Items
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            App.ViewModel.OnWorkingStatusChanged += ViewModel_OnWorkingStatusChanged;
+            App.ViewModel.OnOpenFilePopup += ViewModel_OnOpenFilePopup;
+
             if (!App.ViewModel.IsDataLoaded)
             {
                 App.ViewModel.LoadData();
             }
-
-            App.ViewModel.OnWorkingStatusChanged += ViewModel_OnWorkingStatusChanged;
-            App.ViewModel.OnOpenFilePopup += ViewModel_OnOpenFilePopup;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            //App.ViewModel.OnWorkingStatusChanged -= ViewModel_OnWorkingStatusChanged;
+            App.ViewModel.OnWorkingStatusChanged -= ViewModel_OnWorkingStatusChanged;
             App.ViewModel.OnOpenFilePopup -= ViewModel_OnOpenFilePopup;
         }
 

@@ -72,7 +72,7 @@
                                 </Grid.RowDefinitions>
 
                                 <TextBlock Text="{Binding Transfer.Name}" Grid.Column="0" FontSize="{StaticResource PhoneFontSizeMediumLarge}" />
-                                <TextBlock Text="{Binding PercentCompleteString}" Grid.Column="1" Foreground="{StaticResource PhoneTextLowContrastBrush}" />
+                                <TextBlock Text="{Binding PercentCompleteString}" Grid.Column="1" Foreground="{StaticResource PhoneTextLowContrastBrush}" Margin="10 0 0 0" VerticalAlignment="Center" />
 
                                 <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" Maximum="100" Value="{Binding Transfer.PercentComplete}" IsIndeterminate="{Binding Transfer.Status, Converter={StaticResource StatusTypeIsIndeterminate}}" Height="4" Margin="0" Padding="0" />
                             </Grid>
