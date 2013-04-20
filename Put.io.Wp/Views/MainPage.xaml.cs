@@ -355,10 +355,17 @@ namespace Put.io.Wp.Views
                 return;
             }
             
-            foreach (var model in currentFiles)
+            foreach (var item in Files.ItemsSource)
             {
-                Files.SelectedItems.Add(model);
+                var container = Files.ContainerFromItem(item) as LongListMultiSelectorItem;
+                if (container != null) 
+                    container.IsSelected = true;
             }
+            
+            //foreach (var model in currentFiles)
+            //{
+            //    Files.SelectedItems.Add(model);
+            //}
         }
 
         #endregion
