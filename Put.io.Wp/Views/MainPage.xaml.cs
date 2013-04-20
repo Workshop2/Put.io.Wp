@@ -233,13 +233,15 @@ namespace Put.io.Wp.Views
 
             if (Pivot.SelectedItem == TransfersPivot)
             {
-                ButtonHandler.DisplayButtons(new[] { ApplicationBarButtons.Refresh, ApplicationBarButtons.Settings, ApplicationBarButtons.Cleanup });
+                ButtonHandler.DisplayButtons(new[] { ApplicationBarButtons.Refresh, ApplicationBarButtons.Cleanup, ApplicationBarButtons.Settings });
             }
         }
 
         private void SetupFilesApplicationBar()
         {
-            ButtonHandler.DisplayButtons(Files.IsSelectionEnabled ? new[] { ApplicationBarButtons.SelectAll, ApplicationBarButtons.Convert, ApplicationBarButtons.Delete, } : new[] { ApplicationBarButtons.Select, ApplicationBarButtons.Refresh, ApplicationBarButtons.Settings });
+            ButtonHandler.DisplayButtons(Files.IsSelectionEnabled ?
+                new[] { ApplicationBarButtons.SelectAll, ApplicationBarButtons.Delete, ApplicationBarButtons.Convert } :
+                new[] { ApplicationBarButtons.Refresh, ApplicationBarButtons.Select, ApplicationBarButtons.Settings });
         }
 
         private void ButtonHandlerOnOnClick(ApplicationBarButtons button)
@@ -354,40 +356,15 @@ namespace Put.io.Wp.Views
                 Files.IsSelectionEnabled = false;
                 return;
             }
-            
+
             foreach (var item in Files.ItemsSource)
             {
                 var container = Files.ContainerFromItem(item) as LongListMultiSelectorItem;
-                if (container != null) 
+                if (container != null)
                     container.IsSelected = true;
             }
-            
-            //foreach (var model in currentFiles)
-            //{
-            //    Files.SelectedItems.Add(model);
-            //}
         }
 
         #endregion
-
-        private void Files_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //foreach (FileViewModel addedItem in e.AddedItems)
-            //{
-            //    var items = Files.SelectedItems.Cast<FileViewModel>().ToList();
-
-            //    if (items.Count(x => x.File.FileID == addedItem.File.FileID) == 2)
-            //    {
-            //        for (var i = 0; i < Files.SelectedItems.Count; i++)
-            //        {
-            //            if (Files.SelectedItems[i] == addedItem)
-            //            {
-            //                Files.SelectedItems.RemoveAt(i);
-            //                break;
-            //            }
-            //        }
-            //    }
-            //}
-        }
     }
 }
