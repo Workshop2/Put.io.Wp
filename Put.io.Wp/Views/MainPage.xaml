@@ -32,7 +32,7 @@
                 <TextBlock Text="{Binding FileCollection.CurrentPath}" Foreground="{StaticResource PhoneTextLowContrastBrush}" />
                 <HyperlinkButton Visibility="{Binding InvalidApiKey, Converter={StaticResource VisibilityOfBool}}" Click="LoginClicked">Please login to continue.</HyperlinkButton>
                 
-                <toolkit:LongListMultiSelector x:Name="Files" Grid.Row="1" Margin="0 8 0 0" ItemsSource="{Binding FileCollection.CurrentFileList}" IsSelectionEnabledChanged="IsSelectingChanged" SelectionChanged="Files_OnSelectionChanged">
+                <toolkit:LongListMultiSelector x:Name="Files" Grid.Row="1" Margin="0 8 0 0" ItemsSource="{Binding FileCollection.CurrentFileList}" IsSelectionEnabledChanged="IsSelectingChanged">
                     <toolkit:LongListMultiSelector.ItemTemplate>
                         <DataTemplate>
                             <Grid Tap="FileSelectionChanged" Margin="0 -8 0 0">
