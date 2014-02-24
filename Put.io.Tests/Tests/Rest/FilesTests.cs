@@ -30,7 +30,7 @@ namespace Put.io.Tests.Tests.Rest
         [TestMethod]
         public void GetFile()
         {
-            var rester = new Api.Rest.Files("PUTIO_KEY");
+            var rester = new Api.Rest.Files("**Put.io API Key**");
 
             rester.GetFile(31088044, response =>
             {
@@ -48,7 +48,7 @@ namespace Put.io.Tests.Tests.Rest
         [TestMethod]
         public void Mp4Status()
         {
-            var rester = new Api.Rest.Files("PUTIO_KEY");
+            var rester = new Api.Rest.Files("**Put.io API Key**");
 
             rester.Mp4Status(11908901, response =>
             {
@@ -66,7 +66,7 @@ namespace Put.io.Tests.Tests.Rest
         [TestMethod]
         public void FileToMp4()
         {
-            var rester = new Api.Rest.Files("PUTIO_KEY");
+            var rester = new Api.Rest.Files("**Put.io API Key**");
 
             rester.FileToMp4(11908901, response =>
             {
@@ -83,7 +83,7 @@ namespace Put.io.Tests.Tests.Rest
         [TestMethod]
         public void DownloadFile()
         {
-            var rester = new Api.Rest.Files("PUTIO_KEY");
+            var rester = new Api.Rest.Files("**Put.io API Key**");
 
             rester.DownloadFile(47022459, response =>
             {
