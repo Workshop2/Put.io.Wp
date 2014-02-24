@@ -11,7 +11,7 @@ namespace Put.io.Tests.Tests.Rest
         [TestMethod]
         public void ListTransfers()
         {
-            var rester = new Api.Rest.Transfers("PUTIO_KEY");
+            var rester = new Api.Rest.Transfers("**Put.io API Key**");
 
             rester.ListTransfers(response =>
             {
