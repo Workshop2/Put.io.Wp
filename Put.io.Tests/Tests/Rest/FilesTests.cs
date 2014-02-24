@@ -11,7 +11,7 @@ namespace Put.io.Tests.Tests.Rest
         [TestMethod]
         public void ListFiles()
         {
-            var rester = new Api.Rest.Files("PUTIO_KEY");
+            var rester = new Api.Rest.Files("**Put.io API Key**");
 
             rester.ListFiles(null, response =>
             {
