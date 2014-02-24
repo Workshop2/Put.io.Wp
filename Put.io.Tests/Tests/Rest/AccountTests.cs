@@ -10,7 +10,7 @@ namespace Put.io.Tests.Tests.Rest
         [TestMethod]
         public void GetAccountInfo()
         {
-            var rester = new Api.Rest.Account("PUTIO_KEY");
+            var rester = new Api.Rest.Account("**Put.io API Key**");
 
             rester.GetAccountInfo(response =>
             {
