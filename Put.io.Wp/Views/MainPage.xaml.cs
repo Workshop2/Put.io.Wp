@@ -233,7 +233,7 @@ namespace Put.io.Wp.Views
 
             if (Pivot.SelectedItem == TransfersPivot)
             {
-                ButtonHandler.DisplayButtons(new[] { ApplicationBarButtons.Refresh, ApplicationBarButtons.Cleanup, ApplicationBarButtons.Settings });
+                ButtonHandler.DisplayButtons(new[] { ApplicationBarButtons.Refresh, ApplicationBarButtons.Cleanup });
             }
         }
 
@@ -241,7 +241,7 @@ namespace Put.io.Wp.Views
         {
             ButtonHandler.DisplayButtons(Files.IsSelectionEnabled ?
                 new[] { ApplicationBarButtons.SelectAll, ApplicationBarButtons.Delete, ApplicationBarButtons.Convert } :
-                new[] { ApplicationBarButtons.Refresh, ApplicationBarButtons.Select, ApplicationBarButtons.Settings });
+                new[] { ApplicationBarButtons.Refresh, ApplicationBarButtons.Select });
         }
 
         private void ButtonHandlerOnOnClick(ApplicationBarButtons button)
@@ -256,9 +256,6 @@ namespace Put.io.Wp.Views
                     break;
                 case ApplicationBarButtons.SelectAll:
                     SelectAllClicked();
-                    break;
-                case ApplicationBarButtons.Settings:
-                    SettingsClicked();
                     break;
                 case ApplicationBarButtons.Convert:
                     ConvertClicked();
@@ -336,11 +333,6 @@ namespace Put.io.Wp.Views
         private void ClearupClick()
         {
             App.ViewModel.TransferCollection.Clearup();
-        }
-
-        private void SettingsClicked()
-        {
-
         }
 
         private void SelectAllClicked()

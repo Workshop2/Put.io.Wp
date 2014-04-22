@@ -5,8 +5,8 @@
     <Language code="en-GB" />
     <Language code="en-US" />
   </Languages>
-  <App xmlns="" ProductID="{df2b9045-c0b9-4e90-aead-433aa73c10ec}" Title="Put.io.Wp" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="Simon Colmer" Description="Sample description" Publisher="X-Volt Studios" PublisherID="{dc3cfb28-1428-40d4-8bb2-c9ed62685cca}">
-    <IconPath IsRelative="true" IsResource="false">Assets\ApplicationIcon.png</IconPath>
+  <App xmlns="" ProductID="{df2b9045-c0b9-4e90-aead-433aa73c10ec}" Title="Put.io for Windows Phone" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="Simon Colmer" Description="Put.io for Windows Phone" Publisher="X-Volt Studios" PublisherID="{dc3cfb28-1428-40d4-8bb2-c9ed62685cca}">
+    <IconPath IsRelative="true" IsResource="false">Assets\Icons\Logo.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />
       <Capability Name="ID_CAP_MEDIALIB_AUDIO" />
@@ -20,10 +20,11 @@
     <Tokens>
       <PrimaryToken TokenID="Put.io.WpToken" TaskName="_default">
         <TemplateFlip>
-          <SmallImageURI IsRelative="true" IsResource="false">Assets\Tiles\FlipCycleTileSmall.png</SmallImageURI>
+          <SmallImageURI IsRelative="true" IsResource="false">Assets\Icons\Logo.png</SmallImageURI>
           <Count>0</Count>
-          <BackgroundImageURI IsRelative="true" IsResource="false">Assets\Tiles\FlipCycleTileMedium.png</BackgroundImageURI>
-          <Title>Put.io.Wp</Title>
+          <BackgroundImageURI IsRelative="true" IsResource="false">Assets\Icons\Logo.png</BackgroundImageURI>
+          <Title>
+          </Title>
           <BackContent>
           </BackContent>
           <BackBackgroundImageURI>
