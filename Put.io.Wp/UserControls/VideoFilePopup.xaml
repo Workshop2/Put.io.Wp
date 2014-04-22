@@ -43,8 +43,8 @@
             <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding CreatedDate}" Foreground="{StaticResource PhoneTextMidContrastBrush}" />
         </Grid>
 
-        <Button Grid.Row="3" IsEnabled="False" Name="ConvertMp4" Click="ConvertMp4_OnClick">Convert to MP4</Button>
-        <Button Grid.Row="4" IsEnabled="False" Name="DownloadMp4">Download MP4</Button>
+        <Button Grid.Row="4" IsEnabled="False" Name="ConvertMp4" Click="ConvertMp4_OnClick">Convert to MP4</Button>
+        <Button Grid.Row="4" IsEnabled="False" Name="DownloadMp4" Visibility="Collapsed">Download MP4</Button>
         <Button Grid.Row="5" IsEnabled="False" Name="StreamMp4" Click="StreamMp4_OnClick">Stream MP4</Button>
     </Grid>
 </UserControl>

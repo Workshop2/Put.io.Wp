@@ -3,9 +3,8 @@
   <DefaultLanguage xmlns="" code="en-GB" />
   <Languages xmlns="">
     <Language code="en-GB" />
-    <Language code="en-US" />
   </Languages>
-  <App xmlns="" ProductID="{df2b9045-c0b9-4e90-aead-433aa73c10ec}" Title="Put.io for Windows Phone" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="Simon Colmer" Description="Put.io for Windows Phone" Publisher="X-Volt Studios" PublisherID="{dc3cfb28-1428-40d4-8bb2-c9ed62685cca}">
+  <App xmlns="" ProductID="{df2b9045-c0b9-4e90-aead-433aa73c10ec}" Title="Put.io for Windows Phone" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="Simon Colmer" Description="Native Put.io for Windows Phone." Publisher="X-Volt Studios" PublisherID="{dc3cfb28-1428-40d4-8bb2-c9ed62685cca}">
     <IconPath IsRelative="true" IsResource="false">Assets\Icons\Logo.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />
@@ -33,8 +32,7 @@
           </BackTitle>
           <DeviceLockImageURI>
           </DeviceLockImageURI>
-          <HasLarge>
-          </HasLarge>
+          <HasLarge>False</HasLarge>
         </TemplateFlip>
       </PrimaryToken>
     </Tokens>

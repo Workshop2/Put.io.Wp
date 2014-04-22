@@ -158,6 +158,9 @@
     </Content>
     <Content Include="Assets\Icons\folder.png" />
     <Content Include="Assets\Icons\Logo.png" />
+    <Content Include="Assets\Icons\LogoAppStore.png" />
+    <Content Include="Assets\Icons\Logo_358.png" />
+    <Content Include="Assets\Icons\Logo_Wide.png" />
     <Content Include="Assets\Icons\music.png" />
     <Content Include="Assets\Icons\image.png" />
     <Content Include="Assets\Icons\ribbon.png" />
