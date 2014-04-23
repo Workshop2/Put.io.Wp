@@ -1,6 +1,19 @@
 Put.io for Windows Phone
 =============
 
+Now available on the Windows Phone Store: http://windowsphone.com/s?appId=b809ea8e-6831-46e5-a3c0-6724b696b01e
+
+	
+Completed Features:
+<li>
+	<ul>Transfers</ul>
+	<ul>File list</ul>
+	<ul>Loggin in</ul>
+	<ul>Stream MP4s</ul>
+	<ul>Delete files and folders (inc multiple files)</ul>
+	<ul>Mp4 converision (inc multiple files)</ul>
+</li>	
+
 Confirmed Features:
 <li>
 	<ul>Download MP4s using background downloading service</ul>
@@ -19,19 +32,5 @@ Desired Features:
 	<ul>Rename Files</ul>
 	<ul>Restrict usage in trial mode (TBD)</ul>
 	<ul>Detect album & artist info for music from something like musicbrainz</ul>
-</li>	
-	
-Completed Features:
-<li>
-	<ul>Transfers</ul>
-	<ul>File list</ul>
-	<ul>Loggin in</ul>
-	<ul>Stream MP4s</ul>
-	<ul>Delete files and folders (inc multiple files)</ul>
-	<ul>Mp4 converision (inc multiple files)</ul>
-</li>	
- 
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Workshop2/put.io.wp/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+</li>
 
