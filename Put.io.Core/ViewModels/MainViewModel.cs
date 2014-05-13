@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO.IsolatedStorage;
+using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Ioc;
+using Microsoft.Phone.Info;
 using Put.io.Api.UrlHelper;
 using Put.io.Core.Common;
 using Put.io.Core.InvokeSynchronising;
@@ -41,7 +43,10 @@ namespace Put.io.Core.ViewModels
             _transferCollection = new TransferCollectionViewModel(Tracker, Settings, Invoker);
 
             ValidateKey();
+
+            Setup();
         }
+
         #endregion
 
         private void ValidateKey()
@@ -173,5 +178,47 @@ namespace Put.io.Core.ViewModels
         }
         #endregion
 
+        private void Setup()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    var data = new Api.Rest.Mothership.Data
+                    {
+                        DeviceUniqueId = GetPhoneVar("DeviceUniqueId"),
+                        DeviceFirmwareVersion = GetPhoneVar("DeviceFirmwareVersion"),
+                        DeviceManufacturer = GetPhoneVar("DeviceManufacturer"),
+                        DeviceName = GetPhoneVar("DeviceName"),
+                        DeviceTotalMemory = GetPhoneVar("DeviceTotalMemory"),
+                        PhysicalScreenResolution = GetPhoneVar("PhysicalScreenResolution"),
+                    };
+
+                    var mothership = new Api.Rest.Mothership();
+                    mothership.Fire(data);
+                }
+                catch { }
+            });
+        }
+
+        private string GetPhoneVar(string name)
+        {
+            string result = string.Empty;
+            object get;
+            if (DeviceExtendedProperties.TryGetValue(name, out get) && get != null)
+            {
+                byte[] byteArray = get as byte[];
+                if (byteArray != null)
+                {
+                    result = Convert.ToBase64String(byteArray);
+                }
+                else
+                {
+                    result = get.ToString();
+                }
+            }
+
+            return result;  
+        }
     }
 }

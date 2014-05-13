@@ -106,6 +106,7 @@
     <Compile Include="Tests\AuthenticationTests\CallbackHandlerTests.cs" />
     <Compile Include="Tests\Rest\AccountTests.cs" />
     <Compile Include="Tests\Rest\FilesTests.cs" />
+    <Compile Include="Tests\Rest\MothershipTests.cs" />
     <Compile Include="Tests\Rest\TransferTests.cs" />
     <Compile Include="Tests\SpecsFor.cs" />
     <Compile Include="Tests\UrlHelperTests\AuthenticateUrl.cs" />
@@ -176,8 +177,9 @@
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTesting.Phone">
       <HintPath>..\packages\WPToolkitTestFx.4.2012.11.14\lib\wp8\Microsoft.VisualStudio.QualityTools.UnitTesting.Phone.dll</HintPath>
     </Reference>
-    <Reference Include="RestSharp.WindowsPhone">
-      <HintPath>..\packages\RestSharp.104.1\lib\sl4-wp71\RestSharp.WindowsPhone.dll</HintPath>
+    <Reference Include="RestSharp.WindowsPhone, Version=104.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\RestSharp.104.4.0\lib\sl4-wp71\RestSharp.WindowsPhone.dll</HintPath>
     </Reference>
     <Reference Include="SilverlightSerializer.WP7">
       <HintPath>..\packages\WindowsPhoneEssentials.0.5.0.59\lib\SL4-WindowsPhone\SilverlightSerializer.WP7.dll</HintPath>
