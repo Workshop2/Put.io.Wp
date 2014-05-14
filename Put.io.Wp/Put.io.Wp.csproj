@@ -103,6 +103,9 @@
     <Compile Include="UserControls\ApiKeyFetcher.xaml.cs">
       <DependentUpon>ApiKeyFetcher.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\AboutPopup.xaml.cs">
+      <DependentUpon>AboutPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\Popups\IPopupClient.cs" />
     <Compile Include="UserControls\Popups\RectangleSpacing.cs" />
     <Compile Include="UserControls\Popups\PopupWrapper.cs" />
@@ -127,6 +130,10 @@
     <Page Include="UserControls\ApiKeyFetcher.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\AboutPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UserControls\VideoFilePopup.xaml">
       <SubType>Designer</SubType>

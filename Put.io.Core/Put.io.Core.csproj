@@ -106,6 +106,7 @@
     <Compile Include="Themes\IThemeManager.cs" />
     <Compile Include="Themes\ThemeManager.cs" />
     <Compile Include="Transfers\AutonomousUpdater.cs" />
+    <Compile Include="ViewModels\AboutViewModel.cs" />
     <Compile Include="ViewModels\FileCollectionViewModel.cs" />
     <Compile Include="ViewModels\FileViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
