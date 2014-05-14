@@ -19,16 +19,16 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="75" />
-            <RowDefinition Height="75" />
-            <RowDefinition Height="75" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Text="{Binding Title}" FontFamily="{StaticResource PhoneFontFamilyNormal}" FontSize="{StaticResource PhoneFontSizeLarge}" Margin="20,10,5,5" TextWrapping="Wrap" />
         <TextBlock Grid.Row="1" Text="{Binding Description}" FontFamily="{StaticResource PhoneFontFamilyLight}" Margin="20" TextWrapping="Wrap" TextAlignment="Center"></TextBlock>
 
-        <Button Grid.Row="2" IsEnabled="False" Name="LeaveReview" Click="LeaveReview_OnClick">Leave Review</Button>
-        <Button Grid.Row="3" IsEnabled="False" Name="VisitHomepage" Click="VisitHomepage_OnClick">Visit Homepage</Button>
-        <Button Grid.Row="4" IsEnabled="False" Name="ViewSource" Click="ViewSource_OnClick">View Source</Button>
-        <Button Grid.Row="5" IsEnabled="False" Name="EmailAuthor" Click="EmailAuthor_OnClick">Email Author</Button>
+        <Button Grid.Row="2" Name="LeaveReview" FontSize="{StaticResource PhoneFontSizeSmall}" Click="LeaveReview_OnClick">Leave Review</Button>
+        <Button Grid.Row="3" Name="VisitHomepage" FontSize="{StaticResource PhoneFontSizeSmall}" Click="VisitHomepage_OnClick">Visit Homepage</Button>
+        <Button Grid.Row="4" Name="ViewSource" FontSize="{StaticResource PhoneFontSizeSmall}" Click="ViewSource_OnClick">View Source</Button>
+        <Button Grid.Row="5" Name="EmailAuthor" FontSize="{StaticResource PhoneFontSizeSmall}" Click="EmailAuthor_OnClick">Email Author</Button>
     </Grid>
 </UserControl>

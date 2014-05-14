@@ -128,6 +128,7 @@
             </shell:ApplicationBar.Buttons>
             <shell:ApplicationBar.MenuItems>
                 <shell:ApplicationBarMenuItem Text="Login" Click="LoginClicked"></shell:ApplicationBarMenuItem>
+                <shell:ApplicationBarMenuItem Text="About" Click="AboutClicked"></shell:ApplicationBarMenuItem>
             </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>

@@ -207,6 +207,12 @@ namespace Put.io.Wp.Views
             SetupPopup(apiKeyFetcher);
         }
 
+        private void AboutClicked(object sender, EventArgs e)
+        {
+            var aboutPopup = new AboutPopup();
+            SetupPopup(aboutPopup);
+        }
+
         private void PopupOnClose()
         {
             Popup.OnClose -= PopupOnClose;
