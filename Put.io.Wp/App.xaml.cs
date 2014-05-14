@@ -8,6 +8,7 @@ using Microsoft.Phone.Shell;
 using Put.io.Core.InvokeSynchronising;
 using Put.io.Core.ViewModels;
 using Put.io.Wp.Resources;
+using ReviewNotifier.Apollo;
 
 namespace Put.io.Wp
 {
@@ -80,8 +81,9 @@ namespace Put.io.Wp
 
         // Code to execute when the application is launching (eg, from Start)
         // This code will not execute when the application is reactivated
-        private void Application_Launching(object sender, LaunchingEventArgs e)
+        private async void Application_Launching(object sender, LaunchingEventArgs e)
         {
+            await ReviewNotification.InitializeAsync();
         }
 
         // Code to execute when the application is activated (brought to foreground)

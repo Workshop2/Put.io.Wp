@@ -217,6 +217,12 @@
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\packages\MvvmLight.4.1.23.0\lib\sl3-wp\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
+    <Reference Include="ReviewNotifier.Apollo">
+      <HintPath>..\packages\ReviewNotifier.1.0.0\lib\windowsphone8\ReviewNotifier.Apollo.dll</HintPath>
+    </Reference>
+    <Reference Include="StorageHelper.Apollo">
+      <HintPath>..\packages\StorageHelper.1.0.0\lib\windowsphone8\StorageHelper.Apollo.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Interactivity, Version=3.7.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\MvvmLight.4.1.23.0\lib\sl3-wp\System.Windows.Interactivity.dll</HintPath>

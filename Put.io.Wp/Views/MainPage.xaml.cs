@@ -12,6 +12,7 @@ using Put.io.Core.ViewModels;
 using Put.io.Wp.ApplicationBarHandling;
 using Put.io.Wp.UserControls;
 using Put.io.Wp.UserControls.Popups;
+using ReviewNotifier.Apollo;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace Put.io.Wp.Views
@@ -364,5 +365,10 @@ namespace Put.io.Wp.Views
         }
 
         #endregion
+
+        private async void MainPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            await ReviewNotification.TriggerAsync("Enjoying this app? Not enjoying this app? Please leave a review :-)", "Time for a review?", 5);
+        }
     }
 }
