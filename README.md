@@ -3,6 +3,7 @@ Put.io for Windows Phone
 
 Now available on the Windows Phone Store: http://windowsphone.com/s?appId=b809ea8e-6831-46e5-a3c0-6724b696b01e
 
+[Powered by ![alt text](http://raygun.io/cassette.axd/file/images/navigation/public-header-logo-b23ff94e036ed64eea65d8d12548b6d927a3e669.png "Powered by Raygun.io")](http://raygun.io/)
 	
 Completed Features:
 <li>
