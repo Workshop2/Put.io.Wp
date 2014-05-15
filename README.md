@@ -3,9 +3,9 @@ Put.io for Windows Phone
 
 Now available on the Windows Phone Store: http://windowsphone.com/s?appId=b809ea8e-6831-46e5-a3c0-6724b696b01e
 
-[Powered by ![alt text](http://raygun.io/cassette.axd/file/images/navigation/public-header-logo-b23ff94e036ed64eea65d8d12548b6d927a3e669.png "Powered by Raygun.io")](http://raygun.io/)
+[Error reporting and management powered by ![alt text](http://raygun.io/cassette.axd/file/images/navigation/public-header-logo-b23ff94e036ed64eea65d8d12548b6d927a3e669.png "Powered by Raygun.io").io](http://raygun.io/) - please give these guys a visit as they are amazing!
 	
-Completed Features:
+__Completed Features:__
 <li>
 	<ul>Transfers</ul>
 	<ul>File list</ul>
@@ -15,7 +15,7 @@ Completed Features:
 	<ul>Mp4 converision (inc multiple files)</ul>
 </li>	
 
-Confirmed Features:
+__Confirmed Features:__
 <li>
 	<ul>Download MP4s using background downloading service</ul>
 	<ul>Play and manage offline MP4s</ul>
@@ -25,7 +25,7 @@ Confirmed Features:
 	<ul>Display account info</ul>
 </li>
 	
-Desired Features:
+__Desired Features:__
 <li>
 	<ul>Create folders</ul>
 	<ul>Move files & folders</ul>
