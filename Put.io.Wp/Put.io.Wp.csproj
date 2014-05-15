@@ -217,6 +217,9 @@
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\packages\MvvmLight.4.1.23.0\lib\sl3-wp\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
+    <Reference Include="Mindscape.Raygun4Net.WindowsPhone">
+      <HintPath>..\packages\Mindscape.Raygun4Net.2.0.4\lib\wp71\Mindscape.Raygun4Net.WindowsPhone.dll</HintPath>
+    </Reference>
     <Reference Include="ReviewNotifier.Apollo">
       <HintPath>..\packages\ReviewNotifier.1.0.0\lib\windowsphone8\ReviewNotifier.Apollo.dll</HintPath>
     </Reference>

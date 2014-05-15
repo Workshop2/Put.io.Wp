@@ -5,6 +5,7 @@ using System.Windows.Markup;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Mindscape.Raygun4Net;
 using Put.io.Core.InvokeSynchronising;
 using Put.io.Core.ViewModels;
 using Put.io.Wp.Resources;
@@ -15,6 +16,7 @@ namespace Put.io.Wp
     public partial class App : Application
     {
         private static MainViewModel _viewModel;
+        private RaygunClient _client = new RaygunClient("MBCx3MJ8LG/ZCkDlfM47zw==");
 
         /// <summary>
         /// A static ViewModel used by the views to bind against.
@@ -124,6 +126,8 @@ namespace Put.io.Wp
         // Code to execute on Unhandled Exceptions
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
+            _client.Send(e);
+
             if (Debugger.IsAttached)
             {
                 // An unhandled exception has occurred; break into the debugger
