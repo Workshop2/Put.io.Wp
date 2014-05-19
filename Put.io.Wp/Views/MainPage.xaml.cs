@@ -202,7 +202,6 @@ namespace Put.io.Wp.Views
 
         private void LoginClicked(object sender, EventArgs e)
         {
-            throw new NotImplementedException("Test for raygun");
             var apiKeyFetcher = new ApiKeyFetcher();
             apiKeyFetcher.OnKeyFound += App.ViewModel.ChangeKey;
 
