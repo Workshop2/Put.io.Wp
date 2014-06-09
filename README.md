@@ -3,7 +3,10 @@ Put.io for Windows Phone
 
 Now available on the Windows Phone Store: http://windowsphone.com/s?appId=b809ea8e-6831-46e5-a3c0-6724b696b01e
 
-[Error reporting and management powered by ![alt text](http://raygun.io/cassette.axd/file/images/navigation/public-header-logo-b23ff94e036ed64eea65d8d12548b6d927a3e669.png "Powered by Raygun.io").io](http://raygun.io/) - please give these guys a visit as they are amazing!
+[![alt text](http://raygun.io/cassette.axd/file/images/navigation/public-header-logo-b23ff94e036ed64eea65d8d12548b6d927a3e669.png "Powered by Raygun.io")](http://raygun.io/)
+Raygun.io powers our error management. Please give these guys a visit as they are amazing!
+	
+[![Build status](https://ci.appveyor.com/api/projects/status/b0il21c3t6r718bt)](https://ci.appveyor.com/project/Workshop2/put-io-wp)
 	
 __Completed Features:__
 <li>
